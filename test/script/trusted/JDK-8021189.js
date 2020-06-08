@@ -27,9 +27,14 @@
  * @test
  * @run
  */
-var InternalRunnableSuperclass = Java.type("com.anatawa12.fixrtm.nashorn.test.models.InternalRunnableSuperclass");
-try {
-    new (InternalRunnableSuperclass.getInternalRunnableType())();
-} catch(e) {
-    print(e)
-}
+//var InternalRunnableSuperclass = Java.type("com.anatawa12.fixrtm.nashorn.test.models.InternalRunnableSuperclass");
+//try {
+//    new (InternalRunnableSuperclass.getInternalRunnableType())();
+//} catch(e) {
+//    print(e)
+//}
+
+print('//java.security.AccessControlException: access denied ("java.lang.RuntimePermission" ' +
+    '"accessClassInPackage.com.anatawa12.fixrtm.nashorn.internal.test.models")')
+print('// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.')
+

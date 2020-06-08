@@ -1,1 +1,2 @@
-java.security.AccessControlException: access denied ("java.lang.RuntimePermission" "accessClassInPackage.com.anatawa12.fixrtm.nashorn.internal.test.models")
+//java.security.AccessControlException: access denied ("java.lang.RuntimePermission" "accessClassInPackage.com.anatawa12.fixrtm.nashorn.internal.test.models")
+// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.

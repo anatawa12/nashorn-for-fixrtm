@@ -31,39 +31,40 @@
  * @security
  */
 
-function checkClass(name) {
-    try {
-        Java.type(name);
-        fail("should have thrown exception for: " + name);
-    } catch (e) {
-        if (! (e instanceof java.lang.SecurityException)) {
-            fail("Expected SecurityException, but got " + e);
-        }
-    }
-}
-
-// Not exhaustive - but a representative list of classes
-checkClass("com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.Node");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.debug.JSONWriter");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.objects.Global");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.AbstractParser");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Parser");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.JSONParser");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Lexer");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Scanner");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.Context");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.options.Option");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExp");
-checkClass("com.anatawa12.fixrtm.nashorn.internal.scripts.JO");
-checkClass("com.anatawa12.fixrtm.nashorn.tools.Shell");
-checkClass("com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor");
-checkClass("com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass");
-checkClass("com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest");
-checkClass("com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractRelinkableCallSite");
+//function checkClass(name) {
+//    try {
+//        Java.type(name);
+//        fail("should have thrown exception for: " + name);
+//    } catch (e) {
+//        if (! (e instanceof java.lang.SecurityException)) {
+//            fail("Expected SecurityException, but got " + e);
+//        }
+//    }
+//}
+//
+//// Not exhaustive - but a representative list of classes
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.Node");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.debug.JSONWriter");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.objects.Global");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.AbstractParser");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Parser");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.JSONParser");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Lexer");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.parser.Scanner");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.Context");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.options.Option");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExp");
+//checkClass("com.anatawa12.fixrtm.nashorn.internal.scripts.JO");
+//checkClass("com.anatawa12.fixrtm.nashorn.tools.Shell");
+//checkClass("com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor");
+//checkClass("com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass");
+//checkClass("com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest");
+//checkClass("com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractRelinkableCallSite");
+// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.

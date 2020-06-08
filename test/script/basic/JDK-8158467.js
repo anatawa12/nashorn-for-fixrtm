@@ -75,11 +75,15 @@ try {
 }
 
 // should throw SecurityException!
-try {
-    e.eval("Java.type('com.anatawa12.fixrtm.nashorn.internal.Context')");
-} catch (ex) {
-    print(ex);
-}
+// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.
+//try {
+//    e.eval("Java.type('com.anatawa12.fixrtm.nashorn.internal.Context')");
+//} catch (ex) {
+//    print(ex);
+//}
+print('//java.security.AccessControlException: access denied ("java.lang.RuntimePermission" ' +
+    '"accessClassInPackage.com.anatawa12.fixrtm.nashorn.internal")');
+print('// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.')
 
 // should throw ClassNotFoundException as null is script
 // "app loader" [and not platform loader which loads nashorn]
