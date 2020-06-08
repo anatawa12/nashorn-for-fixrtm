@@ -81,13 +81,13 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.DynamicLinkerFactory;
-import jdk.internal.dynalink.linker.MethodHandleTransformer;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinkerFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
 
 /**
  * Default implementation for a {@link DynamicLinkerFactory#setInternalObjectsFilter(MethodHandleTransformer)}.

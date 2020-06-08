@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.test;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.test;
 
-import static jdk.nashorn.internal.runtime.Source.sourceFor;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -35,8 +35,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
-import jdk.nashorn.api.scripting.URLReader;
-import jdk.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.api.scripting.URLReader;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
 import org.testng.annotations.Test;
 
 /**
@@ -49,7 +49,7 @@ public class SourceTest {
     final private static String SOURCE_STRING = "var x = 1;";
     final private static char[] SOURCE_CHARS = SOURCE_STRING.toCharArray();
     final private static String RESOURCE_PATH = "resources/load_test.js";
-    final private static File SOURCE_FILE = new File("build/test/classes/jdk/nashorn/internal/runtime/test/" + RESOURCE_PATH);
+    final private static File SOURCE_FILE = new File("build/test/classes/com/anatawa12/fixrtm/nashorn/internal/runtime/test/" + RESOURCE_PATH);
     final private static URL  SOURCE_URL = SourceTest.class.getResource(RESOURCE_PATH);
 
 

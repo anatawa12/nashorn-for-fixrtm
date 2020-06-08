@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.staticCall;
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCall;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -35,15 +35,15 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import jdk.internal.dynalink.beans.StaticClass;
-import jdk.nashorn.api.scripting.AbstractJSObject;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.internal.codegen.CompilerConstants.Call;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.parser.Lexer;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
+import com.anatawa12.fixrtm.nashorn.api.scripting.AbstractJSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.Call;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Lexer;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 
 /**
  * Representation for ECMAScript types - this maps directly to the ECMA script standard

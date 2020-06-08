@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.test.models;
+package com.anatawa12.fixrtm.nashorn.test.models;
 
 /**
  * Test class used by JDK-8011362.js

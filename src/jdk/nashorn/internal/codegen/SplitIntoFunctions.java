@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.ir.Node.NO_FINISH;
-import static jdk.nashorn.internal.ir.Node.NO_LINE_NUMBER;
-import static jdk.nashorn.internal.ir.Node.NO_TOKEN;
+import static com.anatawa12.fixrtm.nashorn.internal.ir.Node.NO_FINISH;
+import static com.anatawa12.fixrtm.nashorn.internal.ir.Node.NO_LINE_NUMBER;
+import static com.anatawa12.fixrtm.nashorn.internal.ir.Node.NO_TOKEN;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -36,34 +36,34 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
-import jdk.nashorn.internal.ir.AccessNode;
-import jdk.nashorn.internal.ir.BinaryNode;
-import jdk.nashorn.internal.ir.Block;
-import jdk.nashorn.internal.ir.BlockLexicalContext;
-import jdk.nashorn.internal.ir.BreakNode;
-import jdk.nashorn.internal.ir.CallNode;
-import jdk.nashorn.internal.ir.CaseNode;
-import jdk.nashorn.internal.ir.ContinueNode;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.ExpressionStatement;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.GetSplitState;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.IfNode;
-import jdk.nashorn.internal.ir.JumpStatement;
-import jdk.nashorn.internal.ir.JumpToInlinedFinally;
-import jdk.nashorn.internal.ir.LiteralNode;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.ReturnNode;
-import jdk.nashorn.internal.ir.SetSplitState;
-import jdk.nashorn.internal.ir.SplitNode;
-import jdk.nashorn.internal.ir.SplitReturn;
-import jdk.nashorn.internal.ir.Statement;
-import jdk.nashorn.internal.ir.SwitchNode;
-import jdk.nashorn.internal.ir.VarNode;
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
-import jdk.nashorn.internal.parser.Token;
-import jdk.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.ir.AccessNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Block;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BlockLexicalContext;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BreakNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CallNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CaseNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ContinueNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ExpressionStatement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.GetSplitState;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IfNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JumpStatement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JumpToInlinedFinally;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LiteralNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ReturnNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SetSplitState;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SplitNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SplitReturn;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Statement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SwitchNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.VarNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
 
 /**
  * A node visitor that replaces {@link SplitNode}s with anonymous function invocations and some additional constructs

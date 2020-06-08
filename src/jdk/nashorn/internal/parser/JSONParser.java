@@ -23,28 +23,28 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import jdk.nashorn.internal.codegen.ObjectClassGenerator;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.runtime.ECMAErrors;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.JSErrorType;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ParserException;
-import jdk.nashorn.internal.runtime.Property;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.SpillProperty;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-import jdk.nashorn.internal.scripts.JD;
-import jdk.nashorn.internal.scripts.JO;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSErrorType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Property;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.SpillProperty;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex;
+import com.anatawa12.fixrtm.nashorn.internal.scripts.JD;
+import com.anatawa12.fixrtm.nashorn.internal.scripts.JO;
 
-import static jdk.nashorn.internal.parser.TokenType.STRING;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.STRING;
 
 /**
  * Parses JSON text and returns the corresponding IR node. This is derived from

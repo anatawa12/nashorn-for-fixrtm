@@ -81,11 +81,11 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 
 /**
  * Interface for objects that are used to transform one guarded invocation into another one. Typical usage is for

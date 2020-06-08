@@ -81,10 +81,10 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.beans;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import java.lang.invoke.MethodHandle;
-import jdk.internal.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 
 /**
  * Represents one component for a GuardedInvocation of a potentially composite operation of an

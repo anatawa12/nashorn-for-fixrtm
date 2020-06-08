@@ -34,8 +34,8 @@ var intType    = Java.type("int");
 var doubleType = Java.type("double");
 var objectType = Java.type("java.lang.Object");
 
-var Context = Java.type("jdk.nashorn.internal.runtime.Context");
-var JSType  = Java.type("jdk.nashorn.internal.runtime.JSType");
+var Context = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.Context");
+var JSType  = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.JSType");
 
 var context = Context.getContext();
 var dualFields = context.useDualFields();

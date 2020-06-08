@@ -22,9 +22,9 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
 
 /**
  * Is this a node that can be optimistically typed? This means that it

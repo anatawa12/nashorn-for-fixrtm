@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
-import static jdk.nashorn.internal.tools.nasgen.ScriptClassInfo.SCRIPT_CLASS_ANNO_DESC;
-import static jdk.nashorn.internal.tools.nasgen.ScriptClassInfo.WHERE_ENUM_DESC;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.ScriptClassInfo.SCRIPT_CLASS_ANNO_DESC;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.ScriptClassInfo.WHERE_ENUM_DESC;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,8 +41,8 @@ import jdk.internal.org.objectweb.asm.FieldVisitor;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Opcodes;
 import jdk.internal.org.objectweb.asm.Type;
-import jdk.nashorn.internal.objects.annotations.Where;
-import jdk.nashorn.internal.tools.nasgen.MemberInfo.Kind;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Where;
+import com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.MemberInfo.Kind;
 
 /**
  * This class collects all @ScriptClass and other annotation information from a

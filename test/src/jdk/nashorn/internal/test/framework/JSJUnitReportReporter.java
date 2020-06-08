@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.framework;
+package com.anatawa12.fixrtm.nashorn.internal.test.framework;
 
 import org.testng.ITestResult;
 import org.testng.reporters.JUnitReportReporter;

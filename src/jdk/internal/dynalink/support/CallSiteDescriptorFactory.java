@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
@@ -94,7 +94,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import jdk.internal.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 
 /**
  * Usable as a default factory for call site descriptor implementations. It is weakly canonicalizing, meaning it will

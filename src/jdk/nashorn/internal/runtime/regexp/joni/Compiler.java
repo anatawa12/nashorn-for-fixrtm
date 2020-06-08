@@ -17,20 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ast.AnchorNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.BackRefNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.EncloseNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.Node;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.NodeType;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.AnchorNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.BackRefNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.EncloseNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.Node;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.NodeType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
 
 abstract class Compiler implements ErrorMessages {
     protected final Analyser analyser;

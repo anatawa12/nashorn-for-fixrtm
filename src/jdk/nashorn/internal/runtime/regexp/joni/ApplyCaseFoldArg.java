@@ -17,10 +17,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
 
 @SuppressWarnings("javadoc")
 public final class ApplyCaseFoldArg {

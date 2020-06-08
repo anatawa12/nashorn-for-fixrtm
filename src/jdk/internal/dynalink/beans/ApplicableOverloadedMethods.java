@@ -81,12 +81,12 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.beans;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import java.lang.invoke.MethodType;
 import java.util.LinkedList;
 import java.util.List;
-import jdk.internal.dynalink.support.TypeUtilities;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
 
 /**
  * Represents overloaded methods applicable to a specific call site signature.

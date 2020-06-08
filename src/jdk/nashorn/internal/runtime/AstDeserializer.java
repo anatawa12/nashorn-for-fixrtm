@@ -22,13 +22,13 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.zip.InflaterInputStream;
-import jdk.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
 
 /**
  * This static utility class performs deserialization of FunctionNode ASTs from a byte array.

@@ -23,14 +23,14 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.arrays;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.specialCall;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.specialCall;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 
 /**
  * Implementation of {@link ArrayData} as soon as an Object has been

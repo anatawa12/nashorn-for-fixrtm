@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.events;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.events;
 
 import java.util.logging.Level;
-import jdk.nashorn.internal.objects.NativeDebug;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeDebug;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 
 /**
  * Class for representing a runtime event, giving less global dependencies than logger.

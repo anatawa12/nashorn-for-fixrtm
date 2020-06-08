@@ -23,21 +23,21 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.codegen.Condition.EQ;
-import static jdk.nashorn.internal.codegen.Condition.GE;
-import static jdk.nashorn.internal.codegen.Condition.GT;
-import static jdk.nashorn.internal.codegen.Condition.LE;
-import static jdk.nashorn.internal.codegen.Condition.LT;
-import static jdk.nashorn.internal.codegen.Condition.NE;
-import static jdk.nashorn.internal.parser.TokenType.NOT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.EQ;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.GE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.GT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.LE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.LT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Condition.NE;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.NOT;
 
-import jdk.nashorn.internal.ir.BinaryNode;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.JoinPredecessorExpression;
-import jdk.nashorn.internal.ir.LocalVariableConversion;
-import jdk.nashorn.internal.ir.UnaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JoinPredecessorExpression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LocalVariableConversion;
+import com.anatawa12.fixrtm.nashorn.internal.ir.UnaryNode;
 
 /**
  * Branch optimizer for CodeGenerator. Given a jump condition this helper

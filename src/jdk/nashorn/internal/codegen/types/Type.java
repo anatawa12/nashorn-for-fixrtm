@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen.types;
+package com.anatawa12.fixrtm.nashorn.internal.codegen.types;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.DALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.DASTORE;
@@ -46,7 +46,7 @@ import static jdk.internal.org.objectweb.asm.Opcodes.SWAP;
 import static jdk.internal.org.objectweb.asm.Opcodes.T_DOUBLE;
 import static jdk.internal.org.objectweb.asm.Opcodes.T_INT;
 import static jdk.internal.org.objectweb.asm.Opcodes.T_LONG;
-import static jdk.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -64,11 +64,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import jdk.internal.org.objectweb.asm.Handle;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
-import jdk.nashorn.internal.codegen.CompilerConstants.Call;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.Undefined;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.Call;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 
 /**
  * This is the representation of a JavaScript type, disassociated from java
@@ -930,7 +930,7 @@ public abstract class Type implements Comparable<Type>, BytecodeOps, Serializabl
 
     /**
      * This is the CharSequence singleton used to represent JS strings internally
-     * (either a {@code java.lang.String} or {@code jdk.nashorn.internal.runtime.ConsString}.
+     * (either a {@code java.lang.String} or {@code com.anatawa12.fixrtm.nashorn.internal.runtime.ConsString}.
      */
     public static final Type CHARSEQUENCE = putInCache(new ObjectType(CharSequence.class));
 

@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;

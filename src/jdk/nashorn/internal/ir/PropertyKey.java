@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
 /**
  * Any node that can be a property key inherits this

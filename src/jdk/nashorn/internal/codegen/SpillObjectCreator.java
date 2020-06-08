@@ -23,26 +23,26 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.constructorNoLookup;
-import static jdk.nashorn.internal.codegen.CompilerConstants.virtualCallNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.constructorNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.virtualCallNoLookup;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.LiteralNode;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.Property;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-import jdk.nashorn.internal.scripts.JD;
-import jdk.nashorn.internal.scripts.JO;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LiteralNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Property;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex;
+import com.anatawa12.fixrtm.nashorn.internal.scripts.JD;
+import com.anatawa12.fixrtm.nashorn.internal.scripts.JO;
 
 /**
  * An object creator that uses spill properties.

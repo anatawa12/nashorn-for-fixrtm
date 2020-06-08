@@ -23,22 +23,22 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import static jdk.nashorn.internal.parser.TokenType.BIT_NOT;
-import static jdk.nashorn.internal.parser.TokenType.DECPOSTFIX;
-import static jdk.nashorn.internal.parser.TokenType.INCPOSTFIX;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.BIT_NOT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.DECPOSTFIX;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.INCPOSTFIX;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
-import jdk.nashorn.internal.parser.Token;
-import jdk.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.annotations.Ignore;
+import com.anatawa12.fixrtm.nashorn.internal.ir.annotations.Immutable;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
 
 /**
  * UnaryNode nodes represent single operand operations.

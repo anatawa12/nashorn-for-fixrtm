@@ -30,7 +30,7 @@
  *     jjs -scripting genshelldoc.js > shell.html
  */
 
-var Options = Packages.jdk.nashorn.internal.runtime.options.Options;
+var Options = Packages.com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 var title = "Nashorn command line shell tool";
 
 print(<<PREFIX

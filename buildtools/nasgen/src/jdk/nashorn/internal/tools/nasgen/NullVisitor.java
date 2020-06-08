@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import jdk.internal.org.objectweb.asm.AnnotationVisitor;
 import jdk.internal.org.objectweb.asm.ClassVisitor;

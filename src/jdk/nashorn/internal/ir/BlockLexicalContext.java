@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

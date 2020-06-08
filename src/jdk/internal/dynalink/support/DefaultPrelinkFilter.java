@@ -81,12 +81,12 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import jdk.internal.dynalink.GuardedInvocationFilter;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.GuardedInvocationFilter;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 
 /**
  * Default filter for guarded invocation pre link filtering

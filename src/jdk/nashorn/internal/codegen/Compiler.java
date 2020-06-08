@@ -23,15 +23,15 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.ARGUMENTS;
-import static jdk.nashorn.internal.codegen.CompilerConstants.CALLEE;
-import static jdk.nashorn.internal.codegen.CompilerConstants.RETURN;
-import static jdk.nashorn.internal.codegen.CompilerConstants.SCOPE;
-import static jdk.nashorn.internal.codegen.CompilerConstants.THIS;
-import static jdk.nashorn.internal.codegen.CompilerConstants.VARARGS;
-import static jdk.nashorn.internal.runtime.logging.DebugLogger.quote;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.ARGUMENTS;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.CALLEE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.RETURN;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SCOPE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.THIS;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.VARARGS;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.quote;
 
 import java.io.File;
 import java.lang.invoke.MethodType;
@@ -50,26 +50,26 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import jdk.internal.dynalink.support.NameCodec;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.Optimistic;
-import jdk.nashorn.internal.ir.debug.ClassHistogramElement;
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
-import jdk.nashorn.internal.runtime.CodeInstaller;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.FunctionInitializer;
-import jdk.nashorn.internal.runtime.ParserException;
-import jdk.nashorn.internal.runtime.RecompilableScriptFunctionData;
-import jdk.nashorn.internal.runtime.ScriptEnvironment;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
-import jdk.nashorn.internal.runtime.logging.Loggable;
-import jdk.nashorn.internal.runtime.logging.Logger;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.NameCodec;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Optimistic;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.ClassHistogramElement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.ObjectSizeCalculator;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.CodeInstaller;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.FunctionInitializer;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.RecompilableScriptFunctionData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Loggable;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
 
 /**
  * Responsible for converting JavaScripts to java byte code. Main entry
@@ -81,10 +81,10 @@ import jdk.nashorn.internal.runtime.logging.Logger;
 public final class Compiler implements Loggable {
 
     /** Name of the scripts package */
-    public static final String SCRIPTS_PACKAGE = "jdk/nashorn/internal/scripts";
+    public static final String SCRIPTS_PACKAGE = "com/anatawa12/fixrtm/nashorn/internal/scripts";
 
     /** Name of the objects package */
-    public static final String OBJECTS_PACKAGE = "jdk/nashorn/internal/objects";
+    public static final String OBJECTS_PACKAGE = "com/anatawa12/fixrtm/nashorn/internal/objects";
 
     private final ScriptEnvironment env;
 

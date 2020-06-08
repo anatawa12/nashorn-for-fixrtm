@@ -541,8 +541,8 @@ var spill = {
     p499: { code: 499, category: m }
 };
 
-var AccessorProperty = Java.type("jdk.nashorn.internal.runtime.AccessorProperty");
-var SpillProperty    = Java.type("jdk.nashorn.internal.runtime.SpillProperty");
+var AccessorProperty = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.AccessorProperty");
+var SpillProperty    = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.SpillProperty");
 
 Assert.assertTrue(Object.keys(fields).length === 3);
 Assert.assertTrue(Debug.map(fields).findProperty("p0").getClass() === AccessorProperty.class);

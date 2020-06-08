@@ -23,22 +23,22 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import jdk.nashorn.internal.codegen.types.ArrayType;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
-import jdk.nashorn.internal.objects.NativeArray;
-import jdk.nashorn.internal.parser.Lexer.LexerToken;
-import jdk.nashorn.internal.parser.Token;
-import jdk.nashorn.internal.parser.TokenType;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.ArrayType;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.annotations.Immutable;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Lexer.LexerToken;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
 
 /**
  * Literal nodes represent JavaScript values.

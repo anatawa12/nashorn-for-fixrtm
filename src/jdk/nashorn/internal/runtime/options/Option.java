@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.options;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.options;
 
 /**
  * This is an option class that at its most primitive level just wraps a

@@ -23,28 +23,28 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects;
+package com.anatawa12.fixrtm.nashorn.internal.objects;
 
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.Objects;
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Function;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.objects.annotations.Where;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.PropertyListeners;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.Scope;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.events.RuntimeEvent;
-import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
-import jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Where;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyListeners;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Scope;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.events.RuntimeEvent;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.LinkerCallSite;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
 
 /**
  * Nashorn specific debug utils. This is meant for Nashorn developers.

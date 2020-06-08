@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.runtime.logging.DebugLogger.quote;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.quote;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -33,20 +33,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import jdk.nashorn.internal.codegen.Compiler.CompilationPhases;
-import jdk.nashorn.internal.ir.Block;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.LiteralNode;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.Symbol;
-import jdk.nashorn.internal.ir.debug.ASTWriter;
-import jdk.nashorn.internal.ir.debug.PrintVisitor;
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import jdk.nashorn.internal.runtime.CodeInstaller;
-import jdk.nashorn.internal.runtime.RecompilableScriptFunctionData;
-import jdk.nashorn.internal.runtime.ScriptEnvironment;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler.CompilationPhases;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Block;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LiteralNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Symbol;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.ASTWriter;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.PrintVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.CodeInstaller;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.RecompilableScriptFunctionData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
 
 /**
  * A compilation phase is a step in the processes of turning a JavaScript
@@ -551,10 +551,10 @@ abstract class CompilationPhase {
 
     static final CompilationPhase INSTALL_PHASE = new InstallPhase();
 
-    /** start time of transform - used for timing, see {@link jdk.nashorn.internal.runtime.Timing} */
+    /** start time of transform - used for timing, see {@link com.anatawa12.fixrtm.nashorn.internal.runtime.Timing} */
     private long startTime;
 
-    /** start time of transform - used for timing, see {@link jdk.nashorn.internal.runtime.Timing} */
+    /** start time of transform - used for timing, see {@link com.anatawa12.fixrtm.nashorn.internal.runtime.Timing} */
     private long endTime;
 
     /** boolean that is true upon transform completion */

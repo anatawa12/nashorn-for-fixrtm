@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.test.models;
+package com.anatawa12.fixrtm.nashorn.test.models;
 
 public abstract class BigAbstract {
     public static void accept(BigAbstract ba) {

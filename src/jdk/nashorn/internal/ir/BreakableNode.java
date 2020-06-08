@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.codegen.Label;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Label;
 
 /**
  * This class represents a node from which control flow can execute

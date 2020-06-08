@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects.annotations;
+package com.anatawa12.fixrtm.nashorn.internal.objects.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

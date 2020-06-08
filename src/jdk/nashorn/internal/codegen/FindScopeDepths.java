@@ -23,28 +23,28 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.runtime.logging.DebugLogger.quote;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.quote;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import jdk.nashorn.internal.ir.Block;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.LexicalContext;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.Symbol;
-import jdk.nashorn.internal.ir.WithNode;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.RecompilableScriptFunctionData;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
-import jdk.nashorn.internal.runtime.logging.Loggable;
-import jdk.nashorn.internal.runtime.logging.Logger;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Block;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LexicalContext;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Symbol;
+import com.anatawa12.fixrtm.nashorn.internal.ir.WithNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.RecompilableScriptFunctionData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Loggable;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
 
 /**
  * Establishes depth of scope for non local symbols at the start of method.

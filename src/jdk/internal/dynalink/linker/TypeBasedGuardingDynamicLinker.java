@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
 /**
  * A guarding dynamic linker that can determine whether it can link the call site solely based on the type of the first

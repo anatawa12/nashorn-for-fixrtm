@@ -23,29 +23,29 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.linker;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
-import static jdk.nashorn.internal.runtime.JSType.isString;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isString;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Map;
 import javax.script.Bindings;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.TypeBasedGuardingDynamicLinker;
-import jdk.internal.dynalink.support.CallSiteDescriptorFactory;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.internal.lookup.MethodHandleFactory;
-import jdk.nashorn.internal.lookup.MethodHandleFunctionality;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.TypeBasedGuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFunctionality;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 
 /**
  * A Dynalink linker to handle web browser built-in JS (DOM etc.) objects as well

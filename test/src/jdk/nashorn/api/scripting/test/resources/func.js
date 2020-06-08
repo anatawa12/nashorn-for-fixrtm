@@ -23,7 +23,7 @@
  * questions.
  */
 
-// This script is loaded from jdk.nashorn.api.scripting.ScopeTest to test script class sharing and reuse.
+// This script is loaded from com.anatawa12.fixrtm.nashorn.api.scripting.ScopeTest to test script class sharing and reuse.
 
 var scopeVar = 1;
 var global = this;

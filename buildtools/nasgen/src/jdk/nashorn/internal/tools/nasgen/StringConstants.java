@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
@@ -31,12 +31,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import jdk.internal.org.objectweb.asm.Type;
-import jdk.nashorn.internal.runtime.AccessorProperty;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.PrototypeObject;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.Specialization;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.AccessorProperty;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PrototypeObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Specialization;
 
 /**
  * String constants used for code generation/instrumentation.

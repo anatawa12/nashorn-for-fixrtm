@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.linker;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -39,26 +39,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import javax.script.Bindings;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.linker.ConversionComparator;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.GuardedTypeConversion;
-import jdk.internal.dynalink.linker.GuardingTypeConverterFactory;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.TypeBasedGuardingDynamicLinker;
-import jdk.internal.dynalink.support.Guards;
-import jdk.internal.dynalink.support.LinkerServicesImpl;
-import jdk.internal.dynalink.support.Lookup;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.api.scripting.ScriptUtils;
-import jdk.nashorn.internal.objects.NativeArray;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ListAdapter;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedTypeConversion;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingTypeConverterFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.TypeBasedGuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Guards;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.LinkerServicesImpl;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptUtils;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ListAdapter;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
 
 /**
  * This is the main dynamic linker for Nashorn. It is used for linking all {@link ScriptObject} and its subclasses (this

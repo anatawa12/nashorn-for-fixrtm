@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir.debug;
+package com.anatawa12.fixrtm.nashorn.internal.ir.debug;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandle;
@@ -45,33 +45,33 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import jdk.internal.dynalink.support.NameCodec;
-import jdk.nashorn.internal.codegen.Compiler;
-import jdk.nashorn.internal.codegen.Compiler.CompilationPhases;
-import jdk.nashorn.internal.codegen.CompilerConstants;
-import jdk.nashorn.internal.codegen.FunctionSignature;
-import jdk.nashorn.internal.codegen.Namespace;
-import jdk.nashorn.internal.codegen.OptimisticTypesPersistence;
-import jdk.nashorn.internal.codegen.TypeMap;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.Block;
-import jdk.nashorn.internal.ir.ForNode;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.LexicalContext;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.SwitchNode;
-import jdk.nashorn.internal.ir.Symbol;
-import jdk.nashorn.internal.ir.TryNode;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.parser.Parser;
-import jdk.nashorn.internal.parser.Token;
-import jdk.nashorn.internal.parser.TokenType;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
-import jdk.nashorn.internal.runtime.logging.Loggable;
-import jdk.nashorn.internal.runtime.logging.Logger;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.NameCodec;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler.CompilationPhases;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.FunctionSignature;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Namespace;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.OptimisticTypesPersistence;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.TypeMap;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Block;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ForNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LexicalContext;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SwitchNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Symbol;
+import com.anatawa12.fixrtm.nashorn.internal.ir.TryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Parser;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Loggable;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 /**
  * This is a subclass that represents a script function that may be regenerated,
  * for example with specialization based on call site types, or lazily generated.

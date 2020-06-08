@@ -23,13 +23,13 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting;
+package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import java.util.ArrayList;
 import java.util.List;
-import jdk.nashorn.internal.codegen.CompilerConstants;
-import jdk.nashorn.internal.runtime.ECMAErrors;
-import jdk.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 
 /**
  * This is base exception for all Nashorn exceptions. These originate from

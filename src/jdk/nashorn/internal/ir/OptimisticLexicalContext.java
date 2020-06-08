@@ -22,14 +22,14 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
-import jdk.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
 
 /**
  * Lexical context that keeps track of optimistic assumptions (if any)

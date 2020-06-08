@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.codegen.CompileUnit;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompileUnit;
 
 /**
  * Marker interface for things in the IR that can hold compile units.

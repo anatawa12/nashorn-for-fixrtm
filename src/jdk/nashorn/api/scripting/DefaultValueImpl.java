@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting;
+package com.anatawa12.fixrtm.nashorn.api.scripting;
 
-import jdk.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 
 /**
  * Default implementation of {@link JSObject#getDefaultValue(Class)}. Isolated into a separate class mostly so

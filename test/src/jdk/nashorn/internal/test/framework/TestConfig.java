@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.framework;
+package com.anatawa12.fixrtm.nashorn.internal.test.framework;
 
 /**
  * Configuration info for script tests.

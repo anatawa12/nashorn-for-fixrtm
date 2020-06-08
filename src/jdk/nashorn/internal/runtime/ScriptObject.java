@@ -23,30 +23,30 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
-import static jdk.nashorn.internal.codegen.CompilerConstants.virtualCall;
-import static jdk.nashorn.internal.codegen.CompilerConstants.virtualCallNoLookup;
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.ECMAErrors.referenceError;
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
-import static jdk.nashorn.internal.runtime.JSType.UNDEFINED_DOUBLE;
-import static jdk.nashorn.internal.runtime.JSType.UNDEFINED_INT;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.CONFIGURABLE;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.ENUMERABLE;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.SET;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.VALUE;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
-import static jdk.nashorn.internal.runtime.arrays.ArrayIndex.getArrayIndex;
-import static jdk.nashorn.internal.runtime.arrays.ArrayIndex.isValidArrayIndex;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.isScopeFlag;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.isStrictFlag;
-import static jdk.nashorn.internal.runtime.linker.NashornGuards.explicitInstanceOfCheck;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.virtualCall;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.virtualCallNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.referenceError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.UNDEFINED_DOUBLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.UNDEFINED_INT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.CONFIGURABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.ENUMERABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.GET;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.SET;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.VALUE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex.getArrayIndex;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex.isValidArrayIndex;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.isScopeFlag;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.isStrictFlag;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornGuards.explicitInstanceOfCheck;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -64,24 +64,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.LongAdder;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.support.CallSiteDescriptorFactory;
-import jdk.nashorn.internal.codegen.CompilerConstants.Call;
-import jdk.nashorn.internal.codegen.ObjectClassGenerator;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.lookup.Lookup;
-import jdk.nashorn.internal.objects.AccessorPropertyDescriptor;
-import jdk.nashorn.internal.objects.DataPropertyDescriptor;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.objects.NativeArray;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
-import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
-import jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
-import jdk.nashorn.internal.runtime.linker.NashornGuards;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.Call;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup;
+import com.anatawa12.fixrtm.nashorn.internal.objects.AccessorPropertyDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.DataPropertyDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.LinkerCallSite;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornGuards;
 
 /**
  * Base class for generic JavaScript objects.
@@ -762,11 +762,11 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
      * <p>
      * Find a property in the prototype hierarchy. Note: this is final and not
      * a good idea to override. If you have to, use
-     * {jdk.nashorn.internal.objects.NativeArray{@link #getProperty(String)} or
-     * {jdk.nashorn.internal.objects.NativeArray{@link #getPropertyDescriptor(String)} as the
+     * {com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray{@link #getProperty(String)} or
+     * {com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray{@link #getPropertyDescriptor(String)} as the
      * overriding way to find array properties
      *
-     * @see jdk.nashorn.internal.objects.NativeArray
+     * @see com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray
      *
      * @param key  Property key.
      * @param deep Whether the search should look up proto chain.
@@ -783,11 +783,11 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
      * Find a property in the prototype hierarchy. Note: this is not a good idea
      * to override except as it was done in {@link WithObject}.
      * If you have to, use
-     * {jdk.nashorn.internal.objects.NativeArray{@link #getProperty(String)} or
-     * {jdk.nashorn.internal.objects.NativeArray{@link #getPropertyDescriptor(String)} as the
+     * {com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray{@link #getProperty(String)} or
+     * {com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray{@link #getPropertyDescriptor(String)} as the
      * overriding way to find array properties
      *
-     * @see jdk.nashorn.internal.objects.NativeArray
+     * @see com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray
      *
      * @param key  Property key.
      * @param deep Whether the search should look up proto chain.
@@ -1148,7 +1148,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
     }
 
     /**
-     * Overridden by {@link jdk.nashorn.internal.objects.NativeArguments} class (internal use.)
+     * Overridden by {@link com.anatawa12.fixrtm.nashorn.internal.objects.NativeArguments} class (internal use.)
      * Used for argument access in a vararg function using parameter name.
      * Returns the argument at a given key (index)
      *
@@ -1161,7 +1161,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
     }
 
     /**
-     * Overridden by {@link jdk.nashorn.internal.objects.NativeArguments} class (internal use.)
+     * Overridden by {@link com.anatawa12.fixrtm.nashorn.internal.objects.NativeArguments} class (internal use.)
      * Used for argument access in a vararg function using parameter name.
      * Returns the argument at a given key (index)
      *

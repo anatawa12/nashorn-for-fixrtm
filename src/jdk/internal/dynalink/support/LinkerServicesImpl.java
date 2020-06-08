@@ -81,16 +81,16 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.linker.ConversionComparator.Comparison;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.MethodHandleTransformer;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator.Comparison;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
 
 /**
  * Default implementation of the {@link LinkerServices} interface.

@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen.types;
+package com.anatawa12.fixrtm.nashorn.internal.codegen.types;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.BIPUSH;
 import static jdk.internal.org.objectweb.asm.Opcodes.I2D;
@@ -49,13 +49,13 @@ import static jdk.internal.org.objectweb.asm.Opcodes.ISUB;
 import static jdk.internal.org.objectweb.asm.Opcodes.IUSHR;
 import static jdk.internal.org.objectweb.asm.Opcodes.IXOR;
 import static jdk.internal.org.objectweb.asm.Opcodes.SIPUSH;
-import static jdk.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
-import static jdk.nashorn.internal.runtime.JSType.UNDEFINED_INT;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCallNoLookup;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.UNDEFINED_INT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 
 import jdk.internal.org.objectweb.asm.MethodVisitor;
-import jdk.nashorn.internal.codegen.CompilerConstants;
-import jdk.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 
 /**
  * Type class: INT

@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.beans;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import java.io.Serializable;
 import java.util.Objects;

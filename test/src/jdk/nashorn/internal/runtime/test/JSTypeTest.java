@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.test;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.test;
 
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
  * Tests for JSType methods.
  *
  * @test
- * @run testng jdk.nashorn.internal.runtime.test.JSTypeTest
+ * @run testng com.anatawa12.fixrtm.nashorn.internal.runtime.test.JSTypeTest
  */
 public class JSTypeTest {
     /**

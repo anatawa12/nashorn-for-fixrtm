@@ -31,7 +31,7 @@
  * @run
  */
 
-var NullProvider = Java.type("jdk.nashorn.test.models.NullProvider");
+var NullProvider = Java.type("com.anatawa12.fixrtm.nashorn.test.models.NullProvider");
 
 if (!NullProvider.getBoolean()) { print("yay"); }
 print(NullProvider.getLong() * (1 << 33));

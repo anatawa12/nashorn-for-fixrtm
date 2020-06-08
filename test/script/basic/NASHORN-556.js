@@ -22,7 +22,7 @@
  */
 
 /*
- * NASHORN-556: Need more tests to exercise code in jdk.nashorn.internal.runtime.array package.
+ * NASHORN-556: Need more tests to exercise code in com.anatawa12.fixrtm.nashorn.internal.runtime.array package.
  *
  * @test
  * @run

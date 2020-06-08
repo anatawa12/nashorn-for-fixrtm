@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,16 +31,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import jdk.internal.org.objectweb.asm.Type;
-import jdk.nashorn.internal.objects.annotations.Constructor;
-import jdk.nashorn.internal.objects.annotations.Function;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Property;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.objects.annotations.Setter;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
-import jdk.nashorn.internal.objects.annotations.Where;
-import jdk.nashorn.internal.tools.nasgen.MemberInfo.Kind;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Constructor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Getter;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Property;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Setter;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Where;
+import com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.MemberInfo.Kind;
 
 /**
  * All annotation information from a class that is annotated with

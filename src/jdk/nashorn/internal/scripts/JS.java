@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.scripts;
+package com.anatawa12.fixrtm.nashorn.internal.scripts;
 
 /**
  * Root of script classes.

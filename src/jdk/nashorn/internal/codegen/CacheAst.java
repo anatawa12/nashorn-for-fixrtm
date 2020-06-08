@@ -23,16 +23,16 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.Statement;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import jdk.nashorn.internal.runtime.RecompilableScriptFunctionData;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Statement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.RecompilableScriptFunctionData;
 
 class CacheAst extends SimpleNodeVisitor {
     private final Deque<RecompilableScriptFunctionData> dataStack = new ArrayDeque<>();

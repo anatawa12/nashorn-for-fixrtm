@@ -23,30 +23,30 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.runtime.Property.NOT_CONFIGURABLE;
-import static jdk.nashorn.internal.runtime.Property.NOT_ENUMERABLE;
-import static jdk.nashorn.internal.runtime.Property.NOT_WRITABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Property.NOT_CONFIGURABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Property.NOT_ENUMERABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Property.NOT_WRITABLE;
 
 import java.lang.invoke.MethodType;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.AccessNode;
-import jdk.nashorn.internal.ir.CallNode;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.IndexNode;
-import jdk.nashorn.internal.ir.Optimistic;
-import jdk.nashorn.internal.objects.ArrayBufferView;
-import jdk.nashorn.internal.objects.NativeArray;
-import jdk.nashorn.internal.runtime.FindProperty;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.Property;
-import jdk.nashorn.internal.runtime.RecompilableScriptFunctionData;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.AccessNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CallNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IndexNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Optimistic;
+import com.anatawa12.fixrtm.nashorn.internal.objects.ArrayBufferView;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.FindProperty;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Property;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.RecompilableScriptFunctionData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 
 /**
  * Functionality for using a runtime scope to look up value types.

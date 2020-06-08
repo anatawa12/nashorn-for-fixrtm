@@ -23,28 +23,28 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.test;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.test;
 
-import static jdk.nashorn.internal.runtime.Source.sourceFor;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 import java.util.Map;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 import org.testng.annotations.Test;
 
 /**
  * Basic Context API tests.
  *
  * @test
- * @run testng jdk.nashorn.internal.runtime.test.ContextTest
+ * @run testng com.anatawa12.fixrtm.nashorn.internal.runtime.test.ContextTest
  */
 @SuppressWarnings("javadoc")
 public class ContextTest {

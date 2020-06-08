@@ -81,15 +81,15 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.DynamicLinker;
-import jdk.internal.dynalink.DynamicLinkerFactory;
-import jdk.internal.dynalink.linker.ConversionComparator.Comparison;
-import jdk.internal.dynalink.support.TypeUtilities;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinkerFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator.Comparison;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
 
 /**
  * Interface for services provided to {@link GuardingDynamicLinker} instances by the {@link DynamicLinker} that owns
@@ -120,7 +120,7 @@ public interface LinkerServices {
      * Similar to {@link #asType(MethodHandle, MethodType)} except it only converts the return type of the method handle
      * when it can be done using a conversion that loses neither precision nor magnitude, otherwise it leaves it
      * unchanged. The idea is that other conversions should not be performed by individual linkers, but instead the
-     * {@link DynamicLinkerFactory#setPrelinkFilter(jdk.internal.dynalink.GuardedInvocationFilter) pre-link filter of
+     * {@link DynamicLinkerFactory#setPrelinkFilter(com.anatawa12.fixrtm.nashorn.dynalink.GuardedInvocationFilter) pre-link filter of
      * the dynamic linker} should implement the strategy of dealing with potentially lossy return type conversions in a
      * manner specific to the language runtime.
      *

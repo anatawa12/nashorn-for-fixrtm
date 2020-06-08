@@ -81,9 +81,9 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -92,8 +92,8 @@ import java.lang.invoke.SwitchPoint;
 import java.lang.invoke.WrongMethodTypeException;
 import java.util.List;
 import java.util.Objects;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.support.Guards;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Guards;
 
 /**
  * Represents a conditionally valid method handle. It is an immutable triple of an invocation method handle, a guard

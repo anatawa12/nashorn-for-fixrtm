@@ -81,17 +81,17 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
-import jdk.internal.dynalink.DynamicLinkerFactory;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinkerFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
 
 /**
  * Provides methods for automatic discovery of all guarding dynamic linkers listed in the
- * <tt>/META-INF/services/jdk.internal.dynalink.linker.GuardingDynamicLinker</tt> resources of all JAR files for a
+ * <tt>/META-INF/services/com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker</tt> resources of all JAR files for a
  * particular class loader. Ordinarily, you will not use this class directly, but you will use a
  * {@link DynamicLinkerFactory} instead.
  */

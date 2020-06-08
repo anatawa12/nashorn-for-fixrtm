@@ -66,7 +66,7 @@ Nashorn supports javax.script API. It is possible to drop nashorn.jar in
 class path and request for "nashorn" script engine from
 javax.script.ScriptEngineManager. 
 
-Look for samples under the directory test/src/jdk/nashorn/api/scripting/.
+Look for samples under the directory test/src/com/anatawa12/fixrtm/nashorn/api/scripting/.
 
 - Documentation
 

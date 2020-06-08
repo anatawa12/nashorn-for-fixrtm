@@ -22,26 +22,26 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.FIRST_PROGRAM_POINT;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.MAX_PROGRAM_POINT_VALUE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.FIRST_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.MAX_PROGRAM_POINT_VALUE;
 
 import java.util.HashSet;
 import java.util.Set;
-import jdk.nashorn.internal.IntDeque;
-import jdk.nashorn.internal.ir.AccessNode;
-import jdk.nashorn.internal.ir.BinaryNode;
-import jdk.nashorn.internal.ir.CallNode;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.IndexNode;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.Optimistic;
-import jdk.nashorn.internal.ir.UnaryNode;
-import jdk.nashorn.internal.ir.VarNode;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.IntDeque;
+import com.anatawa12.fixrtm.nashorn.internal.ir.AccessNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CallNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IndexNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Optimistic;
+import com.anatawa12.fixrtm.nashorn.internal.ir.UnaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.VarNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
 
 /**
  * Find program points in the code that are needed for optimistic assumptions

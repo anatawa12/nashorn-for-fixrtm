@@ -17,10 +17,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 @SuppressWarnings("javadoc")
 public final class CodeRangeBuffer implements Cloneable {

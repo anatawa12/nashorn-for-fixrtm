@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen.types;
+package com.anatawa12.fixrtm.nashorn.internal.codegen.types;
 
 /**
  * This class represents a numeric type that can be used for bit operations.

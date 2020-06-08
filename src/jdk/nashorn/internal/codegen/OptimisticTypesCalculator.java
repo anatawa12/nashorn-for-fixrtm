@@ -23,37 +23,37 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
 
 import java.util.ArrayDeque;
 import java.util.BitSet;
 import java.util.Deque;
-import jdk.nashorn.internal.ir.AccessNode;
-import jdk.nashorn.internal.ir.BinaryNode;
-import jdk.nashorn.internal.ir.CallNode;
-import jdk.nashorn.internal.ir.CatchNode;
-import jdk.nashorn.internal.ir.Expression;
-import jdk.nashorn.internal.ir.ExpressionStatement;
-import jdk.nashorn.internal.ir.ForNode;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.IfNode;
-import jdk.nashorn.internal.ir.IndexNode;
-import jdk.nashorn.internal.ir.JoinPredecessorExpression;
-import jdk.nashorn.internal.ir.LoopNode;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.Optimistic;
-import jdk.nashorn.internal.ir.PropertyNode;
-import jdk.nashorn.internal.ir.Symbol;
-import jdk.nashorn.internal.ir.TernaryNode;
-import jdk.nashorn.internal.ir.UnaryNode;
-import jdk.nashorn.internal.ir.VarNode;
-import jdk.nashorn.internal.ir.WhileNode;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import jdk.nashorn.internal.parser.TokenType;
-import jdk.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.ir.AccessNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CallNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CatchNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Expression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ExpressionStatement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ForNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IfNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IndexNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JoinPredecessorExpression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LoopNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Optimistic;
+import com.anatawa12.fixrtm.nashorn.internal.ir.PropertyNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Symbol;
+import com.anatawa12.fixrtm.nashorn.internal.ir.TernaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.UnaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.VarNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.WhileNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 
 /**
  * Assigns optimistic types to expressions that can have them. This class mainly contains logic for which expressions

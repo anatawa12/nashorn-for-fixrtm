@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting.test;
+package com.anatawa12.fixrtm.nashorn.api.scripting.test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -41,13 +41,13 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.AbstractJSObject;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import com.anatawa12.fixrtm.nashorn.api.scripting.AbstractJSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror;
 import org.testng.annotations.Test;
 
 /**
- * Tests to check jdk.nashorn.api.scripting.ScriptObjectMirror API.
+ * Tests to check com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror API.
  */
 @SuppressWarnings("javadoc")
 public class ScriptObjectMirrorTest {
@@ -359,7 +359,7 @@ public class ScriptObjectMirrorTest {
         final ScriptEngine engine = engineManager.getEngineByName("nashorn");
         final Invocable invocable = (Invocable)engine;
         engine.eval("function apply(obj) { " +
-            " return obj instanceof Packages.jdk.nashorn.api.scripting.ScriptObjectMirror; " +
+            " return obj instanceof Packages.com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror; " +
             "}");
         @SuppressWarnings("unchecked")
         final Function<Object,Object> func = invocable.getInterface(Function.class);

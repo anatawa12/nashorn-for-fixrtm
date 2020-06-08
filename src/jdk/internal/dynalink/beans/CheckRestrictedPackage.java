@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.beans;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import java.lang.reflect.Modifier;
 import java.security.AccessControlContext;

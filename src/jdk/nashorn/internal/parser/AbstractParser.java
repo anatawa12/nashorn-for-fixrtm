@@ -23,25 +23,25 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
-import static jdk.nashorn.internal.parser.TokenType.COMMENT;
-import static jdk.nashorn.internal.parser.TokenType.DIRECTIVE_COMMENT;
-import static jdk.nashorn.internal.parser.TokenType.EOF;
-import static jdk.nashorn.internal.parser.TokenType.EOL;
-import static jdk.nashorn.internal.parser.TokenType.IDENT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.COMMENT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.DIRECTIVE_COMMENT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.EOF;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.EOL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.IDENT;
 import java.util.HashMap;
 import java.util.Map;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.LiteralNode;
-import jdk.nashorn.internal.parser.Lexer.LexerToken;
-import jdk.nashorn.internal.parser.Lexer.RegexToken;
-import jdk.nashorn.internal.runtime.ECMAErrors;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.JSErrorType;
-import jdk.nashorn.internal.runtime.ParserException;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.regexp.RegExpFactory;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LiteralNode;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Lexer.LexerToken;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Lexer.RegexToken;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSErrorType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExpFactory;
 
 /**
  * Base class for parsers.

@@ -23,32 +23,32 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects;
+package com.anatawa12.fixrtm.nashorn.internal.objects;
 
-import static jdk.nashorn.internal.runtime.ECMAErrors.rangeError;
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
-import static jdk.nashorn.internal.runtime.Source.sourceFor;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.rangeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import jdk.internal.dynalink.support.Lookup;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Constructor;
-import jdk.nashorn.internal.objects.annotations.Function;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.parser.Parser;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ParserException;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptEnvironment;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Constructor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Parser;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 
 /**
  * ECMA 15.3 Function Objects

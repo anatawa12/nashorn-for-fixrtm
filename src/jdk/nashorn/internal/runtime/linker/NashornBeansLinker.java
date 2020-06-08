@@ -23,30 +23,30 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.linker;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.beans.BeansLinker;
-import jdk.internal.dynalink.linker.ConversionComparator.Comparison;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.MethodHandleTransformer;
-import jdk.internal.dynalink.support.DefaultInternalObjectFilter;
-import jdk.internal.dynalink.support.Lookup;
-import jdk.nashorn.api.scripting.ScriptUtils;
-import jdk.nashorn.internal.runtime.ConsString;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator.Comparison;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.DefaultInternalObjectFilter;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptUtils;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ConsString;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 
 /**
  * This linker delegates to a {@code BeansLinker} but passes it a special linker services object that has a modified

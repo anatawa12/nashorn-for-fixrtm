@@ -30,11 +30,11 @@
  */
 
 import java.nio.DoubleBuffer;
-import jdk.nashorn.api.scripting.AbstractJSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.AbstractJSObject;
 
 /**
  * Simple class demonstrating pluggable script object
- * implementation. By implementing jdk.nashorn.api.scripting.JSObject
+ * implementation. By implementing com.anatawa12.fixrtm.nashorn.api.scripting.JSObject
  * (or extending AbstractJSObject which implements it), you
  * can supply a friendly script object. Nashorn will call
  * 'magic' methods on such a class on 'obj.foo, obj.foo = 33,

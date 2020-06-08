@@ -23,18 +23,18 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects;
+package com.anatawa12.fixrtm.nashorn.internal.objects;
 
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Property;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.objects.annotations.Setter;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.regexp.RegExpResult;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Getter;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Property;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Setter;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExpResult;
 
 /**
  * Objects of this class are used to represent return values from

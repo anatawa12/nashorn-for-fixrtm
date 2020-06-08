@@ -22,14 +22,14 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.runtime.arrays;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
 import java.nio.ByteBuffer;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.runtime.PropertyDescriptor;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 
 /**
  * Implementation of {@link ArrayData} that wraps a nio ByteBuffer

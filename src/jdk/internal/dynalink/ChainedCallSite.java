@@ -81,16 +81,16 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicReference;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.support.AbstractRelinkableCallSite;
-import jdk.internal.dynalink.support.Lookup;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractRelinkableCallSite;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 
 /**
  * A relinkable call site that maintains a chain of linked method handles. In the default implementation, up to 8 method

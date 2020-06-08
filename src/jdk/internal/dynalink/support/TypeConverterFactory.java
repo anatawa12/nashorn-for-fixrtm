@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -91,13 +91,13 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.LinkedList;
 import java.util.List;
-import jdk.internal.dynalink.linker.ConversionComparator;
-import jdk.internal.dynalink.linker.ConversionComparator.Comparison;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.GuardedTypeConversion;
-import jdk.internal.dynalink.linker.GuardingTypeConverterFactory;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.MethodTypeConversionStrategy;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator.Comparison;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedTypeConversion;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingTypeConverterFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodTypeConversionStrategy;
 
 /**
  * A factory for type converters. This class is the main implementation behind the

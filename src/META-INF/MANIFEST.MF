@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: jdk.nashorn.tools.Shell
+Main-Class: com.anatawa12.fixrtm.nashorn.tools.Shell
 
-Name: jdk/nashorn/
+Name: com/anatawa12/fixrtm/nashorn/
 Implementation-Vendor: Oracle Corporation

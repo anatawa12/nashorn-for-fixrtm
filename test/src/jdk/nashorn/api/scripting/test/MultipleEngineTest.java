@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting.test;
+package com.anatawa12.fixrtm.nashorn.api.scripting.test;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  * independently.
  *
  * @test
- * @run testng jdk.nashorn.api.scripting.test.MultipleEngineTest
+ * @run testng com.anatawa12.fixrtm.nashorn.api.scripting.test.MultipleEngineTest
  */
 @SuppressWarnings("javadoc")
 public class MultipleEngineTest {

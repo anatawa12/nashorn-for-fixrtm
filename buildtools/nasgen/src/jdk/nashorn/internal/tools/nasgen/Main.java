@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import java.io.File;
 import java.io.FileInputStream;

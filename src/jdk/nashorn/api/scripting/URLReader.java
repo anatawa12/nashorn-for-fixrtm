@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting;
+package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Objects;
-import jdk.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
 
 /**
  * A Reader that reads from a URL. Used to make sure that the reader

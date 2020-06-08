@@ -23,36 +23,36 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir.debug;
+package com.anatawa12.fixrtm.nashorn.internal.ir.debug;
 
 import java.util.List;
-import jdk.nashorn.internal.ir.BinaryNode;
-import jdk.nashorn.internal.ir.Block;
-import jdk.nashorn.internal.ir.BlockStatement;
-import jdk.nashorn.internal.ir.BreakNode;
-import jdk.nashorn.internal.ir.CaseNode;
-import jdk.nashorn.internal.ir.CatchNode;
-import jdk.nashorn.internal.ir.ContinueNode;
-import jdk.nashorn.internal.ir.ExpressionStatement;
-import jdk.nashorn.internal.ir.ForNode;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.IdentNode;
-import jdk.nashorn.internal.ir.IfNode;
-import jdk.nashorn.internal.ir.JoinPredecessor;
-import jdk.nashorn.internal.ir.JoinPredecessorExpression;
-import jdk.nashorn.internal.ir.LabelNode;
-import jdk.nashorn.internal.ir.LocalVariableConversion;
-import jdk.nashorn.internal.ir.Node;
-import jdk.nashorn.internal.ir.SplitNode;
-import jdk.nashorn.internal.ir.Statement;
-import jdk.nashorn.internal.ir.SwitchNode;
-import jdk.nashorn.internal.ir.ThrowNode;
-import jdk.nashorn.internal.ir.TryNode;
-import jdk.nashorn.internal.ir.UnaryNode;
-import jdk.nashorn.internal.ir.VarNode;
-import jdk.nashorn.internal.ir.WhileNode;
-import jdk.nashorn.internal.ir.WithNode;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Block;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BlockStatement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.BreakNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CaseNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.CatchNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ContinueNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ExpressionStatement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ForNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IdentNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.IfNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JoinPredecessor;
+import com.anatawa12.fixrtm.nashorn.internal.ir.JoinPredecessorExpression;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LabelNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.LocalVariableConversion;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Node;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SplitNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.Statement;
+import com.anatawa12.fixrtm.nashorn.internal.ir.SwitchNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.ThrowNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.TryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.UnaryNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.VarNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.WhileNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.WithNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.SimpleNodeVisitor;
 
 /**
  * Print out the AST as human readable source code.

@@ -23,18 +23,18 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.__DIR__;
-import static jdk.nashorn.internal.codegen.CompilerConstants.__FILE__;
-import static jdk.nashorn.internal.codegen.CompilerConstants.__LINE__;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.__DIR__;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.__FILE__;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.__LINE__;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
-import jdk.nashorn.internal.parser.Token;
-import jdk.nashorn.internal.parser.TokenType;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.annotations.Immutable;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.internal.parser.TokenType;
 
 /**
  * IR representation for an identifier.

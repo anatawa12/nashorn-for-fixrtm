@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.ir.visitor.NodeVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.ir.visitor.NodeVisitor;
 
 /**
  * Synthetic AST node that represents return from a split fragment of a split function for control flow reasons (break

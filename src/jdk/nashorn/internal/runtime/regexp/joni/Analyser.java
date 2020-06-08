@@ -17,34 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.BitStatus.bsAll;
-import static jdk.nashorn.internal.runtime.regexp.joni.BitStatus.bsAt;
-import static jdk.nashorn.internal.runtime.regexp.joni.BitStatus.bsOnAt;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isFindCondition;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isIgnoreCase;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isMultiline;
-import static jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode.newAltNode;
-import static jdk.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode.isRepeatInfinite;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitStatus.bsAll;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitStatus.bsAt;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitStatus.bsOnAt;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isFindCondition;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isIgnoreCase;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isMultiline;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode.newAltNode;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode.isRepeatInfinite;
 import java.util.HashSet;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.AnchorNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.BackRefNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.EncloseNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.Node;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.AnchorType;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.NodeType;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StackPopLevel;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.TargetInfo;
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.ObjPtr;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.AnchorNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.BackRefNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.EncloseNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.Node;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.QuantifierNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.AnchorType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.NodeType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.StackPopLevel;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.TargetInfo;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.encoding.ObjPtr;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 final class Analyser extends Parser {
 

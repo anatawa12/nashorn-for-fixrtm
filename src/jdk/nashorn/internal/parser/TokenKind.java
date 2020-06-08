@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
 /**
  * Classification of token types.

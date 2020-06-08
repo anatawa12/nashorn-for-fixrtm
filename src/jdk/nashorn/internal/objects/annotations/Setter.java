@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects.annotations;
+package com.anatawa12.fixrtm.nashorn.internal.objects.annotations;
 
-import static jdk.nashorn.internal.objects.annotations.Attribute.DEFAULT_ATTRIBUTES;
+import static com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute.DEFAULT_ATTRIBUTES;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -81,12 +81,12 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MutableCallSite;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.RelinkableCallSite;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.RelinkableCallSite;
 
 /**
  * A basic implementation of the {@link RelinkableCallSite} as a {@link MutableCallSite} subclass.

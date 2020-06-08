@@ -23,18 +23,18 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.PRIMITIVE_FIELD_TYPE;
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.createGetter;
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.createSetter;
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.getFieldCount;
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.getFieldName;
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.lookup.MethodHandleFactory.stripName;
-import static jdk.nashorn.internal.runtime.JSType.getAccessorTypeIndex;
-import static jdk.nashorn.internal.runtime.JSType.getNumberOfAccessorTypes;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator.PRIMITIVE_FIELD_TYPE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator.createGetter;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator.createSetter;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator.getFieldCount;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator.getFieldName;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory.stripName;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.getAccessorTypeIndex;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.getNumberOfAccessorTypes;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.invoke.MethodHandle;
@@ -42,10 +42,10 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.SwitchPoint;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import jdk.nashorn.internal.codegen.ObjectClassGenerator;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.lookup.Lookup;
-import jdk.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 
 /**
  * An AccessorProperty is the most generic property type. An AccessorProperty is

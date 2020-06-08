@@ -23,18 +23,18 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.linker;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.support.AbstractCallSiteDescriptor;
-import jdk.internal.dynalink.support.CallSiteDescriptorFactory;
-import jdk.nashorn.internal.ir.debug.NashornTextifier;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractCallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.NashornTextifier;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 
 /**
  * Nashorn-specific implementation of Dynalink's {@link CallSiteDescriptor}. The reason we have our own subclass is that

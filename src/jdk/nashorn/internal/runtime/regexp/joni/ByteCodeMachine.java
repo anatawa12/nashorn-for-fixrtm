@@ -17,21 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.BitStatus.bsAt;
-import static jdk.nashorn.internal.runtime.regexp.joni.EncodingHelper.isNewLine;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isFindCondition;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isFindLongest;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isFindNotEmpty;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isNotBol;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isNotEol;
-import static jdk.nashorn.internal.runtime.regexp.joni.Option.isPosixRegion;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitStatus.bsAt;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.EncodingHelper.isNewLine;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isFindCondition;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isFindLongest;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isFindNotEmpty;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isNotBol;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isNotEol;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option.isPosixRegion;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.CClassNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.OPCode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 
 class ByteCodeMachine extends StackMachine {
     private int bestLen;          // return value

@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.tools;
+package com.anatawa12.fixrtm.nashorn.tools;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,7 +39,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import com.anatawa12.fixrtm.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * This shell is designed to launch a JavaFX application written in Nashorn JavaScript.

@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting.test;
+package com.anatawa12.fixrtm.nashorn.api.scripting.test;
 
 import static org.testng.Assert.fail;
 import java.lang.reflect.InvocationHandler;
@@ -32,8 +32,8 @@ import java.lang.reflect.Proxy;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.ClassFilter;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ClassFilter;
+import com.anatawa12.fixrtm.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.testng.annotations.Test;
 
 /**

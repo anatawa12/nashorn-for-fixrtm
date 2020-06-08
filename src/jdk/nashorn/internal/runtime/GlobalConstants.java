@@ -23,14 +23,14 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.staticCall;
-import static jdk.nashorn.internal.codegen.CompilerConstants.virtualCall;
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.getProgramPoint;
-import static jdk.nashorn.internal.runtime.logging.DebugLogger.quote;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCall;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.virtualCall;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.getProgramPoint;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.quote;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -40,16 +40,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.DynamicLinker;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.nashorn.internal.lookup.Lookup;
-import jdk.nashorn.internal.lookup.MethodHandleFactory;
-import jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
-import jdk.nashorn.internal.runtime.logging.Loggable;
-import jdk.nashorn.internal.runtime.logging.Logger;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Loggable;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
 
 /**
  * Each context owns one of these. This is basically table of accessors

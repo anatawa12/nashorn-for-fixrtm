@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.beans;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
@@ -92,7 +92,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import jdk.internal.dynalink.support.Lookup;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 
 /**
  * Base for classes that expose class field and method information to an {@link AbstractJavaLinker}. There are

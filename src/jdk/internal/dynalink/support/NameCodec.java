@@ -81,9 +81,9 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import jdk.internal.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 
 /**
  * Implements the name mangling and demangling as specified by John Rose's

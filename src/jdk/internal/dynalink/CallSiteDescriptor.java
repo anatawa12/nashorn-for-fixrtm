@@ -81,11 +81,11 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.support.CallSiteDescriptorFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
 
 /**
  * An immutable descriptor of a call site. It is an immutable object that contains all the information about a call

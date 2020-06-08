@@ -23,17 +23,17 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.arrays;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
-import static jdk.nashorn.internal.codegen.CompilerConstants.specialCall;
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.specialCall;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
-import jdk.internal.dynalink.support.TypeUtilities;
-import jdk.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 
 /**
  * Implementation of {@link ArrayData} as soon as a double has been

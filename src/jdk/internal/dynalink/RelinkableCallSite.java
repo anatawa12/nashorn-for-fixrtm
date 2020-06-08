@@ -81,13 +81,13 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MutableCallSite;
 import java.lang.invoke.VolatileCallSite;
-import jdk.internal.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 
 /**
  * Interface for relinkable call sites. Language runtimes wishing to use this framework must use subclasses of

@@ -23,25 +23,25 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.test;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.test;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 import javax.script.Bindings;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.internal.objects.NativeArray;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror;
+import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 import org.testng.annotations.Test;
 
 /**
  * @test
  * @bug 8078414
  * @summary Test that arbitrary classes can't be converted to mirror's superclasses/interfaces.
- * @run testng jdk.nashorn.internal.runtime.test.JDK_8078414_Test
+ * @run testng com.anatawa12.fixrtm.nashorn.internal.runtime.test.JDK_8078414_Test
  */
 public class JDK_8078414_Test {
     @Test

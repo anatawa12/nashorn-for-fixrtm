@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
 /**
  * Utility for scanning thru a char array.

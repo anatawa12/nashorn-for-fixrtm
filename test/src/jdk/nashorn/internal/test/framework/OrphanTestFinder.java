@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.framework;
+package com.anatawa12.fixrtm.nashorn.internal.test.framework;
 
 import java.util.Set;
 import org.testng.Assert;

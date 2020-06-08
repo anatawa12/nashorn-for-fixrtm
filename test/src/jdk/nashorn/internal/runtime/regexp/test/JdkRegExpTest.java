@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.regexp.test;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.test;
 
-import jdk.nashorn.internal.runtime.regexp.RegExp;
-import jdk.nashorn.internal.runtime.regexp.RegExpFactory;
-import jdk.nashorn.internal.runtime.regexp.RegExpMatcher;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExp;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExpFactory;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.RegExpMatcher;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
  * Basic tests for the JDK based RegExp implementation.
  *
  * @test
- * @run testng jdk.nashorn.internal.runtime.regexp.test.JdkRegExpTest
+ * @run testng com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.test.JdkRegExpTest
  */
 public class JdkRegExpTest {
 

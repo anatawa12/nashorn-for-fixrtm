@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects;
+package com.anatawa12.fixrtm.nashorn.internal.objects;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -39,31 +39,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import jdk.internal.dynalink.beans.BeansLinker;
-import jdk.internal.dynalink.beans.StaticClass;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.support.CallSiteDescriptorFactory;
-import jdk.internal.dynalink.support.LinkRequestImpl;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.internal.lookup.Lookup;
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Constructor;
-import jdk.nashorn.internal.objects.annotations.Function;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.objects.annotations.Where;
-import jdk.nashorn.internal.runtime.AccessorProperty;
-import jdk.nashorn.internal.runtime.ECMAException;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.Property;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
-import jdk.nashorn.internal.runtime.linker.InvokeByName;
-import jdk.nashorn.internal.runtime.linker.NashornBeansLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.LinkRequestImpl;
+import com.anatawa12.fixrtm.nashorn.api.scripting.ScriptObjectMirror;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Constructor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Where;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.AccessorProperty;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Property;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.InvokeByName;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornBeansLinker;
 
 /**
  * ECMA 15.2 Object objects
@@ -585,7 +585,7 @@ public final class NativeObject {
         final Object obj = Global.toObject(self);
 
         if (obj instanceof ScriptObject) {
-            final jdk.nashorn.internal.runtime.Property property = ((ScriptObject)obj).getMap().findProperty(str);
+            final com.anatawa12.fixrtm.nashorn.internal.runtime.Property property = ((ScriptObject)obj).getMap().findProperty(str);
             return property != null && property.isEnumerable();
         }
 

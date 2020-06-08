@@ -23,14 +23,14 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import jdk.nashorn.internal.codegen.types.Type;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
 
 /**
  * A tuple containing function id, parameter types, return type and needsCallee flag.
@@ -93,7 +93,7 @@ public final class TypeMap {
 
     /**
      * Does the function using this TypeMap need a callee argument. This is used
-     * to compute correct param index offsets in {@link jdk.nashorn.internal.codegen.ApplySpecialization}
+     * to compute correct param index offsets in {@link com.anatawa12.fixrtm.nashorn.internal.codegen.ApplySpecialization}
      * @return true if a callee is needed, false otherwise
      */
     public boolean needsCallee() {

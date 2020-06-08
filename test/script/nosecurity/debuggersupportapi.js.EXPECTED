@@ -1,22 +1,22 @@
-class jdk.nashorn.internal.runtime.DebuggerSupport
+class com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport
 
-static java.lang.Object jdk.nashorn.internal.runtime.DebuggerSupport.eval(jdk.nashorn.internal.runtime.ScriptObject,java.lang.Object,java.lang.String,boolean)
-static jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo jdk.nashorn.internal.runtime.DebuggerSupport.getSourceInfo(java.lang.Class)
-static void jdk.nashorn.internal.runtime.DebuggerSupport.notifyInvoke(java.lang.invoke.MethodHandle)
-static java.lang.String jdk.nashorn.internal.runtime.DebuggerSupport.valueAsString(java.lang.Object)
-static jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc jdk.nashorn.internal.runtime.DebuggerSupport.valueInfo(java.lang.String,java.lang.Object,boolean)
-static jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc[] jdk.nashorn.internal.runtime.DebuggerSupport.valueInfos(java.lang.Object,boolean)
+static java.lang.Object com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.eval(com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject,java.lang.Object,java.lang.String,boolean)
+static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.getSourceInfo(java.lang.Class)
+static void com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.notifyInvoke(java.lang.invoke.MethodHandle)
+static java.lang.String com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueAsString(java.lang.Object)
+static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueInfo(java.lang.String,java.lang.Object,boolean)
+static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc[] com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueInfos(java.lang.Object,boolean)
 
-class jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc
+class com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc
 
-final boolean jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.expandable
-final java.lang.String jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.key
-final java.lang.Object jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.valueAsObject
-final java.lang.String jdk.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.valueAsString
+final boolean com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.expandable
+final java.lang.String com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.key
+final java.lang.Object com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.valueAsObject
+final java.lang.String com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc.valueAsString
 
-class jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo
+class com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo
 
-final char[] jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo.content
-final int jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo.hash
-final java.lang.String jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo.name
-final java.net.URL jdk.nashorn.internal.runtime.DebuggerSupport$SourceInfo.url
+final char[] com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo.content
+final int com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo.hash
+final java.lang.String com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo.name
+final java.net.URL com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo.url

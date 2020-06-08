@@ -23,16 +23,16 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects;
+package com.anatawa12.fixrtm.nashorn.internal.objects;
 
-import static jdk.nashorn.internal.runtime.ECMAErrors.rangeError;
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.VALUE;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
-import static jdk.nashorn.internal.runtime.arrays.ArrayIndex.isValidArrayIndex;
-import static jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator.arrayLikeIterator;
-import static jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator.reverseArrayLikeIterator;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_STRICT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.rangeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.VALUE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex.isValidArrayIndex;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIterator.arrayLikeIterator;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIterator.reverseArrayLikeIterator;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_STRICT;
 
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
@@ -42,38 +42,38 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Constructor;
-import jdk.nashorn.internal.objects.annotations.Function;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.ScriptClass;
-import jdk.nashorn.internal.objects.annotations.Setter;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
-import jdk.nashorn.internal.objects.annotations.Where;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.Debug;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.OptimisticBuiltins;
-import jdk.nashorn.internal.runtime.PropertyDescriptor;
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptObject;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.Undefined;
-import jdk.nashorn.internal.runtime.arrays.ArrayData;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
-import jdk.nashorn.internal.runtime.arrays.ContinuousArrayData;
-import jdk.nashorn.internal.runtime.arrays.IntElements;
-import jdk.nashorn.internal.runtime.arrays.IteratorAction;
-import jdk.nashorn.internal.runtime.arrays.NumericElements;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
-import jdk.nashorn.internal.runtime.linker.InvokeByName;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Constructor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Getter;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.ScriptClass;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Setter;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Where;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Debug;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.OptimisticBuiltins;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ContinuousArrayData;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.IntElements;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.IteratorAction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.NumericElements;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.InvokeByName;
 
 /**
  * Runtime representation of a JavaScript array. NativeArray only holds numeric

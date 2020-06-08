@@ -23,24 +23,24 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.runtime.ECMAErrors.typeError;
-import static jdk.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.beans.BeansLinker;
-import jdk.internal.dynalink.beans.StaticClass;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.support.Guards;
-import jdk.nashorn.internal.lookup.MethodHandleFactory;
-import jdk.nashorn.internal.lookup.MethodHandleFunctionality;
-import jdk.nashorn.internal.objects.annotations.Attribute;
-import jdk.nashorn.internal.objects.annotations.Function;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.Guards;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFactory;
+import com.anatawa12.fixrtm.nashorn.internal.lookup.MethodHandleFunctionality;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
 
 /**
  * An object that exposes Java packages and classes as its properties. Packages are exposed as objects that have further
@@ -55,7 +55,7 @@ import jdk.nashorn.internal.objects.annotations.Function;
  * var ArrayList = java.util.ArrayList
  * var list = new ArrayList
  * </pre>
- * You can also use {@link jdk.nashorn.internal.objects.NativeJava#type(Object, Object)} to access Java classes. These two statements are mostly
+ * You can also use {@link com.anatawa12.fixrtm.nashorn.internal.objects.NativeJava#type(Object, Object)} to access Java classes. These two statements are mostly
  * equivalent:
  * <pre>
  * var listType1 = java.util.ArrayList
@@ -82,7 +82,7 @@ public final class NativeJavaPackage extends ScriptObject {
     private final String name;
 
     /**
-     * Public constructor to be accessible from {@link jdk.nashorn.internal.objects.Global}
+     * Public constructor to be accessible from {@link com.anatawa12.fixrtm.nashorn.internal.objects.Global}
      * @param name  package name
      * @param proto proto
      */

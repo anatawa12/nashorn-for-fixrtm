@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
-import static jdk.nashorn.internal.parser.TokenKind.LITERAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.LITERAL;
 
-import jdk.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
 
 /**
  * Basic parse/lex unit.

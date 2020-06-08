@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.objects.annotations;
+package com.anatawa12.fixrtm.nashorn.internal.objects.annotations;
 
 /**
  * Enum to tell where a Function or Property belongs.

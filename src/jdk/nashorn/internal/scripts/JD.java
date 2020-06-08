@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.internal.scripts;
+package com.anatawa12.fixrtm.nashorn.internal.scripts;
 
-import jdk.nashorn.internal.runtime.PropertyMap;
-import jdk.nashorn.internal.runtime.ScriptObject;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 
 /**
  * Empty object class for dual primitive-object fields.
@@ -63,8 +63,8 @@ public class JD extends ScriptObject {
 
     /**
      * Constructor that takes a pre-initialized spill pool. Used by
-     * {@link jdk.nashorn.internal.codegen.SpillObjectCreator} and
-     * {@link jdk.nashorn.internal.parser.JSONParser} for initializing object literals
+     * {@link com.anatawa12.fixrtm.nashorn.internal.codegen.SpillObjectCreator} and
+     * {@link com.anatawa12.fixrtm.nashorn.internal.parser.JSONParser} for initializing object literals
      *
      * @param map            property map
      * @param primitiveSpill primitive spill pool

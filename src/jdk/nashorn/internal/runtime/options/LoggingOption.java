@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.options;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.options;
 
 import java.util.Collections;
 import java.util.HashMap;

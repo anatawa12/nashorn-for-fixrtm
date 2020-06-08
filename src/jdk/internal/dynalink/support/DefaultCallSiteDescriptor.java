@@ -81,11 +81,11 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import jdk.internal.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 
 /**
  * A default, fairly light implementation of a call site descriptor used for describing non-standard operations. It does

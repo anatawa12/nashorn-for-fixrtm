@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.models;
+package com.anatawa12.fixrtm.nashorn.internal.test.models;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

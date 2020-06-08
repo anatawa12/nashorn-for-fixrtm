@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal;
+package com.anatawa12.fixrtm.nashorn.internal;
 
 /**
  * Small helper class for fast int deques

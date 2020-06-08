@@ -23,14 +23,14 @@
  * questions.
  */
 
-package jdk.nashorn.api.scripting;
+package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import jdk.nashorn.internal.runtime.JSONListAdapter;
-import jdk.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSONListAdapter;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 
 /**
  * This is the base class for nashorn ScriptObjectMirror class.

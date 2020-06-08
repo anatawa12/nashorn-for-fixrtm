@@ -81,7 +81,7 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import java.lang.invoke.MutableCallSite;
 import java.security.AccessController;
@@ -93,22 +93,22 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import jdk.internal.dynalink.beans.BeansLinker;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
-import jdk.internal.dynalink.linker.GuardingTypeConverterFactory;
-import jdk.internal.dynalink.linker.LinkRequest;
-import jdk.internal.dynalink.linker.LinkerServices;
-import jdk.internal.dynalink.linker.MethodHandleTransformer;
-import jdk.internal.dynalink.linker.MethodTypeConversionStrategy;
-import jdk.internal.dynalink.support.AutoDiscovery;
-import jdk.internal.dynalink.support.BottomGuardingDynamicLinker;
-import jdk.internal.dynalink.support.ClassLoaderGetterContextProvider;
-import jdk.internal.dynalink.support.CompositeGuardingDynamicLinker;
-import jdk.internal.dynalink.support.CompositeTypeBasedGuardingDynamicLinker;
-import jdk.internal.dynalink.support.DefaultPrelinkFilter;
-import jdk.internal.dynalink.support.LinkerServicesImpl;
-import jdk.internal.dynalink.support.TypeConverterFactory;
-import jdk.internal.dynalink.support.TypeUtilities;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingTypeConverterFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodTypeConversionStrategy;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.AutoDiscovery;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.BottomGuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.ClassLoaderGetterContextProvider;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CompositeGuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.CompositeTypeBasedGuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.DefaultPrelinkFilter;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.LinkerServicesImpl;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeConverterFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
 
 /**
  * A factory class for creating {@link DynamicLinker}s. The most usual dynamic linker is a linker that is a composition

@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.test.models;
+package com.anatawa12.fixrtm.nashorn.test.models;
 
-import jdk.internal.dynalink.beans.StaticClass;
-import jdk.nashorn.internal.test.models.InternalRunnable;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
+import com.anatawa12.fixrtm.nashorn.internal.test.models.InternalRunnable;
 
 /**
  * Acts as a non-restricted superclass for a restricted class.

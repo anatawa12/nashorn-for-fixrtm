@@ -70,7 +70,7 @@ $(eval $(call SetupJavaCompilation,BUILD_NASGEN, \
 # Nasgen needs nashorn classes
 $(BUILD_NASGEN): $(BUILD_NASHORN)
 
-# Copy classes to final classes dir and run nasgen to modify classes in jdk.nashorn.internal.objects package
+# Copy classes to final classes dir and run nasgen to modify classes in com.anatawa12.fixrtm.nashorn.internal.objects package
 $(NASHORN_OUTPUTDIR)/classes/_the.nasgen.run: $(BUILD_NASGEN)
 	$(ECHO) Running nasgen
 	$(MKDIR) -p $(@D)
@@ -78,15 +78,15 @@ $(NASHORN_OUTPUTDIR)/classes/_the.nasgen.run: $(BUILD_NASGEN)
 	$(CP) -R -p $(NASHORN_OUTPUTDIR)/nashorn_classes/* $(@D)/
 	$(FIXPATH) $(JAVA) \
 	    -Xbootclasspath/p:"$(NASHORN_OUTPUTDIR)/nasgen_classes$(PATH_SEP)$(NASHORN_OUTPUTDIR)/nashorn_classes" \
-	    jdk.nashorn.internal.tools.nasgen.Main $(@D) jdk.nashorn.internal.objects $(@D)
+	    com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.Main $(@D) com.anatawa12.fixrtm.nashorn.internal.objects $(@D)
 	$(TOUCH) $@
 
 # Version file needs to be processed with version numbers
-VERSION_FILE := $(NASHORN_OUTPUTDIR)/classes/jdk/nashorn/internal/runtime/resources/version.properties
+VERSION_FILE := $(NASHORN_OUTPUTDIR)/classes/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/version.properties
 
 # Needs to happen after nasgen run since nasgen run deletes it
 $(VERSION_FILE): $(NASHORN_OUTPUTDIR)/classes/_the.nasgen.run
-$(VERSION_FILE): $(NASHORN_TOPDIR)/src/jdk/nashorn/internal/runtime/resources/version.properties-template
+$(VERSION_FILE): $(NASHORN_TOPDIR)/src/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/version.properties-template
 	$(ECHO) Creating version.properties
 	$(MKDIR) -p $(@D)
 	$(CAT) $< | $(SED) -e 's/$$(FULL_VERSION)/$(NASHORN_FULL_VERSION)/g' \
@@ -94,7 +94,7 @@ $(VERSION_FILE): $(NASHORN_TOPDIR)/src/jdk/nashorn/internal/runtime/resources/ve
 	    -e '/^#.*$$/d' -e '/^$$/d'  > $@
 
 
-MANIFEST_ATTRIBUTES := Name: jdk/nashorn/\nImplementation-Title: Oracle Nashorn\nImplementation-Version: $(NASHORN_FULL_VERSION)
+MANIFEST_ATTRIBUTES := Name: com/anatawa12/fixrtm/nashorn/\nImplementation-Title: Oracle Nashorn\nImplementation-Version: $(NASHORN_FULL_VERSION)
 
 # Create nashorn.jar from the final classes dir
 $(eval $(call SetupArchive,BUILD_NASHORN_JAR, \

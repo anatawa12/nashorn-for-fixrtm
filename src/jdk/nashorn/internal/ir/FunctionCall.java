@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
 /**
  * Interface used by AccessNodes, IndexNodes and IdentNodes to signal that when evaluated, their value will be treated

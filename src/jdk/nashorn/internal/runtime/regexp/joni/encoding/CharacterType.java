@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni.encoding;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.encoding;
 
 @SuppressWarnings("javadoc")
 public interface CharacterType {

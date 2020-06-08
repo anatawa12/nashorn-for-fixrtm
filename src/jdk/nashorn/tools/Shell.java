@@ -23,25 +23,25 @@
  * questions.
  */
 
-package jdk.nashorn.tools;
+package com.anatawa12.fixrtm.nashorn.tools;
 
-import jdk.nashorn.api.scripting.NashornException;
-import jdk.nashorn.internal.codegen.Compiler;
-import jdk.nashorn.internal.codegen.Compiler.CompilationPhases;
-import jdk.nashorn.internal.ir.FunctionNode;
-import jdk.nashorn.internal.ir.debug.ASTWriter;
-import jdk.nashorn.internal.ir.debug.PrintVisitor;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.parser.Parser;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.Property;
-import jdk.nashorn.internal.runtime.ScriptEnvironment;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.ScriptingFunctions;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.api.scripting.NashornException;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler.CompilationPhases;
+import com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.ASTWriter;
+import com.anatawa12.fixrtm.nashorn.internal.ir.debug.PrintVisitor;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Parser;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Property;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptingFunctions;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -62,7 +62,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static jdk.nashorn.internal.runtime.Source.sourceFor;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
 /**
  * Command line Shell for processing JavaScript files.
@@ -72,7 +72,7 @@ public class Shell {
     /**
      * Resource name for properties file
      */
-    private static final String MESSAGE_RESOURCE = "jdk.nashorn.tools.resources.Shell";
+    private static final String MESSAGE_RESOURCE = "com.anatawa12.fixrtm.nashorn.tools.resources.Shell";
     /**
      * Shell message bundle.
      */

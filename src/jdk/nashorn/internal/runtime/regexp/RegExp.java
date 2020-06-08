@@ -23,12 +23,12 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.regexp;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp;
 
 import java.util.regex.MatchResult;
-import jdk.nashorn.internal.runtime.BitVector;
-import jdk.nashorn.internal.runtime.ECMAErrors;
-import jdk.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.BitVector;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
 
 /**
  * This is the base class for representing a parsed regular expression.
@@ -155,7 +155,7 @@ public abstract class RegExp {
      *
      * @param key the message key
      * @param str string argument
-     * @throws jdk.nashorn.internal.runtime.ParserException unconditionally
+     * @throws com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException unconditionally
      */
     protected static void throwParserException(final String key, final String str) throws ParserException {
         throw new ParserException(ECMAErrors.getMessage("parser.error.regex." + key, str));

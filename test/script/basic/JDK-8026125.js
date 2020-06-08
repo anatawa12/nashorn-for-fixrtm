@@ -22,7 +22,7 @@
  */
 
 /**
- * JDK-8026125: Array.prototype.slice.call(Java.type("java.util.HashMap")) throws ClassCastException: jdk.internal.dynalink.beans.StaticClass cannot be cast to jdk.nashorn.internal.runtime.ScriptObject
+ * JDK-8026125: Array.prototype.slice.call(Java.type("java.util.HashMap")) throws ClassCastException: com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass cannot be cast to com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject
  *
  * @test
  * @run

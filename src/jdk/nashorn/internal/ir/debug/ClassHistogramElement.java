@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir.debug;
+package com.anatawa12.fixrtm.nashorn.internal.ir.debug;
 
 import java.util.Comparator;
 

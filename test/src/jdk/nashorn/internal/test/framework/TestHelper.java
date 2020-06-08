@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.framework;
+package com.anatawa12.fixrtm.nashorn.internal.test.framework;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

@@ -81,15 +81,15 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.support;
+package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.internal.dynalink.DynamicLinker;
-import jdk.internal.dynalink.linker.LinkerServices;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 
 /**
  * Utility methods for creating typical guards. TODO: introduce reasonable caching of created guards.
@@ -98,7 +98,7 @@ import jdk.internal.dynalink.linker.LinkerServices;
  */
 public class Guards {
     private static final Logger LOG = Logger
-            .getLogger(Guards.class.getName(), "jdk.internal.dynalink.support.messages");
+            .getLogger(Guards.class.getName(), "com.anatawa12.fixrtm.nashorn.dynalink.support.messages");
 
     private Guards() {
     }

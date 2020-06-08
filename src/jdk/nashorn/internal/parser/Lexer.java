@@ -23,37 +23,37 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
-import static jdk.nashorn.internal.parser.TokenType.ADD;
-import static jdk.nashorn.internal.parser.TokenType.COMMENT;
-import static jdk.nashorn.internal.parser.TokenType.DECIMAL;
-import static jdk.nashorn.internal.parser.TokenType.DIRECTIVE_COMMENT;
-import static jdk.nashorn.internal.parser.TokenType.EOF;
-import static jdk.nashorn.internal.parser.TokenType.EOL;
-import static jdk.nashorn.internal.parser.TokenType.ERROR;
-import static jdk.nashorn.internal.parser.TokenType.ESCSTRING;
-import static jdk.nashorn.internal.parser.TokenType.EXECSTRING;
-import static jdk.nashorn.internal.parser.TokenType.FLOATING;
-import static jdk.nashorn.internal.parser.TokenType.FUNCTION;
-import static jdk.nashorn.internal.parser.TokenType.HEXADECIMAL;
-import static jdk.nashorn.internal.parser.TokenType.LBRACE;
-import static jdk.nashorn.internal.parser.TokenType.LPAREN;
-import static jdk.nashorn.internal.parser.TokenType.OCTAL;
-import static jdk.nashorn.internal.parser.TokenType.RBRACE;
-import static jdk.nashorn.internal.parser.TokenType.REGEX;
-import static jdk.nashorn.internal.parser.TokenType.RPAREN;
-import static jdk.nashorn.internal.parser.TokenType.STRING;
-import static jdk.nashorn.internal.parser.TokenType.XML;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.ADD;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.COMMENT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.DECIMAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.DIRECTIVE_COMMENT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.EOF;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.EOL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.ERROR;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.ESCSTRING;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.EXECSTRING;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.FLOATING;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.FUNCTION;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.HEXADECIMAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.LBRACE;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.LPAREN;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.OCTAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.RBRACE;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.REGEX;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.RPAREN;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.STRING;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenType.XML;
 
 import java.io.Serializable;
-import jdk.nashorn.internal.runtime.ECMAErrors;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.JSErrorType;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.runtime.ParserException;
-import jdk.nashorn.internal.runtime.Source;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSErrorType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ParserException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 
 /**
  * Responsible for converting source content into a stream of tokens.

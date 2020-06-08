@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.codegen.Label;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.Label;
 
 /**
  * Common base class for jump statements (e.g. {@code break} and {@code continue}).

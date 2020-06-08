@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
 import java.security.CodeSource;
 import java.util.Objects;
@@ -33,7 +33,7 @@ import java.util.Objects;
  *
  */
 final class ScriptLoader extends NashornLoader {
-    private static final String NASHORN_PKG_PREFIX = "jdk.nashorn.internal.";
+    private static final String NASHORN_PKG_PREFIX = "com.anatawa12.fixrtm.nashorn.internal.";
 
     private final Context context;
 

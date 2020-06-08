@@ -23,15 +23,15 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import static jdk.nashorn.internal.codegen.Compiler.SCRIPTS_PACKAGE;
-import static jdk.nashorn.internal.codegen.Compiler.binaryName;
-import static jdk.nashorn.internal.codegen.CompilerConstants.JS_OBJECT_DUAL_FIELD_PREFIX;
-import static jdk.nashorn.internal.codegen.CompilerConstants.JS_OBJECT_SINGLE_FIELD_PREFIX;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler.SCRIPTS_PACKAGE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler.binaryName;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.JS_OBJECT_DUAL_FIELD_PREFIX;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.JS_OBJECT_SINGLE_FIELD_PREFIX;
 
 import java.security.ProtectionDomain;
-import jdk.nashorn.internal.codegen.ObjectClassGenerator;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 
 /**
  * Responsible for on the fly construction of structure classes.

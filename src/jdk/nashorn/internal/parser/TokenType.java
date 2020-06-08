@@ -23,17 +23,17 @@
  * questions.
  */
 
-package jdk.nashorn.internal.parser;
+package com.anatawa12.fixrtm.nashorn.internal.parser;
 
-import static jdk.nashorn.internal.parser.TokenKind.BINARY;
-import static jdk.nashorn.internal.parser.TokenKind.BRACKET;
-import static jdk.nashorn.internal.parser.TokenKind.FUTURE;
-import static jdk.nashorn.internal.parser.TokenKind.FUTURESTRICT;
-import static jdk.nashorn.internal.parser.TokenKind.IR;
-import static jdk.nashorn.internal.parser.TokenKind.KEYWORD;
-import static jdk.nashorn.internal.parser.TokenKind.LITERAL;
-import static jdk.nashorn.internal.parser.TokenKind.SPECIAL;
-import static jdk.nashorn.internal.parser.TokenKind.UNARY;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.BINARY;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.BRACKET;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.FUTURE;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.FUTURESTRICT;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.IR;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.KEYWORD;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.LITERAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.SPECIAL;
+import static com.anatawa12.fixrtm.nashorn.internal.parser.TokenKind.UNARY;
 
 import java.util.Locale;
 

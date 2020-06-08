@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.tools;
+package com.anatawa12.fixrtm.nashorn.tools;
 
-import static jdk.nashorn.internal.lookup.Lookup.MH;
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,8 +35,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import jdk.nashorn.internal.runtime.JSType;
-import jdk.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 
 /**
  * Global functions supported only in shell interactive mode.

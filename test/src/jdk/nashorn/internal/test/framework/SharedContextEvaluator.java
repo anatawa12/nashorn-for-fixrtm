@@ -23,24 +23,24 @@
  * questions.
  */
 
-package jdk.nashorn.internal.test.framework;
+package com.anatawa12.fixrtm.nashorn.internal.test.framework;
 
-import static jdk.nashorn.internal.runtime.Source.sourceFor;
-import static jdk.nashorn.tools.Shell.COMPILATION_ERROR;
-import static jdk.nashorn.tools.Shell.RUNTIME_ERROR;
-import static jdk.nashorn.tools.Shell.SUCCESS;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
+import static com.anatawa12.fixrtm.nashorn.tools.Shell.COMPILATION_ERROR;
+import static com.anatawa12.fixrtm.nashorn.tools.Shell.RUNTIME_ERROR;
+import static com.anatawa12.fixrtm.nashorn.tools.Shell.SUCCESS;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import jdk.nashorn.api.scripting.NashornException;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.runtime.Context;
-import jdk.nashorn.internal.runtime.ErrorManager;
-import jdk.nashorn.internal.runtime.ScriptFunction;
-import jdk.nashorn.internal.runtime.ScriptRuntime;
-import jdk.nashorn.internal.runtime.options.Options;
+import com.anatawa12.fixrtm.nashorn.api.scripting.NashornException;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 
 /**
  * A script evaluator that shares a single Nashorn Context instance to run

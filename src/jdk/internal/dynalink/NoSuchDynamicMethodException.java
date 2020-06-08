@@ -81,9 +81,9 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker;
 
 /**
  * Thrown at the invocation if the call site can not be linked by any available {@link GuardingDynamicLinker}.

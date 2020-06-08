@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir.debug;
+package com.anatawa12.fixrtm.nashorn.internal.ir.debug;
 
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_PROGRAM_POINT_SHIFT;
-import static jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.FLAGS_MASK;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_PROGRAM_POINT_SHIFT;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.FLAGS_MASK;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,8 +47,8 @@ import jdk.internal.org.objectweb.asm.Type;
 import jdk.internal.org.objectweb.asm.signature.SignatureReader;
 import jdk.internal.org.objectweb.asm.util.Printer;
 import jdk.internal.org.objectweb.asm.util.TraceSignatureVisitor;
-import jdk.nashorn.internal.runtime.ScriptEnvironment;
-import jdk.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor;
 
 /**
  * Pretty printer for --print-code.

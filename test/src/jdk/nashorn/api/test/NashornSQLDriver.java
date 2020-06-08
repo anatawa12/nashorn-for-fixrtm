@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.test;
+package com.anatawa12.fixrtm.nashorn.api.test;
 
 import java.sql.Connection;
 import java.sql.Driver;

@@ -22,7 +22,7 @@
  */
 
 /**
- * JDK-8079145: jdk.nashorn.internal.runtime.arrays.IntArrayData.convert assertion
+ * JDK-8079145: com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.IntArrayData.convert assertion
  *
  * @test
  * @fork

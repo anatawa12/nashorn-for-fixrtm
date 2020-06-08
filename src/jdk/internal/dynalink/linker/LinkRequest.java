@@ -81,10 +81,10 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
-import jdk.internal.dynalink.CallSiteDescriptor;
-import jdk.internal.dynalink.DynamicLinkerFactory;
+import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinkerFactory;
 
 /**
  * Represents a request to link a particular invocation at a particular call site. Instances of these requests are being

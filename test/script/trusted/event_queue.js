@@ -36,13 +36,13 @@ print(Debug);
 print();
 
 var forName       = java.lang.Class["forName(String)"];
-var RuntimeEvent  = forName("jdk.nashorn.internal.runtime.events.RuntimeEvent").static;
+var RuntimeEvent  = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.events.RuntimeEvent").static;
 var getValue      = RuntimeEvent.class.getMethod("getValue");
 var getValueClass = RuntimeEvent.class.getMethod("getValueClass");
 
 print(RuntimeEvent);
 
-var RewriteException = forName("jdk.nashorn.internal.runtime.RewriteException").static;
+var RewriteException = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.RewriteException").static;
 var getReturnType    = RewriteException.class.getMethod("getReturnType");
 
 print(RewriteException);

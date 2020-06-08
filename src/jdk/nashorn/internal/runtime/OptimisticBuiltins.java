@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
 
 /**
  * This is an interface for classes that need custom linkage logic. This means Native objects

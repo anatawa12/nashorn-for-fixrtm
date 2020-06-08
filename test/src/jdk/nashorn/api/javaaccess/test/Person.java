@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.api.javaaccess.test;
+package com.anatawa12.fixrtm.nashorn.api.javaaccess.test;
 
 @SuppressWarnings("javadoc")
 public class Person {

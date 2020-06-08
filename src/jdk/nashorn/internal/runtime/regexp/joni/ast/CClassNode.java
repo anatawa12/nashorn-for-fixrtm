@@ -17,22 +17,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni.ast;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast;
 
-import jdk.nashorn.internal.runtime.regexp.joni.BitSet;
-import jdk.nashorn.internal.runtime.regexp.joni.CodeRangeBuffer;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
-import jdk.nashorn.internal.runtime.regexp.joni.EncodingHelper;
-import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
-import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.CCSTATE;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.CCVALTYPE;
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitSet;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.CodeRangeBuffer;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Config;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.EncodingHelper;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Syntax;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.CCSTATE;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.CCVALTYPE;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 @SuppressWarnings("javadoc")
 public final class CClassNode extends Node {

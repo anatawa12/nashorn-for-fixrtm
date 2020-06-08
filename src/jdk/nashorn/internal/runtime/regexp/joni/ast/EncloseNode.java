@@ -17,10 +17,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni.ast;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Option;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.Option;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
 
 @SuppressWarnings("javadoc")
 public final class EncloseNode extends StateNode implements EncloseType {

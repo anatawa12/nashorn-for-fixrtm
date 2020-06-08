@@ -23,10 +23,10 @@
  * questions.
  */
 
-package jdk.internal.dynalink.beans.test;
+package com.anatawa12.fixrtm.nashorn.dynalink.beans.test;
 
-import jdk.internal.dynalink.beans.BeansLinker;
-import jdk.nashorn.test.models.ClassLoaderAware;
+import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;
+import com.anatawa12.fixrtm.nashorn.test.models.ClassLoaderAware;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("javadoc")

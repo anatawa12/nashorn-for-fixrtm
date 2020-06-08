@@ -22,9 +22,9 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
-import jdk.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
 
 /**
  * Encapsulates the information for restoring the local state when continuing execution after a rewrite triggered by

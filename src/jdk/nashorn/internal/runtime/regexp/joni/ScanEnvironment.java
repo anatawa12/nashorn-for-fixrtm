@@ -17,12 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package jdk.nashorn.internal.runtime.regexp.joni;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.BitStatus.bsClear;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.Node;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.BitStatus.bsClear;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.ast.Node;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 
 @SuppressWarnings("javadoc")
 public final class ScanEnvironment {

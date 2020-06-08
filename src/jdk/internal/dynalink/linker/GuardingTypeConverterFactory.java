@@ -81,9 +81,9 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
-import jdk.internal.dynalink.support.TypeUtilities;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
 
 /**
  * Optional interface that can be implemented by {@link GuardingDynamicLinker} implementations to provide

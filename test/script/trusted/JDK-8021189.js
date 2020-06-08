@@ -27,7 +27,7 @@
  * @test
  * @run
  */
-var InternalRunnableSuperclass = Java.type("jdk.nashorn.test.models.InternalRunnableSuperclass");
+var InternalRunnableSuperclass = Java.type("com.anatawa12.fixrtm.nashorn.test.models.InternalRunnableSuperclass");
 try {
     new (InternalRunnableSuperclass.getInternalRunnableType())();
 } catch(e) {

@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.tools.nasgen;
+package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.AALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.AASTORE;
@@ -77,16 +77,16 @@ import static jdk.internal.org.objectweb.asm.Opcodes.SALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.SASTORE;
 import static jdk.internal.org.objectweb.asm.Opcodes.SIPUSH;
 import static jdk.internal.org.objectweb.asm.Opcodes.SWAP;
-import static jdk.nashorn.internal.tools.nasgen.StringConstants.INIT;
-import static jdk.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_INIT2;
-import static jdk.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_INIT3;
-import static jdk.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_TYPE;
-import static jdk.nashorn.internal.tools.nasgen.StringConstants.TYPE_SPECIALIZATION;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.INIT;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_INIT2;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_INIT3;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.SPECIALIZATION_TYPE;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.TYPE_SPECIALIZATION;
 import java.util.List;
 import jdk.internal.org.objectweb.asm.Handle;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Type;
-import jdk.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
+import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunction.LinkLogic;
 
 /**
  * Base class for all method generating classes.

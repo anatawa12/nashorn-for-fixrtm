@@ -23,12 +23,12 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.arrays;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
-import static jdk.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
+import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 import java.lang.reflect.Array;
-import jdk.nashorn.internal.runtime.BitVector;
-import jdk.nashorn.internal.runtime.UnwarrantedOptimismException;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.BitVector;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException;
 
 /**
  * This filter handles the presence of undefined array elements.

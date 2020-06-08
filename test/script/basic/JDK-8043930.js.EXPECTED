@@ -1,1 +1,1 @@
-TypeError: new cannot be used with non-public java type jdk.nashorn.test.models.NonPublicClass.
+TypeError: new cannot be used with non-public java type com.anatawa12.fixrtm.nashorn.test.models.NonPublicClass.

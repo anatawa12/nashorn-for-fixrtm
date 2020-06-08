@@ -22,9 +22,9 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package jdk.nashorn.test.tools;
+package com.anatawa12.fixrtm.nashorn.test.tools;
 
-import jdk.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
 
 @SuppressWarnings("javadoc")
 public class StaticTypeInspector {

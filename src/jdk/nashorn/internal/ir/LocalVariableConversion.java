@@ -23,9 +23,9 @@
  * questions.
  */
 
-package jdk.nashorn.internal.ir;
+package com.anatawa12.fixrtm.nashorn.internal.ir;
 
-import jdk.nashorn.internal.codegen.types.Type;
+import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
 
 /**
  * Class describing one or more local variable conversions that needs to be performed on entry to a control flow join

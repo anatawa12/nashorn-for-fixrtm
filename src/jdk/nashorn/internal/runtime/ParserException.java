@@ -23,11 +23,11 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime;
+package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import jdk.nashorn.api.scripting.NashornException;
-import jdk.nashorn.internal.objects.Global;
-import jdk.nashorn.internal.parser.Token;
+import com.anatawa12.fixrtm.nashorn.api.scripting.NashornException;
+import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
+import com.anatawa12.fixrtm.nashorn.internal.parser.Token;
 
 /**
  * ECMAScript parser exceptions.

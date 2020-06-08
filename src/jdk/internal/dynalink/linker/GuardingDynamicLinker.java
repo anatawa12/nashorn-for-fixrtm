@@ -81,14 +81,14 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink.linker;
+package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
 /**
  * The base interface for language-specific dynamic linkers. Such linkers always have to produce method handles with
  * guards, as the validity of the method handle for calls at a call site inevitably depends on some condition (at the
  * very least, it depends on the receiver belonging to the language runtime of the linker). Language runtime
  * implementors will normally implement one for their own language, and declare it in the
- * <tt>META-INF/services/jdk.internal.dynalink.linker.GuardingDynamicLinker</tt> file within their JAR file.
+ * <tt>META-INF/services/com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardingDynamicLinker</tt> file within their JAR file.
  *
  * @author Attila Szegedi
  */

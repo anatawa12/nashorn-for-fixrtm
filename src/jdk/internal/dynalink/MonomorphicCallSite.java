@@ -81,11 +81,11 @@
        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package jdk.internal.dynalink;
+package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import java.lang.invoke.MethodHandle;
-import jdk.internal.dynalink.linker.GuardedInvocation;
-import jdk.internal.dynalink.support.AbstractRelinkableCallSite;
+import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
+import com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractRelinkableCallSite;
 
 /**
  * A relinkable call site that implements monomorphic inline caching strategy. After it linked a method, it will keep it

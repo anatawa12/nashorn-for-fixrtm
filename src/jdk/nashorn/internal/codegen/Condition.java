@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.codegen;
+package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.IFEQ;
 import static jdk.internal.org.objectweb.asm.Opcodes.IFGE;

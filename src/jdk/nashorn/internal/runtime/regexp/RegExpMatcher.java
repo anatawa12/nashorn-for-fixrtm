@@ -23,7 +23,7 @@
  * questions.
  */
 
-package jdk.nashorn.internal.runtime.regexp;
+package com.anatawa12.fixrtm.nashorn.internal.runtime.regexp;
 
 import java.util.regex.MatchResult;
 
