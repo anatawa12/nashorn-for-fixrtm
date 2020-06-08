@@ -1,3 +1,12 @@
+- What is this repository?
+
+This repository is a fork of Nashorn for fixRTM (https://github.com/anatawa12/fixRTM).
+This repository is to support the features below on Nashorn.
+
+- Serialize Compiled Scripts.
+- Serialize Executed Global Environment.
+- Share Compiled Script between two or more ScriptRuntime instance (if possible).
+
 - What is Nashorn?
 
 Nashorn is a runtime environment for programs written in ECMAScript 5.1
