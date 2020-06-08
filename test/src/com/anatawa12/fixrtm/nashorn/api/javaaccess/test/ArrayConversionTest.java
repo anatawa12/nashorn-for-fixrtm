@@ -50,7 +50,7 @@ public class ArrayConversionTest {
 
     @BeforeClass
     public static void setUpClass() {
-        e = new ScriptEngineManager().getEngineByName("nashorn");
+        e = new ScriptEngineManager().getEngineByName("fixrtm-nashorn");
     }
 
     @AfterClass

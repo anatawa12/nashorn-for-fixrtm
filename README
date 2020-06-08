@@ -63,7 +63,7 @@ Use the jjs script (see RELESE_README):
     sh bin/jjs <your .js file>
 
 Nashorn supports javax.script API. It is possible to drop nashorn.jar in
-class path and request for "nashorn" script engine from
+class path and request for "fixrtm-nashorn" script engine from
 javax.script.ScriptEngineManager. 
 
 Look for samples under the directory test/src/com/anatawa12/fixrtm/nashorn/api/scripting/.

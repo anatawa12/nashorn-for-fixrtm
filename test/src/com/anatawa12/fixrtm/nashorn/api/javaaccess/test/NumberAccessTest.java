@@ -54,7 +54,7 @@ public class NumberAccessTest {
     @BeforeClass
     public static void setUpClass() throws ScriptException {
         final ScriptEngineManager m = new ScriptEngineManager();
-        e = m.getEngineByName("nashorn");
+        e = m.getEngineByName("fixrtm-nashorn");
         o = new SharedObject();
         e.put("o", o);
         e.eval("var SharedObject = Packages.com.anatawa12.fixrtm.nashorn.api.javaaccess.test.SharedObject;");

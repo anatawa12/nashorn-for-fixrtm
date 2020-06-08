@@ -54,7 +54,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         try {
             e.eval("var v = Packages.sun.misc.Unsafe;");
             fail("should have thrown SecurityException");
@@ -75,7 +75,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         try {
             e.eval("var v = Java.type('sun.misc.Unsafe');");
             fail("should have thrown SecurityException");
@@ -96,7 +96,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         try {
             e.eval("var v = java.lang.Class.forName('sun.misc.Unsafe');");
             fail("should have thrown SecurityException");
@@ -117,7 +117,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         try {
             e.eval("java.lang.System.exit(0);");
             fail("should have thrown SecurityException");
@@ -139,7 +139,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         e.eval("var o = Java.extend(Java.type('javax.imageio.spi.ServiceRegistry'), { deregisterAll: this.exit.bind(null, 1234)});\n" +
                 "new o(new java.util.ArrayList().iterator())");
         System.gc();
@@ -155,7 +155,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         try {
             e.eval("java.lang.System.loadLibrary('foo');");
             fail("should have thrown SecurityException");
@@ -188,7 +188,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
 
         e.put("name", ScriptEngineSecurityTest.class.getName());
         e.put("cl", ScriptEngineSecurityTest.class.getClassLoader());
@@ -215,7 +215,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
 
         e.put("name", ScriptEngineSecurityTest.class.getName());
         e.put("cl", ScriptEngineSecurityTest.class.getClassLoader());
@@ -242,7 +242,7 @@ public class ScriptEngineSecurityTest {
         }
 
         final ScriptEngineManager m = new ScriptEngineManager();
-        final ScriptEngine e = m.getEngineByName("nashorn");
+        final ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         final Runnable r = (Runnable)Proxy.newProxyInstance(
             ScriptEngineTest.class.getClassLoader(),
             new Class[] { Runnable.class },

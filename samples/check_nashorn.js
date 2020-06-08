@@ -36,7 +36,7 @@ function isNashorn() {
     // by nashorn jsr-223 engine. Check the name of the engine from
     // javax.script.ScriptEngineFactory associated
     
-    return engine.factory.engineName.contains("Nashorn");
+    return engine.factory.engineName.contains("fixrtm-Nashorn");
   } catch (e) {
     // if engine or any of the properties are undefined
     // then script is not being run using nashorn.

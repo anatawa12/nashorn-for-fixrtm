@@ -38,7 +38,7 @@ import com.anatawa12.fixrtm.nashorn.api.scripting.*;
 public class EvalWithArbitraryThis {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager m = new ScriptEngineManager();
-        ScriptEngine e = m.getEngineByName("nashorn");
+        ScriptEngine e = m.getEngineByName("fixrtm-nashorn");
         Object sobj = e.eval("( { foo: 343, bar: 'hello' } )");
 
         // "this" bound to sobj in this eval.

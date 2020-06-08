@@ -48,7 +48,7 @@ print("typeof(new global.Object()) = " + (typeof (new global.Object())));
 
 // foreign engine objects
 var m = new javax.script.ScriptEngineManager();
-var engine = m.getEngineByName("nashorn");
+var engine = m.getEngineByName("fixrtm-nashorn");
 var engineGlobal = engine.eval("this");
 
 print("typeof(engineGlobal.Object) = " + (typeof engineGlobal.Object));

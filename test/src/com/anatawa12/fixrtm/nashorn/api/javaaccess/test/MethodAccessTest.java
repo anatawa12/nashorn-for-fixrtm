@@ -57,7 +57,7 @@ public class MethodAccessTest {
     @BeforeClass
     public static void setUpClass() throws ScriptException {
         final ScriptEngineManager m = new ScriptEngineManager();
-        e = m.getEngineByName("nashorn");
+        e = m.getEngineByName("fixrtm-nashorn");
         o = new SharedObject();
         o.setEngine(e);
         e.put("o", o);

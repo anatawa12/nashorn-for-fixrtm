@@ -37,7 +37,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.Version;
 /**
  * JSR-223 compliant script engine factory for Nashorn. The engine answers for:
  * <ul>
- * <li>names {@code "nashorn"}, {@code "Nashorn"}, {@code "js"}, {@code "JS"}, {@code "JavaScript"},
+ * <li>names {@code "fixrtm-nashorn"}, {@code "fixrtm-Nashorn"}, {@code "js"}, {@code "JS"}, {@code "JavaScript"},
  * {@code "javascript"}, {@code "ECMAScript"}, and {@code "ecmascript"};</li>
  * <li>MIME types {@code "application/javascript"}, {@code "application/ecmascript"}, {@code "text/javascript"}, and
  * {@code "text/ecmascript"};</li>
@@ -253,7 +253,7 @@ public final class NashornScriptEngineFactory implements ScriptEngineFactory {
 
     static {
         names = immutableList(
-                    "nashorn", "Nashorn",
+                    "fixrtm-nashorn", "fixrtm-Nashorn",
                     "js", "JS",
                     "JavaScript", "javascript",
                     "ECMAScript", "ecmascript"
