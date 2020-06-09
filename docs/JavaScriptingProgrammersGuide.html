@@ -170,7 +170,7 @@ public class EvalScript {
         // create a script engine manager
         <span class="classref">ScriptEngineManager</span> factory = new ScriptEngineManager();
         // create a JavaScript engine
-        <span class="classref">ScriptEngine</span> engine = factory.<span class="methodref">getEngineByName</span>("nashorn");
+        <span class="classref">ScriptEngine</span> engine = factory.<span class="methodref">getEngineByName</span>("fixrtm-nashorn");
         // evaluate JavaScript code from String
         engine.<span class="methodref">eval</span>("print('Hello, World')");
     }
@@ -196,7 +196,7 @@ public class EvalFile {
         // create a script engine manager
         <span class="classref">ScriptEngineManager</span> factory = new ScriptEngineManager();
         // create JavaScript engine
-        <span class="classref">ScriptEngine</span> engine = factory.<span class="methodref">getEngineByName</span>("nashorn");
+        <span class="classref">ScriptEngine</span> engine = factory.<span class="methodref">getEngineByName</span>("fixrtm-nashorn");
         // evaluate JavaScript code from given file - specified by first argument
         engine.<span class="methodref">eval</span>(new java.io.FileReader(args[0]));
     }
@@ -246,7 +246,7 @@ import java.io.*;
 public class ScriptVars { 
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         File f = new File("test.txt");
         // expose File object as variable to script
@@ -277,7 +277,7 @@ import javax.script.*;
 public class InvokeScriptFunction {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         // JavaScript code in a String
         String script = "function hello(name) { print('Hello, ' + name); }";
@@ -307,7 +307,7 @@ import javax.script.*;
 public class InvokeScriptMethod {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         // JavaScript code in a String. This code defines a script object 'obj'
         // with one method called 'hello'.        
@@ -348,7 +348,7 @@ import javax.script.*;
 public class RunnableImpl {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         // JavaScript code in a String
         String script = "function run() { print('run called'); }";
@@ -384,7 +384,7 @@ import javax.script.*;
 public class RunnableImplObject {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         // JavaScript code in a String
         String script = "var obj = new Object(); obj.run = function() { print('run method called'); }";
@@ -434,7 +434,7 @@ import javax.script.*;
 public class MultiScopes {
     public static void main(String[] args) throws Exception {
         ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = manager.getEngineByName("fixrtm-nashorn");
 
         engine.put("x", "hello");
         // print global variable "x"

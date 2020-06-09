@@ -34,8 +34,8 @@
 
 var Arrays = Java.type("java.util.Arrays");
 var CharArray = Java.type("char[]");
-var DebuggerSupport = Java.type("jdk.nashorn.internal.runtime.DebuggerSupport");
-var DebuggerValueDesc = Java.type("jdk.nashorn.internal.runtime.DebuggerSupport.DebuggerValueDesc");
+var DebuggerSupport = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport");
+var DebuggerValueDesc = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.DebuggerValueDesc");
 
 var valueDescFields = DebuggerValueDesc.class.declaredFields;
 Arrays.sort(valueDescFields, function(f1, f2) f1.name.compareTo(f2.name));
@@ -118,10 +118,10 @@ printValue(this);
 // The below are not part of DebuggerSupport. But we need these to
 // test DebuggerSupport.getSourceInfo etc. which need compiled script class
 
-var Source = Java.type("jdk.nashorn.internal.runtime.Source");
-var Context = Java.type("jdk.nashorn.internal.runtime.Context");
+var Source = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.Source");
+var Context = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.Context");
 var sourceCls = Source.class;
-var errorMgrCls = Java.type("jdk.nashorn.internal.runtime.ErrorManager").class;
+var errorMgrCls = Java.type("com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager").class;
 var booleanCls = Java.type("java.lang.Boolean").TYPE;
 
 // private compile method of Context class
@@ -133,7 +133,7 @@ var scriptCls = compileMethod.invoke(Context.context,
     Source.sourceFor("test", "print('hello')"),
     new Context.ThrowErrorManager(), false);
 
-var SCRIPT_CLASS_NAME_PREFIX = "jdk.nashorn.internal.scripts.Script$";
+var SCRIPT_CLASS_NAME_PREFIX = "com.anatawa12.fixrtm.nashorn.internal.scripts.Script$";
 print("script class name pattern satisfied? " +
     scriptCls.name.startsWith(SCRIPT_CLASS_NAME_PREFIX));
 

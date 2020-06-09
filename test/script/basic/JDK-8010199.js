@@ -29,7 +29,7 @@
  */
 
 var m = new javax.script.ScriptEngineManager();
-var e = m.getEngineByName("nashorn");
+var e = m.getEngineByName("fixrtm-nashorn");
 
 var iface = e.getInterface(java.lang.Runnable.class);
 

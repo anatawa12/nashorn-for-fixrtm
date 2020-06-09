@@ -28,16 +28,16 @@
  * @run
  */
 
-var overloadedSetter = new (Java.type("jdk.nashorn.test.models.OverloadedSetter"));
+var overloadedSetter = new (Java.type("com.anatawa12.fixrtm.nashorn.test.models.OverloadedSetter"));
 
 Assert.assertEquals(String(overloadedSetter.foo),
-  "[jdk.internal.dynalink.beans.OverloadedDynamicMethod\n" +
-  " String jdk.nashorn.test.models.OverloadedSetter.foo(String)\n" +
-  " void jdk.nashorn.test.models.OverloadedSetter.foo(int)\n" +
+  "[com.anatawa12.fixrtm.nashorn.dynalink.beans.OverloadedDynamicMethod\n" +
+  " String com.anatawa12.fixrtm.nashorn.test.models.OverloadedSetter.foo(String)\n" +
+  " void com.anatawa12.fixrtm.nashorn.test.models.OverloadedSetter.foo(int)\n" +
   "]");
 
 Assert.assertEquals(String(overloadedSetter.setColor),
-  "[jdk.internal.dynalink.beans.OverloadedDynamicMethod\n" +
-  " void jdk.nashorn.test.models.OverloadedSetter.setColor(int)\n" +
-  " void jdk.nashorn.test.models.OverloadedSetter.setColor(String)\n" +
+  "[com.anatawa12.fixrtm.nashorn.dynalink.beans.OverloadedDynamicMethod\n" +
+  " void com.anatawa12.fixrtm.nashorn.test.models.OverloadedSetter.setColor(int)\n" +
+  " void com.anatawa12.fixrtm.nashorn.test.models.OverloadedSetter.setColor(String)\n" +
   "]");

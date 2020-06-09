@@ -40,22 +40,22 @@
  */
 
 var forName             = java.lang.Class["forName(String)"];
-var Parser              = forName("jdk.nashorn.internal.parser.Parser").static
-var Compiler            = forName("jdk.nashorn.internal.codegen.Compiler").static
-var CompilationPhases   = forName("jdk.nashorn.internal.codegen.Compiler$CompilationPhases").static;
-var Context             = forName("jdk.nashorn.internal.runtime.Context").static
-var CodeInstaller       = forName("jdk.nashorn.internal.runtime.CodeInstaller").static
-var ScriptEnvironment   = forName("jdk.nashorn.internal.runtime.ScriptEnvironment").static
-var Source              = forName("jdk.nashorn.internal.runtime.Source").static
-var FunctionNode        = forName("jdk.nashorn.internal.ir.FunctionNode").static
-var Block               = forName("jdk.nashorn.internal.ir.Block").static
-var VarNode             = forName("jdk.nashorn.internal.ir.VarNode").static
-var ExpressionStatement = forName("jdk.nashorn.internal.ir.ExpressionStatement").static
-var UnaryNode           = forName("jdk.nashorn.internal.ir.UnaryNode").static
-var BinaryNode          = forName("jdk.nashorn.internal.ir.BinaryNode").static
-var ThrowErrorManager   = forName("jdk.nashorn.internal.runtime.Context$ThrowErrorManager").static
-var ErrorManager        = forName("jdk.nashorn.internal.runtime.ErrorManager").static
-var Debug               = forName("jdk.nashorn.internal.runtime.Debug").static
+var Parser              = forName("com.anatawa12.fixrtm.nashorn.internal.parser.Parser").static
+var Compiler            = forName("com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler").static
+var CompilationPhases   = forName("com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler$CompilationPhases").static;
+var Context             = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.Context").static
+var CodeInstaller       = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.CodeInstaller").static
+var ScriptEnvironment   = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptEnvironment").static
+var Source              = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.Source").static
+var FunctionNode        = forName("com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode").static
+var Block               = forName("com.anatawa12.fixrtm.nashorn.internal.ir.Block").static
+var VarNode             = forName("com.anatawa12.fixrtm.nashorn.internal.ir.VarNode").static
+var ExpressionStatement = forName("com.anatawa12.fixrtm.nashorn.internal.ir.ExpressionStatement").static
+var UnaryNode           = forName("com.anatawa12.fixrtm.nashorn.internal.ir.UnaryNode").static
+var BinaryNode          = forName("com.anatawa12.fixrtm.nashorn.internal.ir.BinaryNode").static
+var ThrowErrorManager   = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.Context$ThrowErrorManager").static
+var ErrorManager        = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.ErrorManager").static
+var Debug               = forName("com.anatawa12.fixrtm.nashorn.internal.runtime.Debug").static
 var String              = forName("java.lang.String").static
 var boolean             = Java.type("boolean");
 
@@ -123,7 +123,7 @@ var ParserConstructor = Parser.class.getConstructor(ScriptEnvironment.class, Sou
 var CompilerConstructor = Compiler.class.getMethod("forNoInstallerCompilation", Context.class, Source.class, boolean.class);
 
 // compile(script) -- compiles a script specified as a string with its
-// source code, returns a jdk.nashorn.internal.ir.FunctionNode object
+// source code, returns a com.anatawa12.fixrtm.nashorn.internal.ir.FunctionNode object
 // representing it.
 function compile(source, phases) {
     var source = sourceForMethod.invoke(null, "<no name>", source);

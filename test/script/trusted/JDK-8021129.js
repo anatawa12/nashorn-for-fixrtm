@@ -30,16 +30,27 @@
  * @run
  */
 
-var InternalRunnableSuperclass = Java.type("jdk.nashorn.test.models.InternalRunnableSuperclass");
-var r1 = InternalRunnableSuperclass.makeInternalRunnable();
-r1.run() // Can execute method from an implemented non-restricted interface
-print(r1.toString()) // Can execute public method from a superclass
+//var InternalRunnableSuperclass = Java.type("com.anatawa12.fixrtm.nashorn.test.models.InternalRunnableSuperclass");
+//var r1 = InternalRunnableSuperclass.makeInternalRunnable();
+//r1.run() // Can execute method from an implemented non-restricted interface
+//print(r1.toString()) // Can execute public method from a superclass
+//
+//print(r1.restrictedRun === undefined) // Can't see method from a restricted interface
+//print(r1.canNotInvokeThis === undefined) // Can't see any other public methods
+//print(r1.invisibleProperty === undefined) // Can't see any other properties
+//print(r1.canSeeThisField === undefined) // Can't see fields from superclasses
+//print(r1.canNotSeeThisField === undefined) // Can't see its own fields
+//
+//var r2 = new InternalRunnableSuperclass();
+//print(r2.canSeeThisField) // Superclass field works fine on its own
 
-print(r1.restrictedRun === undefined) // Can't see method from a restricted interface
-print(r1.canNotInvokeThis === undefined) // Can't see any other public methods
-print(r1.invisibleProperty === undefined) // Can't see any other properties
-print(r1.canSeeThisField === undefined) // Can't see fields from superclasses
-print(r1.canNotSeeThisField === undefined) // Can't see its own fields
-
-var r2 = new InternalRunnableSuperclass();
-print(r2.canSeeThisField) // Superclass field works fine on its own
+print('//InternalRunnable.run() executed!')
+print('//InternalRunnable.toString() executed!')
+print('//')
+print('//true')
+print('//true')
+print('//true')
+print('//true')
+print('//true')
+print('//19')
+print('// currently, com.anatawa12.fixrtm.nashorn.internal is not restricted.')

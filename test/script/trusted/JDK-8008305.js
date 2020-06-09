@@ -27,14 +27,14 @@
  * @run
  */
 
-var URLReader = Java.type("jdk.nashorn.api.scripting.URLReader");
+var URLReader = Java.type("com.anatawa12.fixrtm.nashorn.api.scripting.URLReader");
 var File = Java.type("java.io.File");
 var FileReader = Java.type("java.io.FileReader");
 var ScriptEngineManager = Java.type("javax.script.ScriptEngineManager");
 var SecurityException = Java.type("java.lang.SecurityException");
 
 var m = new ScriptEngineManager();
-var e = m.getEngineByName("nashorn");
+var e = m.getEngineByName("fixrtm-nashorn");
 
 
 // subtest script file

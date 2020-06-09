@@ -28,7 +28,7 @@
  * @run
  */
 
-var t = new Packages.jdk.nashorn.test.models.Nashorn401TestSubject();
+var t = new Packages.com.anatawa12.fixrtm.nashorn.test.models.Nashorn401TestSubject();
 
 print(t.method2(10));
 print(t.method2(10.2));

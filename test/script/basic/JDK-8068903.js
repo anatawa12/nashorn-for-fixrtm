@@ -28,7 +28,7 @@
  * @run
  */
 
-var vc = new (Java.type("jdk.nashorn.test.models.VarArgConsumer"))(
+var vc = new (Java.type("com.anatawa12.fixrtm.nashorn.test.models.VarArgConsumer"))(
     function(x) {
         Assert.assertTrue(x.length == 3);
         Assert.assertTrue(x[0] == 1);

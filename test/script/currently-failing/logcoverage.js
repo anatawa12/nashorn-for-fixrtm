@@ -37,7 +37,7 @@
 
 function runScriptEngine(opts, name) {
     var imports = new JavaImporter(
-        Packages.jdk.nashorn.api.scripting,
+        Packages.com.anatawa12.fixrtm.nashorn.api.scripting,
         java.io, java.lang, java.util);
 
     with(imports) {

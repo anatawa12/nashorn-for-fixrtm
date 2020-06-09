@@ -159,21 +159,21 @@
     <copy todir="${build.classes.dir}/META-INF/services">
        <fileset dir="${meta.inf.dir}/services/"/>
     </copy>
-     <copy todir="${build.classes.dir}/jdk/nashorn/api/scripting/resources">
-       <fileset dir="${src.dir}/jdk/nashorn/api/scripting/resources/"/>
+     <copy todir="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/api/scripting/resources">
+       <fileset dir="${src.dir}/com/anatawa12/fixrtm/nashorn/api/scripting/resources/"/>
     </copy>
-    <copy todir="${build.classes.dir}/jdk/nashorn/internal/runtime/resources">
-       <fileset dir="${src.dir}/jdk/nashorn/internal/runtime/resources/"/>
+    <copy todir="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/resources">
+       <fileset dir="${src.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/"/>
     </copy>
-    <copy todir="${build.classes.dir}/jdk/nashorn/tools/resources">
-       <fileset dir="${src.dir}/jdk/nashorn/tools/resources/"/>
+    <copy todir="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/tools/resources">
+       <fileset dir="${src.dir}/com/anatawa12/fixrtm/nashorn/tools/resources/"/>
     </copy>
-    <copy file="${src.dir}/jdk/internal/dynalink/support/messages.properties" todir="${build.classes.dir}/jdk/internal/dynalink/support"/>
-    <copy file="${src.dir}/jdk/nashorn/internal/codegen/anchor.properties" todir="${build.classes.dir}/jdk/nashorn/internal/codegen"/>
+    <copy file="${src.dir}/com/anatawa12/fixrtm/nashorn/dynalink/support/messages.properties" todir="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/dynalink/support"/>
+    <copy file="${src.dir}/com/anatawa12/fixrtm/nashorn/internal/codegen/anchor.properties" todir="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/codegen"/>
 
-    <echo message="full=${nashorn.fullversion}" file="${build.classes.dir}/jdk/nashorn/internal/runtime/resources/version.properties"/>
-    <echo file="${build.classes.dir}/jdk/nashorn/internal/runtime/resources/version.properties" append="true">${line.separator}</echo>
-    <echo message="release=${nashorn.version}" file="${build.classes.dir}/jdk/nashorn/internal/runtime/resources/version.properties" append="true"/>
+    <echo message="full=${nashorn.fullversion}" file="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/version.properties"/>
+    <echo file="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/version.properties" append="true">${line.separator}</echo>
+    <echo message="release=${nashorn.version}" file="${build.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/resources/version.properties" append="true"/>
   </target>
 
   <target name="jar" depends="compile, run-nasgen, generate-cc-template" description="Creates nashorn.jar" unless="compile.suppress.jar">
@@ -184,7 +184,7 @@
         <attribute name="Build-Jdk" value="${java.runtime.version}"/>
         <attribute name="Built-By" value="n/a"/>
         <attribute name="Created-By" value="Ant jar task"/>
-        <section name="jdk/nashorn/">
+        <section name="com/anatawa12/fixrtm/nashorn/">
           <attribute name="Implementation-Title" value="${nashorn.product.name}"/>
           <attribute name="Implementation-Version" value="${nashorn.version}"/>
         </section>
@@ -215,7 +215,7 @@
         <attribute name="Build-Jdk" value="${java.runtime.version}"/>
         <attribute name="Built-By" value="n/a"/>
         <attribute name="Created-By" value="Ant jar task"/>
-        <section name="jdk/nashorn/">
+        <section name="com/anatawa12/fixrtm/nashorn/">
           <attribute name="Implementation-Title" value="Oracle Nashorn FXShell"/>
           <attribute name="Implementation-Version" value="${nashorn.version}"/>
         </section>
@@ -264,7 +264,7 @@
       <classpath>
         <pathelement location="${build.classes.dir}"/>
       </classpath>
-      <fileset dir="${src.dir}" includes="jdk/nashorn/api/**/*.java"/>
+      <fileset dir="${src.dir}" includes="com/anatawa12/fixrtm/nashorn/api/**/*.java"/>
       <link href="http://docs.oracle.com/javase/8/docs/api/"/>
     </javadoc>
   </target>
@@ -312,12 +312,12 @@
        <fileset dir="${test.src.dir}/META-INF/services/"/>
     </copy>
 
-    <copy todir="${build.test.classes.dir}/jdk/nashorn/internal/runtime/test/resources">
-       <fileset dir="${test.src.dir}/jdk/nashorn/internal/runtime/test/resources"/>
+    <copy todir="${build.test.classes.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/test/resources">
+       <fileset dir="${test.src.dir}/com/anatawa12/fixrtm/nashorn/internal/runtime/test/resources"/>
     </copy>
 
-    <copy todir="${build.test.classes.dir}/jdk/nashorn/api/scripting/test/resources">
-       <fileset dir="${test.src.dir}/jdk/nashorn/api/scripting/test/resources"/>
+    <copy todir="${build.test.classes.dir}/com/anatawa12/fixrtm/nashorn/api/scripting/test/resources">
+       <fileset dir="${test.src.dir}/com/anatawa12/fixrtm/nashorn/api/scripting/test/resources"/>
     </copy>
 
     <!-- tests that check nashorn internals and internal API -->

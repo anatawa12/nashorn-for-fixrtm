@@ -30,10 +30,10 @@
  */
 
 var SM = Java.type("javax.script.ScriptEngineManager");
-var AJSO = Java.type("jdk.nashorn.api.scripting.AbstractJSObject");
+var AJSO = Java.type("com.anatawa12.fixrtm.nashorn.api.scripting.AbstractJSObject");
 var Supplier = Java.type("java.util.function.Supplier");
 
-var engine = new SM().getEngineByName("nashorn");
+var engine = new SM().getEngineByName("fixrtm-nashorn");
 
 // JSON stringify ScriptObjectMirror instances
 print(JSON.stringify(engine.eval("({ foo : 42 })")));

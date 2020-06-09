@@ -34,10 +34,10 @@ The recommended way to use Nashorn is through the <a href="http://jcp.org/en/jsr
 <pre>
 import javax.script.*;
 ...
-ScriptEngine nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
+ScriptEngine nashornEngine = new ScriptEngineManager().getEngineByName("fixrtm-nashorn");
 </pre>
 and then use it just as you would any other JSR-223 script engine. See
-<a href="jdk/nashorn/api/scripting/package-summary.html">{@code jdk.nashorn.api.scripting}</a> package
+<a href="com/anatawa12/fixrtm/nashorn/api/scripting/package-summary.html">{@code com.anatawa12.fixrtm.nashorn.api.scripting}</a> package
 for details.
 <p>
 <h1>Compatibility</h1>
@@ -97,17 +97,17 @@ This is done to be consistent with the fact that ECMAScript does not have the co
 Nashorn exposes a non-standard global object named {@code Java} that is the primary API entry point into Java
 platform-specific functionality. You can use it to create instances of Java classes, convert from Java arrays to native
 arrays and back, and so on. The methods on the objects are directly implemented by public static methods on the class
-<a href="jdk/nashorn/internal/objects/NativeJava.html">{@code NativeJava}</a>, see that class for details on what
+<a href="com/anatawa12/fixrtm/nashorn/internal/objects/NativeJava.html">{@code NativeJava}</a>, see that class for details on what
 functionality is available.
 <h2>Representations of Java types</h2>
-The method <a href="jdk/nashorn/internal/objects/NativeJava.html#type(java.lang.Object,%20java.lang.Object)">
+The method <a href="com/anatawa12/fixrtm/nashorn/internal/objects/NativeJava.html#type(java.lang.Object,%20java.lang.Object)">
 {@code Java.type(typeName)}</a> takes a name of a type, and returns an object representing a Java type. You can
 use that object to both create new instances of Java classes, as well as to access static fields and methods on them.
 The type object is distinct from the {@code java.lang.Class} object, which represents the reflective run-time type
 identity and doesn't carry i.e. static members. Again, see the link for {@code NativeJava} above for details.
 <h2>Other non-standard built-in objects</h2>
 In addition to {@code Java}, Nashorn also exposes some other non-standard built-in objects:
-<a href="jdk/nashorn/internal/objects/NativeJSAdapter.html">{@code JSAdapter}</a>,
-<a href="jdk/nashorn/internal/objects/NativeJavaImporter.html">{@code JavaImporter}</a>,
-<a href="jdk/nashorn/internal/runtime/NativeJavaPackage.html">{@code Packages}.</a>
+<a href="com/anatawa12/fixrtm/nashorn/internal/objects/NativeJSAdapter.html">{@code JSAdapter}</a>,
+<a href="com/anatawa12/fixrtm/nashorn/internal/objects/NativeJavaImporter.html">{@code JavaImporter}</a>,
+<a href="com/anatawa12/fixrtm/nashorn/internal/runtime/NativeJavaPackage.html">{@code Packages}.</a>
 </body>

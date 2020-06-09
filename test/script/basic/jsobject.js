@@ -29,7 +29,7 @@
  */
 
 var m = new javax.script.ScriptEngineManager();
-var e = m.getEngineByName("nashorn");
+var e = m.getEngineByName("fixrtm-nashorn");
 
 e.eval("obj = { foo:'hello', 0: 'world', func: function(x) { return x.toUpperCase() } } ");
 var obj = e.get("obj");

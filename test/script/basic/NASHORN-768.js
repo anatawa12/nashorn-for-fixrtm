@@ -31,7 +31,7 @@
 
 // create another nashorn engine
 var m = new javax.script.ScriptEngineManager();
-var engine = m.getEngineByName("nashorn");
+var engine = m.getEngineByName("fixrtm-nashorn");
 
 // our global var 'id'
 var id = "global-id";
