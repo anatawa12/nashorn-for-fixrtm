@@ -28,6 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.CONSTANTS;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.CREATE_PROGRAM_FUNCTION;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SOURCE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STORED_SCRIPT;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STRICT_MODE;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.CodeStore.newCodeStore;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
@@ -66,7 +67,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter;
@@ -233,11 +233,9 @@ public final class Context {
         }
 
         @Override
-        public void storeScript(final String cacheKey, final Source source, final String mainClassName,
-                                final Map<String,byte[]> classBytes, final Map<Integer, FunctionInitializer> initializers,
-                                final Object[] constants, final int compilationId) {
+        public void storeScript(final String cacheKey, final Source source, final StoredScript script) {
             if (context.codeStore != null) {
-                context.codeStore.store(cacheKey, source, mainClassName, classBytes, initializers, constants, compilationId);
+                context.codeStore.store(cacheKey, source, script);
             }
         }
 
@@ -1319,7 +1317,24 @@ public final class Context {
                 return null;
             }
             script = compiledFunction.getRootClass();
-            compiler.persistClassInfo(cacheKey, compiledFunction);
+            storedScript = compiler.makeStoredScript(compiledFunction);
+            compiler.persistClassInfo(cacheKey, storedScript);
+
+            final Class<?> scriptFinal = script;
+            final StoredScript storedScriptFinal = storedScript;
+
+            try {
+                AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+                    @Override
+                    public Void run() throws Exception {
+                        scriptFinal.getField(STORED_SCRIPT.symbolName())
+                            .set(null, storedScriptFinal);
+                        return null;
+                    }
+                });
+            } catch (final PrivilegedActionException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             Compiler.updateCompilationId(storedScript.getCompilationId());
             script = storedScript.installScript(source, installer);

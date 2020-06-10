@@ -83,14 +83,9 @@ public interface CodeInstaller {
      *
      * @param cacheKey key to use in cache
      * @param source the script source
-     * @param mainClassName the main class name
-     * @param classBytes map of class names to class bytes
-     * @param initializers compilation id -&gt; FunctionInitializer map
-     * @param constants constants array
-     * @param compilationId compilation id
+     * @param script the script to store
      */
-    public void storeScript(final String cacheKey, final Source source, final String mainClassName, final Map<String, byte[]> classBytes,
-            final Map<Integer, FunctionInitializer> initializers, final Object[] constants, final int compilationId);
+    public void storeScript(final String cacheKey, final Source source, final StoredScript script);
 
     /**
      * Load a previously compiled script
