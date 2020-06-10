@@ -29,6 +29,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -174,12 +175,28 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     @Override
     public CompiledScript compile(final Reader reader) throws ScriptException {
-        return asCompiledScript(makeSource(reader, context));
+        return asNoLinkedCompileScript(makeSource(reader, context)).link(this);
     }
 
     @Override
     public CompiledScript compile(final String str) throws ScriptException {
-        return asCompiledScript(makeSource(str, context));
+        return asNoLinkedCompileScript(makeSource(str, context)).link(this);
+    }
+
+    // Compilable methods
+
+    /**
+     * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     */
+    public NoLinkedCompileScript compileToNoLinked(final Reader reader) throws ScriptException {
+        return asNoLinkedCompileScript(makeSource(reader, context));
+    }
+
+    /**
+     * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     */
+    public NoLinkedCompileScript compileToNoLinked(final String str) throws ScriptException {
+        return asNoLinkedCompileScript(makeSource(str, context));
     }
 
     // Invocable methods
@@ -479,9 +496,8 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
         }
     }
 
-    private CompiledScript asCompiledScript(final Source source) throws ScriptException {
-        final Context.MultiGlobalCompiledScript mgcs;
-        final ScriptFunction func;
+    private NoLinkedCompileScript asNoLinkedCompileScript(final Source source) throws ScriptException {
+        final Context.MultiContextGlobalCompiledScript mcgcs;
         final Global oldGlobal = Context.getGlobal();
         final Global newGlobal = getNashornGlobalFrom(context);
         final boolean globalChanged = (oldGlobal != newGlobal);
@@ -490,8 +506,7 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
                 Context.setGlobal(newGlobal);
             }
 
-            mgcs = nashornContext.compileScript(source);
-            func = mgcs.getFunction(newGlobal);
+            mcgcs = nashornContext.compileScript(source);
         } catch (final Exception e) {
             throwAsScriptException(e, newGlobal);
             throw new AssertionError("should not reach here");
@@ -501,23 +516,58 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
             }
         }
 
-        return new CompiledScript() {
-            @Override
-            public Object eval(final ScriptContext ctxt) throws ScriptException {
-                final Global globalObject = getNashornGlobalFrom(ctxt);
-                // Are we running the script in the same global in which it was compiled?
-                if (func.getScope() == globalObject) {
-                    return evalImpl(func, ctxt, globalObject);
+        return new NoLinkedCompileScript(mcgcs);
+    }
+
+    public static final class NoLinkedCompileScript implements Serializable {
+        private final Context.MultiContextGlobalCompiledScript mcgcs;
+
+        private NoLinkedCompileScript(Context.MultiContextGlobalCompiledScript mcgcs) {
+            this.mcgcs = mcgcs;
+        }
+
+        public CompiledScript link(NashornScriptEngine engine) throws ScriptException {
+
+            final Global oldGlobal = Context.getGlobal();
+            final Global newGlobal = engine.getNashornGlobalFrom(engine.context);
+            final boolean globalChanged = (oldGlobal != newGlobal);
+            try {
+                if (globalChanged) {
+                    Context.setGlobal(newGlobal);
                 }
 
+                return new CompiledScriptImpl(mcgcs.linkGlobal(engine.nashornContext), engine);
+            } catch (final Exception e) {
+                throwAsScriptException(e, newGlobal);
+                throw new AssertionError("should not reach here");
+            } finally {
+                if (globalChanged) {
+                    Context.setGlobal(oldGlobal);
+                }
+            }
+        }
+
+        private static final class CompiledScriptImpl extends CompiledScript {
+            private final Context.MultiGlobalCompiledScript mgcs;
+            private final NashornScriptEngine engine;
+
+            private CompiledScriptImpl(Context.MultiGlobalCompiledScript mgcs, NashornScriptEngine engine) {
+                this.mgcs = mgcs;
+                this.engine = engine;
+            }
+
+            @Override
+            public Object eval(final ScriptContext ctxt) throws ScriptException {
+                final Global globalObject = engine.getNashornGlobalFrom(ctxt);
+
                 // different global
-                return evalImpl(mgcs, ctxt, globalObject);
+                return engine.evalImpl(mgcs, ctxt, globalObject);
             }
             @Override
             public ScriptEngine getEngine() {
-                return NashornScriptEngine.this;
+                return engine;
             }
-        };
+        }
     }
 
     private ScriptFunction compileImpl(final Source source, final ScriptContext ctxt) throws ScriptException {

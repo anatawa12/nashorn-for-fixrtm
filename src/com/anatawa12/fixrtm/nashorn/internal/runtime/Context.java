@@ -37,7 +37,9 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -68,6 +70,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import javax.script.ScriptEngine;
+
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter;
 import com.anatawa12.fixrtm.nashorn.api.scripting.ClassFilter;
@@ -645,16 +648,62 @@ public final class Context {
      * @param source the script source
      * @return reusable compiled script across many global scopes.
      */
-    public MultiGlobalCompiledScript compileScript(final Source source) {
+    public MultiContextGlobalCompiledScript compileScript(final Source source) {
         final Class<?> clazz = compile(source, this.errors, this._strict);
-        final MethodHandle createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
 
-        return new MultiGlobalCompiledScript() {
-            @Override
-            public ScriptFunction getFunction(final Global newGlobal) {
-                return invokeCreateProgramFunctionHandle(createProgramFunctionHandle, newGlobal);
+        return new MultiContextGlobalCompiledScript(clazz);
+    }
+
+    public static final class MultiContextGlobalCompiledScript implements Serializable {
+        private final StoredScript script;
+        private final Source source;
+
+        private MultiContextGlobalCompiledScript(Class<?> clazz) {
+            try {
+                this.script = (StoredScript) clazz.getField(STORED_SCRIPT.symbolName()).get(null);
+                Field field = clazz.getDeclaredField(SOURCE.symbolName());
+                field.setAccessible(true);
+                this.source = (Source) field.get(null);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new AssertionError("can't get storedScript", e);
             }
-        };
+        }
+
+        private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
+            if (script == null)
+                throw new NotSerializableException("script couldn't be read");
+        }
+
+        private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+            if (script == null)
+                throw new NotSerializableException("script couldn't be written because Script is not Serializable");
+            stream.defaultWriteObject();
+        }
+
+        public MultiGlobalCompiledScriptImpl linkGlobal(Context ctx) {
+            final URL          url    = source.getURL();
+            final ScriptLoader loader = ctx.env._loader_per_compile ? ctx.createNewLoader() : ctx.scriptLoader;
+            final CodeSource   cs     = new CodeSource(url, (CodeSigner[])null);
+            final CodeInstaller installer = new ContextCodeInstaller(ctx, loader, cs);
+            final Class<?> installed = script.installScript(source, installer);
+
+            return new MultiGlobalCompiledScriptImpl(installed);
+        }
+
+    }
+
+    private static final class MultiGlobalCompiledScriptImpl implements MultiGlobalCompiledScript {
+        private transient MethodHandle createProgramFunctionHandle;
+
+        private MultiGlobalCompiledScriptImpl(Class<?> clazz) {
+            this.createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
+        }
+
+        @Override
+        public ScriptFunction getFunction(Global newGlobal) {
+            return invokeCreateProgramFunctionHandle(createProgramFunctionHandle, newGlobal);
+        }
     }
 
     /**
