@@ -77,7 +77,7 @@ public final class StoredScript implements Serializable {
         return compilationId;
     }
 
-    private Map<String, Class<?>> installClasses(final Source source, final CodeInstaller installer) {
+    private Map<String, Class<?>> installClasses(final Source source, final CodeInstaller installer, Object[] constants) {
         final Map<String, Class<?>> installedClasses = new HashMap<>();
         final byte[]   mainClassBytes = classBytes.get(mainClassName);
         final Class<?> mainClass      = installer.install(mainClassName, mainClassBytes);
@@ -97,7 +97,7 @@ public final class StoredScript implements Serializable {
     }
 
     FunctionInitializer installFunction(final RecompilableScriptFunctionData data, final CodeInstaller installer) {
-        final Map<String, Class<?>> installedClasses = installClasses(data.getSource(), installer);
+        final Map<String, Class<?>> installedClasses = installClasses(data.getSource(), installer, constants);
 
         assert initializers != null;
         assert initializers.size() == 1;
@@ -125,17 +125,35 @@ public final class StoredScript implements Serializable {
      * @return main script class
      */
     Class<?> installScript(final Source source, final CodeInstaller installer) {
+        final Object[] newConstants = new Object[constants.length];
+        final Map<RecompilableScriptFunctionData, RecompilableScriptFunctionData>
+            oldNewMap = new HashMap<>();
+        for (int i = 0; i < constants.length; i++) {
+            Object constant = constants[i];
+            if (constant instanceof RecompilableScriptFunctionData) {
+                newConstants[i] = new RecompilableScriptFunctionData((RecompilableScriptFunctionData) constant);
+                oldNewMap.put((RecompilableScriptFunctionData)constant, (RecompilableScriptFunctionData)newConstants[i]);
+            } else {
+                newConstants[i] = constant;
+            }
+        }
 
-        final Map<String, Class<?>> installedClasses = installClasses(source, installer);
+        for (Map.Entry<RecompilableScriptFunctionData, RecompilableScriptFunctionData> entry : oldNewMap.entrySet()) {
+            entry.getValue().reInit(oldNewMap);
+        }
 
-        for (final Object constant : constants) {
+        final Map<String, Class<?>> installedClasses = installClasses(source, installer, newConstants);
+
+        for (Object constant : newConstants) {
             if (constant instanceof RecompilableScriptFunctionData) {
                 final RecompilableScriptFunctionData data = (RecompilableScriptFunctionData) constant;
                 data.initTransients(source, installer);
                 final FunctionInitializer initializer = initializers.get(data.getFunctionNodeId());
                 if (initializer != null) {
-                    initializer.setCode(installedClasses.get(initializer.getClassName()));
-                    data.initializeCode(initializer);
+                    if (initializer.getCode() == null) {
+                        initializer.setCode(installedClasses.get(initializer.getClassName()));
+                        data.initializeCode(initializer);
+                    }
                 }
             }
         }

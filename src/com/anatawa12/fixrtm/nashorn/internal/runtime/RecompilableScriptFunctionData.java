@@ -36,6 +36,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -184,6 +185,33 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         }
 
         createLogger();
+    }
+
+    public RecompilableScriptFunctionData(RecompilableScriptFunctionData copy) {
+        super(copy.name, copy.getArity(), copy.flags);
+        this.functionNodeId = copy.functionNodeId;
+        this.functionName = copy.functionName;
+        this.lineNumber = copy.lineNumber;
+        this.token = copy.token;
+        this.allocationStrategy = copy.allocationStrategy;
+        this.endParserState = copy.endParserState;
+        this.nestedFunctions = new HashMap<>(copy.nestedFunctions);
+        this.functionFlags = copy.functionFlags;
+        this.externalScopeDepths = copy.externalScopeDepths;
+        this.internalSymbols = copy.internalSymbols;
+        this.cachedAst = copy.cachedAst;
+        this.parent = copy.parent;
+
+        createLogger();
+    }
+
+    void reInit(Map<RecompilableScriptFunctionData, RecompilableScriptFunctionData>
+                                oldNewMap) {
+        parent = oldNewMap.get(parent);
+
+        for (Map.Entry<Integer, RecompilableScriptFunctionData> entry : nestedFunctions.entrySet()) {
+            entry.setValue(oldNewMap.get(entry.getValue()));
+        }
     }
 
     private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
