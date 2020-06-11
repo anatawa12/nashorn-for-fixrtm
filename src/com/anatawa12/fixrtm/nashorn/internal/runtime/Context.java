@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -651,14 +652,16 @@ public final class Context {
     public MultiContextGlobalCompiledScript compileScript(final Source source) {
         final Class<?> clazz = compile(source, this.errors, this._strict);
 
-        return new MultiContextGlobalCompiledScript(clazz);
+        return new MultiContextGlobalCompiledScript(clazz, this);
     }
 
     public static final class MultiContextGlobalCompiledScript implements Serializable {
         private final StoredScript script;
         private final Source source;
+        private transient WeakHashMap<Context, MultiGlobalCompiledScriptImpl> mgcsMap 
+            = new WeakHashMap<>();
 
-        private MultiContextGlobalCompiledScript(Class<?> clazz) {
+        private MultiContextGlobalCompiledScript(Class<?> clazz, Context context) {
             try {
                 this.script = (StoredScript) clazz.getField(STORED_SCRIPT.symbolName()).get(null);
                 Field field = clazz.getDeclaredField(SOURCE.symbolName());
@@ -667,10 +670,12 @@ public final class Context {
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 throw new AssertionError("can't get storedScript", e);
             }
+            mgcsMap.put(context, new MultiGlobalCompiledScriptImpl(clazz));
         }
 
         private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
             stream.defaultReadObject();
+            mgcsMap = new WeakHashMap<>();
             if (script == null)
                 throw new NotSerializableException("script couldn't be read");
         }
@@ -682,13 +687,17 @@ public final class Context {
         }
 
         public MultiGlobalCompiledScriptImpl linkGlobal(Context ctx) {
+            MultiGlobalCompiledScriptImpl mgcs =  mgcsMap.get(ctx);
+            if (mgcs != null) return mgcs;
             final URL          url    = source.getURL();
             final ScriptLoader loader = ctx.env._loader_per_compile ? ctx.createNewLoader() : ctx.scriptLoader;
             final CodeSource   cs     = new CodeSource(url, (CodeSigner[])null);
             final CodeInstaller installer = new ContextCodeInstaller(ctx, loader, cs);
             final Class<?> installed = script.installScript(source, installer);
 
-            return new MultiGlobalCompiledScriptImpl(installed);
+            mgcs = new MultiGlobalCompiledScriptImpl(installed);
+            mgcsMap.put(ctx, mgcs);
+            return mgcs;
         }
 
     }
