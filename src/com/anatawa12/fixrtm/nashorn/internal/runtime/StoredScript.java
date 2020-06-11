@@ -131,15 +131,15 @@ public final class StoredScript implements Serializable {
         for (int i = 0; i < constants.length; i++) {
             Object constant = constants[i];
             if (constant instanceof RecompilableScriptFunctionData) {
-                newConstants[i] = new RecompilableScriptFunctionData((RecompilableScriptFunctionData) constant);
-                oldNewMap.put((RecompilableScriptFunctionData)constant, (RecompilableScriptFunctionData)newConstants[i]);
+                if (!oldNewMap.containsKey(constant)) 
+                    newConstants[i] = new RecompilableScriptFunctionData((RecompilableScriptFunctionData) constant, oldNewMap);
             } else {
                 newConstants[i] = constant;
             }
         }
 
-        for (Map.Entry<RecompilableScriptFunctionData, RecompilableScriptFunctionData> entry : oldNewMap.entrySet()) {
-            entry.getValue().reInit(oldNewMap);
+        for (RecompilableScriptFunctionData value : oldNewMap.values()) {
+            value.reInit(oldNewMap);
         }
 
         final Map<String, Class<?>> installedClasses = installClasses(source, installer, newConstants);

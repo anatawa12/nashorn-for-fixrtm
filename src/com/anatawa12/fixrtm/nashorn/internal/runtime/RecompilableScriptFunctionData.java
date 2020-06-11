@@ -187,7 +187,8 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         createLogger();
     }
 
-    public RecompilableScriptFunctionData(RecompilableScriptFunctionData copy) {
+    public RecompilableScriptFunctionData(RecompilableScriptFunctionData copy,
+                                          Map<RecompilableScriptFunctionData, RecompilableScriptFunctionData> oldNewMap) {
         super(copy.name, copy.getArity(), copy.flags);
         this.functionNodeId = copy.functionNodeId;
         this.functionName = copy.functionName;
@@ -202,6 +203,12 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         this.cachedAst = copy.cachedAst;
         this.parent = copy.parent;
 
+        oldNewMap.put(copy, this);
+        for (RecompilableScriptFunctionData value : nestedFunctions.values()) {
+            if (!oldNewMap.containsKey(value))
+                new RecompilableScriptFunctionData(value, oldNewMap);
+        }
+
         createLogger();
     }
 
@@ -210,7 +217,11 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         parent = oldNewMap.get(parent);
 
         for (Map.Entry<Integer, RecompilableScriptFunctionData> entry : nestedFunctions.entrySet()) {
-            entry.setValue(oldNewMap.get(entry.getValue()));
+            RecompilableScriptFunctionData newData = oldNewMap.get(entry.getValue());
+            if (newData == null) {
+                throw new AssertionError("some data is null");
+            }
+            entry.setValue(newData);
         }
     }
 
