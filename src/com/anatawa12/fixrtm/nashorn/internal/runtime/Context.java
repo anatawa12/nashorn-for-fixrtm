@@ -703,7 +703,7 @@ public final class Context {
     }
 
     private static final class MultiGlobalCompiledScriptImpl implements MultiGlobalCompiledScript {
-        private transient MethodHandle createProgramFunctionHandle;
+        private final transient MethodHandle createProgramFunctionHandle;
 
         private MultiGlobalCompiledScriptImpl(Class<?> clazz) {
             this.createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
