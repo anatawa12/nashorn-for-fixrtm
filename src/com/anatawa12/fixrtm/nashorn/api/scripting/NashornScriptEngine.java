@@ -148,12 +148,12 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     @Override
     public Object eval(final Reader reader, final ScriptContext ctxt) throws ScriptException {
-        return evalImpl(makeSource(reader, ctxt), ctxt);
+        return evalImpl(makeSource(reader, getScriptName(ctxt)), ctxt);
     }
 
     @Override
     public Object eval(final String script, final ScriptContext ctxt) throws ScriptException {
-        return evalImpl(makeSource(script, ctxt), ctxt);
+        return evalImpl(makeSource(script, getScriptName(ctxt)), ctxt);
     }
 
     @Override
@@ -175,12 +175,12 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     @Override
     public CompiledScript compile(final Reader reader) throws ScriptException {
-        return asNoLinkedCompileScript(makeSource(reader, context)).link(this);
+        return compileToNoLinked(reader).link(this);
     }
 
     @Override
     public CompiledScript compile(final String str) throws ScriptException {
-        return asNoLinkedCompileScript(makeSource(str, context)).link(this);
+        return compileToNoLinked(str).link(this);
     }
 
     // Compilable methods
@@ -189,14 +189,14 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
      */
     public NoLinkedCompileScript compileToNoLinked(final Reader reader) throws ScriptException {
-        return asNoLinkedCompileScript(makeSource(reader, context));
+        return asNoLinkedCompileScript(makeSource(reader, getScriptName(context)));
     }
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
      */
     public NoLinkedCompileScript compileToNoLinked(final String str) throws ScriptException {
-        return asNoLinkedCompileScript(makeSource(str, context));
+        return asNoLinkedCompileScript(makeSource(str, getScriptName(context)));
     }
 
     // Invocable methods
@@ -231,16 +231,16 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     // Implementation only below this point
 
-    private static Source makeSource(final Reader reader, final ScriptContext ctxt) throws ScriptException {
+    private static Source makeSource(final Reader reader, final String scriptName) throws ScriptException {
         try {
-            return sourceFor(getScriptName(ctxt), reader);
+            return sourceFor(scriptName, reader);
         } catch (final IOException e) {
             throw new ScriptException(e);
         }
     }
 
-    private static Source makeSource(final String src, final ScriptContext ctxt) {
-        return sourceFor(getScriptName(ctxt), src);
+    private static Source makeSource(final String src, final String scriptName) {
+        return sourceFor(scriptName, src);
     }
 
     private static String getScriptName(final ScriptContext ctxt) {
