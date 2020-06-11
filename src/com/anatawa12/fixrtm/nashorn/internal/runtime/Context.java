@@ -661,7 +661,7 @@ public final class Context {
         private transient WeakHashMap<Context, MultiGlobalCompiledScriptImpl> mgcsMap 
             = new WeakHashMap<>();
 
-        private MultiContextGlobalCompiledScript(Class<?> clazz, Context context) {
+        private MultiContextGlobalCompiledScript(final Class<?> clazz, final Context context) {
             try {
                 script = AccessController.doPrivileged(new PrivilegedExceptionAction<StoredScript>() {
                     @Override
