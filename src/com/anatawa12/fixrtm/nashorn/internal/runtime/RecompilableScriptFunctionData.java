@@ -28,6 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -568,6 +569,11 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         SerializedAst(final FunctionNode fn, final Reference<FunctionNode> cachedAst) {
             this.serializedAst = AstSerializer.serialize(fn);
             this.cachedAst = cachedAst;
+        }
+
+        private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
+            cachedAst = new SoftReference<>(null);
         }
     }
 
