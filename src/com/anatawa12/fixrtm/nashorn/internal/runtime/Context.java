@@ -663,11 +663,23 @@ public final class Context {
 
         private MultiContextGlobalCompiledScript(Class<?> clazz, Context context) {
             try {
-                this.script = (StoredScript) clazz.getField(STORED_SCRIPT.symbolName()).get(null);
-                Field field = clazz.getDeclaredField(SOURCE.symbolName());
-                field.setAccessible(true);
-                this.source = (Source) field.get(null);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
+                script = AccessController.doPrivileged(new PrivilegedExceptionAction<StoredScript>() {
+                    @Override
+                    public StoredScript run() throws Exception {
+                        StoredScript script = (StoredScript) clazz.getField(STORED_SCRIPT.symbolName()).get(null);
+                        return script;
+                    }
+                });
+                source = AccessController.doPrivileged(new PrivilegedExceptionAction<Source>() {
+                    @Override
+                    public Source run() throws Exception {
+                        Field field = clazz.getDeclaredField(SOURCE.symbolName());
+                        field.setAccessible(true);
+                        Source source = (Source) field.get(null);
+                        return source;
+                    }
+                });
+            } catch (PrivilegedActionException e) {
                 throw new AssertionError("can't get storedScript", e);
             }
             mgcsMap.put(context, new MultiGlobalCompiledScriptImpl(clazz));
