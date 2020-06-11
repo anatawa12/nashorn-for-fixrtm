@@ -850,7 +850,7 @@ final class CompiledFunction {
             final TypeMap typeMap = data.typeMap(ct);
             final Type[] paramTypes = typeMap == null ? null : typeMap.getParameterTypes(functionNodeId);
             final String cacheKey = CodeStore.getCacheKey(functionNodeId, paramTypes);
-            compiler.persistClassInfo(cacheKey, normalFn);
+            compiler.persistClassInfo(cacheKey, compiler.makeStoredScript(normalFn));
         }
 
         final boolean canBeDeoptimized = normalFn.canBeDeoptimized();
