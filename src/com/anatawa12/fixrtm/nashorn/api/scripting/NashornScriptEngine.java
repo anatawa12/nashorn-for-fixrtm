@@ -27,7 +27,11 @@ package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -148,12 +152,36 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     @Override
     public Object eval(final Reader reader, final ScriptContext ctxt) throws ScriptException {
+        if (_isNashornTestRuntime) {
+            return testEval(makeSource(reader, getScriptName(ctxt)), ctxt);
+        }
         return evalImpl(makeSource(reader, getScriptName(ctxt)), ctxt);
     }
 
     @Override
     public Object eval(final String script, final ScriptContext ctxt) throws ScriptException {
+        if (_isNashornTestRuntime) {
+            return testEval(makeSource(script, getScriptName(ctxt)), ctxt);
+        }
         return evalImpl(makeSource(script, getScriptName(ctxt)), ctxt);
+    }
+
+    private Object testEval(Source source, ScriptContext ctxt) throws ScriptException {
+        NoLinkedCompileScript script1 = asNoLinkedCompileScript(source);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(script1);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        NoLinkedCompileScript script2;
+        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+            script1 = (NoLinkedCompileScript) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new AssertionError(e);
+        }
+        return script1.link(this).eval(context);
     }
 
     @Override
@@ -629,5 +657,17 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     private static boolean isOfContext(final Global global, final Context context) {
         return global.isOfContext(context);
+    }
+
+    private static final boolean _isNashornTestRuntime;
+    static {
+        boolean isNashornTestRuntime;
+        try {
+            Class.forName("com.anatawa12.fixrtm.nashorn.internal.test.models.InternalRunnable");
+            isNashornTestRuntime = true;
+        } catch (Throwable ignore) {
+            isNashornTestRuntime = false;
+        }
+        _isNashornTestRuntime = isNashornTestRuntime;
     }
 }
