@@ -46,6 +46,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.GE
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.INIT;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SET_MAP;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SOURCE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STORED_SCRIPT;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STRICT_MODE;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.className;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.methodDescriptor;
@@ -287,6 +288,9 @@ public class ClassEmitter {
 
         // strictMode - was this script compiled in strict mode.  Set externally by the compiler.
         field(EnumSet.of(Flag.PUBLIC, Flag.STATIC, Flag.FINAL), STRICT_MODE.symbolName(), boolean.class, strictMode);
+
+        // storedScript - used to serialize function. Set externally by the compiler.
+        field(EnumSet.of(Flag.PUBLIC, Flag.STATIC), STORED_SCRIPT.symbolName(), STORED_SCRIPT.type());
     }
 
     /**

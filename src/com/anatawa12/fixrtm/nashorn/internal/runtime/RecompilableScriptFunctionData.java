@@ -28,6 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -35,6 +37,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -132,7 +135,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
 
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private transient DebugLogger log;
+    private transient volatile DebugLogger log;
 
     private final Map<String, Integer> externalScopeDepths;
 
@@ -185,6 +188,58 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         createLogger();
     }
 
+    public RecompilableScriptFunctionData(RecompilableScriptFunctionData copy,
+                                          Map<RecompilableScriptFunctionData, RecompilableScriptFunctionData> oldNewMap) {
+        super(copy.name, copy.getArity(), copy.flags);
+        this.functionNodeId = copy.functionNodeId;
+        this.functionName = copy.functionName;
+        this.lineNumber = copy.lineNumber;
+        this.token = copy.token;
+        this.allocationStrategy = copy.allocationStrategy;
+        this.endParserState = copy.endParserState;
+        this.nestedFunctions = new HashMap<>(copy.nestedFunctions);
+        this.functionFlags = copy.functionFlags;
+        this.externalScopeDepths = copy.externalScopeDepths;
+        this.internalSymbols = copy.internalSymbols;
+        this.cachedAst = copy.cachedAst;
+        this.parent = copy.parent;
+
+        oldNewMap.put(copy, this);
+        for (RecompilableScriptFunctionData value : nestedFunctions.values()) {
+            if (!oldNewMap.containsKey(value))
+                new RecompilableScriptFunctionData(value, oldNewMap);
+        }
+
+        createLogger();
+    }
+
+    void reInit(Map<RecompilableScriptFunctionData, RecompilableScriptFunctionData>
+                                oldNewMap) {
+        parent = oldNewMap.get(parent);
+
+        for (Map.Entry<Integer, RecompilableScriptFunctionData> entry : nestedFunctions.entrySet()) {
+            RecompilableScriptFunctionData newData = oldNewMap.get(entry.getValue());
+            if (newData == null) {
+                throw new AssertionError("some data is null");
+            }
+            entry.setValue(newData);
+        }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        final Object lCachedAst = cachedAst;
+        if (lCachedAst instanceof Reference<?>) {
+            final FunctionNode fn = (FunctionNode)((Reference<?>)lCachedAst).get();
+            if (fn != null) {
+                //noinspection unchecked
+                cachedAst = new SerializedAst(fn, (Reference<FunctionNode>) lCachedAst);
+            } else {
+                cachedAst = null;
+            }
+        }
+        stream.defaultWriteObject();
+    }
+
     private static <K, V> Map<K, V> smallMap(final Map<K, V> map) {
         if (map == null || map.isEmpty()) {
             return Collections.emptyMap();
@@ -206,8 +261,19 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         }
     }
 
+    @SuppressWarnings("FieldMayBeFinal")
+    private transient Object logLock = new Object();
+
     @Override
     public DebugLogger getLogger() {
+        if (log != null) {
+            //noinspection SynchronizeOnNonFinalField
+            synchronized (logLock) {
+                if (log != null) {
+                    createLogger();
+                }
+            }
+        }
         return log;
     }
 
@@ -496,13 +562,18 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
      * we're using this tuple instead to also keep a deserialized AST around in memory to cut down on
      * deserialization costs.
      */
-    private static class SerializedAst {
+    private static class SerializedAst implements Serializable {
         private final byte[] serializedAst;
-        private volatile Reference<FunctionNode> cachedAst;
+        private transient volatile Reference<FunctionNode> cachedAst;
 
         SerializedAst(final FunctionNode fn, final Reference<FunctionNode> cachedAst) {
             this.serializedAst = AstSerializer.serialize(fn);
             this.cachedAst = cachedAst;
+        }
+
+        private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
+            cachedAst = new SoftReference<>(null);
         }
     }
 
@@ -701,8 +772,8 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         // explicit Undefined values for undefined local variables (see AssignSymbols#defineSymbol() and
         // CompilationEnvironment#declareLocalSymbol()).
 
-        if (log.isEnabled()) {
-            log.info("Parameter type specialization of '", functionName, "' signature: ", actualCallSiteType);
+        if (getLogger().isEnabled()) {
+            getLogger().info("Parameter type specialization of '", functionName, "' signature: ", actualCallSiteType);
         }
 
         final boolean persistentCache = persist && usePersistentCodeCache();
@@ -726,7 +797,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
                 fn.isCached() ? CompilationPhases.COMPILE_ALL_CACHED : CompilationPhases.COMPILE_ALL);
 
         if (persist && !compiledFn.hasApplyToCallSpecialization()) {
-            compiler.persistClassInfo(cacheKey, compiledFn);
+            compiler.persistClassInfo(cacheKey, compiler.makeStoredScript(compiledFn));
         }
         return new FunctionInitializer(compiledFn, compiler.getInvalidatedProgramPoints());
     }
@@ -781,8 +852,8 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
     }
 
     private void logLookup(final boolean shouldLog, final MethodType targetType) {
-        if (shouldLog && log.isEnabled()) {
-            log.info("Looking up ", DebugLogger.quote(functionName), " type=", targetType);
+        if (shouldLog && getLogger().isEnabled()) {
+            getLogger().info("Looking up ", DebugLogger.quote(functionName), " type=", targetType);
         }
     }
 
@@ -1045,7 +1116,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
 
     private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        createLogger();
+        logLock = new Object();
     }
 
     private void createLogger() {

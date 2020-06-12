@@ -38,6 +38,7 @@ import com.anatawa12.fixrtm.nashorn.internal.codegen.types.Type;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Source;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.StoredScript;
 
 /**
  * This class represents constant names of variables, methods and fields in
@@ -71,6 +72,9 @@ public enum CompilerConstants {
 
     /** strict mode field name and type */
     STRICT_MODE("strictMode", boolean.class),
+
+    /** storedScript field name and type */
+    STORED_SCRIPT("storedScript", StoredScript.class),
 
     /** default script name */
     DEFAULT_SCRIPT_NAME("Script"),

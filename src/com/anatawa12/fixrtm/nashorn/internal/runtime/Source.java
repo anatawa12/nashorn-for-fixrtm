@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -60,7 +61,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
  * Source objects track the origin of JavaScript entities.
  */
 @Logger(name="source")
-public final class Source implements Loggable {
+public final class Source implements Loggable, Serializable {
     private static final int BUF_SIZE = 8 * 1024;
     private static final Cache CACHE = new Cache();
 
@@ -85,10 +86,10 @@ public final class Source implements Loggable {
     private final Data data;
 
     /** Cached hash code */
-    private int hash;
+    private transient int hash;
 
     /** Base64-encoded SHA1 digest of this source object */
-    private volatile byte[] digest;
+    private transient volatile byte[] digest;
 
     /** source URL set via //@ sourceURL or //# sourceURL directive */
     private String explicitURL;
@@ -155,10 +156,10 @@ public final class Source implements Loggable {
         boolean isEvalCode();
     }
 
-    private static class RawData implements Data {
+    private static class RawData implements Data, Serializable {
         private final char[] array;
         private final boolean evalCode;
-        private int hash;
+        private transient int hash;
 
         private RawData(final char[] array, final boolean evalCode) {
             this.array = Objects.requireNonNull(array);

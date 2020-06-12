@@ -28,6 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.CONSTANTS;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.CREATE_PROGRAM_FUNCTION;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SOURCE;
+import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STORED_SCRIPT;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.STRICT_MODE;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.CodeStore.newCodeStore;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
@@ -36,7 +37,9 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -61,13 +64,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter;
 import com.anatawa12.fixrtm.nashorn.api.scripting.ClassFilter;
@@ -233,11 +237,9 @@ public final class Context {
         }
 
         @Override
-        public void storeScript(final String cacheKey, final Source source, final String mainClassName,
-                                final Map<String,byte[]> classBytes, final Map<Integer, FunctionInitializer> initializers,
-                                final Object[] constants, final int compilationId) {
+        public void storeScript(final String cacheKey, final Source source, final StoredScript script) {
             if (context.codeStore != null) {
-                context.codeStore.store(cacheKey, source, mainClassName, classBytes, initializers, constants, compilationId);
+                context.codeStore.store(cacheKey, source, script);
             }
         }
 
@@ -647,16 +649,82 @@ public final class Context {
      * @param source the script source
      * @return reusable compiled script across many global scopes.
      */
-    public MultiGlobalCompiledScript compileScript(final Source source) {
+    public MultiContextGlobalCompiledScript compileScript(final Source source) {
         final Class<?> clazz = compile(source, this.errors, this._strict);
-        final MethodHandle createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
 
-        return new MultiGlobalCompiledScript() {
-            @Override
-            public ScriptFunction getFunction(final Global newGlobal) {
-                return invokeCreateProgramFunctionHandle(createProgramFunctionHandle, newGlobal);
+        return new MultiContextGlobalCompiledScript(clazz, this);
+    }
+
+    public static final class MultiContextGlobalCompiledScript implements Serializable {
+        private final StoredScript script;
+        private final Source source;
+        private transient WeakHashMap<Context, MultiGlobalCompiledScriptImpl> mgcsMap 
+            = new WeakHashMap<>();
+
+        private MultiContextGlobalCompiledScript(final Class<?> clazz, final Context context) {
+            try {
+                script = AccessController.doPrivileged(new PrivilegedExceptionAction<StoredScript>() {
+                    @Override
+                    public StoredScript run() throws Exception {
+                        StoredScript script = (StoredScript) clazz.getField(STORED_SCRIPT.symbolName()).get(null);
+                        return script;
+                    }
+                });
+                source = AccessController.doPrivileged(new PrivilegedExceptionAction<Source>() {
+                    @Override
+                    public Source run() throws Exception {
+                        Field field = clazz.getDeclaredField(SOURCE.symbolName());
+                        field.setAccessible(true);
+                        Source source = (Source) field.get(null);
+                        return source;
+                    }
+                });
+            } catch (PrivilegedActionException e) {
+                throw new AssertionError("can't get storedScript", e);
             }
-        };
+            mgcsMap.put(context, new MultiGlobalCompiledScriptImpl(clazz));
+        }
+
+        private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
+            mgcsMap = new WeakHashMap<>();
+            if (script == null)
+                throw new NotSerializableException("script couldn't be read");
+        }
+
+        private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+            if (script == null)
+                throw new NotSerializableException("script couldn't be written because Script is not Serializable");
+            stream.defaultWriteObject();
+        }
+
+        public MultiGlobalCompiledScriptImpl linkGlobal(Context ctx) {
+            MultiGlobalCompiledScriptImpl mgcs =  mgcsMap.get(ctx);
+            if (mgcs != null) return mgcs;
+            final URL          url    = source.getURL();
+            final ScriptLoader loader = ctx.env._loader_per_compile ? ctx.createNewLoader() : ctx.scriptLoader;
+            final CodeSource   cs     = new CodeSource(url, (CodeSigner[])null);
+            final CodeInstaller installer = new ContextCodeInstaller(ctx, loader, cs);
+            final Class<?> installed = script.installScript(source, installer);
+
+            mgcs = new MultiGlobalCompiledScriptImpl(installed);
+            mgcsMap.put(ctx, mgcs);
+            return mgcs;
+        }
+
+    }
+
+    private static final class MultiGlobalCompiledScriptImpl implements MultiGlobalCompiledScript {
+        private final transient MethodHandle createProgramFunctionHandle;
+
+        private MultiGlobalCompiledScriptImpl(Class<?> clazz) {
+            this.createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
+        }
+
+        @Override
+        public ScriptFunction getFunction(Global newGlobal) {
+            return invokeCreateProgramFunctionHandle(createProgramFunctionHandle, newGlobal);
+        }
     }
 
     /**
@@ -1319,7 +1387,24 @@ public final class Context {
                 return null;
             }
             script = compiledFunction.getRootClass();
-            compiler.persistClassInfo(cacheKey, compiledFunction);
+            storedScript = compiler.makeStoredScript(compiledFunction);
+            compiler.persistClassInfo(cacheKey, storedScript);
+
+            final Class<?> scriptFinal = script;
+            final StoredScript storedScriptFinal = storedScript;
+
+            try {
+                AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+                    @Override
+                    public Void run() throws Exception {
+                        scriptFinal.getField(STORED_SCRIPT.symbolName())
+                            .set(null, storedScriptFinal);
+                        return null;
+                    }
+                });
+            } catch (final PrivilegedActionException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             Compiler.updateCompilationId(storedScript.getCompilationId());
             script = storedScript.installScript(source, installer);
