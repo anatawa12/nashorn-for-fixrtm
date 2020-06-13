@@ -45,13 +45,13 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
  * Constructor of method handles used to guard call sites.
  */
 public final class NashornGuards {
-    private static final MethodHandle IS_MAP              = findOwnMH("isMap", boolean.class, ScriptObject.class, PropertyMap.class);
-    private static final MethodHandle IS_MAP_SCRIPTOBJECT = findOwnMH("isMap", boolean.class, Object.class, PropertyMap.class);
-    private static final MethodHandle IS_SCRIPTOBJECT     = findOwnMH("isScriptObject", boolean.class, Object.class);
-    private static final MethodHandle IS_NOT_JSOBJECT     = findOwnMH("isNotJSObject", boolean.class, Object.class);
-    private static final MethodHandle SAME_OBJECT         = findOwnMH("sameObject", boolean.class, Object.class, WeakReference.class);
+    private static final SMethodHandle IS_MAP              = findOwnMH("isMap", boolean.class, ScriptObject.class, PropertyMap.class);
+    private static final SMethodHandle IS_MAP_SCRIPTOBJECT = findOwnMH("isMap", boolean.class, Object.class, PropertyMap.class);
+    private static final SMethodHandle IS_SCRIPTOBJECT     = findOwnMH("isScriptObject", boolean.class, Object.class);
+    private static final SMethodHandle IS_NOT_JSOBJECT     = findOwnMH("isNotJSObject", boolean.class, Object.class);
+    private static final SMethodHandle SAME_OBJECT         = findOwnMH("sameObject", boolean.class, Object.class, WeakReference.class);
     //TODO - maybe put this back in ScriptFunction instead of the ClassCastException.class relinkage
-    //private static final MethodHandle IS_SCRIPTFUNCTION = findOwnMH("isScriptFunction", boolean.class, Object.class);
+    //private static final SMethodHandle IS_SCRIPTFUNCTION = findOwnMH("isScriptFunction", boolean.class, Object.class);
 
     private static final boolean CCE_ONLY = Options.getBooleanProperty("nashorn.cce");
 
@@ -80,7 +80,7 @@ public final class NashornGuards {
      * Returns a guard that does an instanceof ScriptObject check on the receiver
      * @return guard
      */
-    public static MethodHandle getScriptObjectGuard() {
+    public static SMethodHandle getScriptObjectGuard() {
         return IS_SCRIPTOBJECT;
     }
 
@@ -88,7 +88,7 @@ public final class NashornGuards {
     * Get the guard that checks if an item is not a {@code JSObject}
     * @return method handle for guard
     */
-   public static MethodHandle getNotJSObjectGuard() {
+   public static SMethodHandle getNotJSObjectGuard() {
        return IS_NOT_JSOBJECT;
    }
 
@@ -97,7 +97,7 @@ public final class NashornGuards {
      * @param explicitInstanceOfCheck - if false, then this is a nop, because it's all the guard does
      * @return guard
      */
-    public static MethodHandle getScriptObjectGuard(final boolean explicitInstanceOfCheck) {
+    public static SMethodHandle getScriptObjectGuard(final boolean explicitInstanceOfCheck) {
         return explicitInstanceOfCheck ? IS_SCRIPTOBJECT : null;
     }
 
@@ -110,7 +110,7 @@ public final class NashornGuards {
      *
      * @return method handle for guard
      */
-    public static MethodHandle getMapGuard(final PropertyMap map, final boolean explicitInstanceOfCheck) {
+    public static SMethodHandle getMapGuard(final PropertyMap map, final boolean explicitInstanceOfCheck) {
         return MH.insertArguments(explicitInstanceOfCheck ? IS_MAP_SCRIPTOBJECT : IS_MAP, 1, map);
     }
 
@@ -136,7 +136,7 @@ public final class NashornGuards {
      * @param explicitInstanceOfCheck true if we should do an explicit script object instanceof check instead of just casting
      * @return method handle for guard
      */
-    public static MethodHandle getGuard(final ScriptObject sobj, final Property property, final CallSiteDescriptor desc, final boolean explicitInstanceOfCheck) {
+    public static SMethodHandle getGuard(final ScriptObject sobj, final Property property, final CallSiteDescriptor desc, final boolean explicitInstanceOfCheck) {
         if (!needsGuard(property, desc)) {
             return null;
         }
@@ -160,7 +160,7 @@ public final class NashornGuards {
      * @param sobj the self object
      * @return true if same self object instance
      */
-    public static MethodHandle getIdentityGuard(final ScriptObject sobj) {
+    public static SMethodHandle getIdentityGuard(final ScriptObject sobj) {
         return MH.insertArguments(SAME_OBJECT, 1, new WeakReference<>(sobj));
     }
 
@@ -169,7 +169,7 @@ public final class NashornGuards {
      *
      * @return method handle for guard
      */
-    public static MethodHandle getStringGuard() {
+    public static SMethodHandle getStringGuard() {
         return JSType.IS_STRING.methodHandle();
     }
 
@@ -178,7 +178,7 @@ public final class NashornGuards {
      *
      * @return method handle for guard
      */
-    public static MethodHandle getNumberGuard() {
+    public static SMethodHandle getNumberGuard() {
         return JSType.IS_NUMBER.methodHandle();
     }
 
@@ -189,7 +189,7 @@ public final class NashornGuards {
      * @param guard2 the second guard, only invoked if guard1 returns true
      * @return true if both guard1 and guard2 returned true
      */
-    public static MethodHandle combineGuards(final MethodHandle guard1, final MethodHandle guard2) {
+    public static SMethodHandle combineGuards(final SMethodHandle guard1, final SMethodHandle guard2) {
         if (guard1 == null) {
             return guard2;
         } else if (guard2 == null) {
@@ -235,7 +235,7 @@ public final class NashornGuards {
         return self instanceof ScriptFunction;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NashornGuards.class, name, MH.type(rtype, types));
     }
 }

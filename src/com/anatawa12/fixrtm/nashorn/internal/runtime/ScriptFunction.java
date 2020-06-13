@@ -64,51 +64,51 @@ public class ScriptFunction extends ScriptObject {
     /**
      * Method handle for prototype getter for this ScriptFunction
      */
-    public static final MethodHandle G$PROTOTYPE = findOwnMH_S("G$prototype", Object.class, Object.class);
+    public static final SMethodHandle G$PROTOTYPE = findOwnMH_S("G$prototype", Object.class, Object.class);
 
     /**
      * Method handle for prototype setter for this ScriptFunction
      */
-    public static final MethodHandle S$PROTOTYPE = findOwnMH_S("S$prototype", void.class, Object.class, Object.class);
+    public static final SMethodHandle S$PROTOTYPE = findOwnMH_S("S$prototype", void.class, Object.class, Object.class);
 
     /**
      * Method handle for length getter for this ScriptFunction
      */
-    public static final MethodHandle G$LENGTH = findOwnMH_S("G$length", int.class, Object.class);
+    public static final SMethodHandle G$LENGTH = findOwnMH_S("G$length", int.class, Object.class);
 
     /**
      * Method handle for name getter for this ScriptFunction
      */
-    public static final MethodHandle G$NAME = findOwnMH_S("G$name", Object.class, Object.class);
+    public static final SMethodHandle G$NAME = findOwnMH_S("G$name", Object.class, Object.class);
 
     /**
      * Method handle used for implementing sync() in mozilla_compat
      */
-    public static final MethodHandle INVOKE_SYNC = findOwnMH_S("invokeSync", Object.class, ScriptFunction.class, Object.class, Object.class, Object[].class);
+    public static final SMethodHandle INVOKE_SYNC = findOwnMH_S("invokeSync", Object.class, ScriptFunction.class, Object.class, Object.class, Object[].class);
 
     /**
      * Method handle for allocate function for this ScriptFunction
      */
-    static final MethodHandle ALLOCATE = findOwnMH_V("allocate", Object.class);
+    static final SMethodHandle ALLOCATE = findOwnMH_V("allocate", Object.class);
 
-    private static final MethodHandle WRAPFILTER = findOwnMH_S("wrapFilter", Object.class, Object.class);
+    private static final SMethodHandle WRAPFILTER = findOwnMH_S("wrapFilter", Object.class, Object.class);
 
-    private static final MethodHandle SCRIPTFUNCTION_GLOBALFILTER = findOwnMH_S("globalFilter", Object.class, Object.class);
+    private static final SMethodHandle SCRIPTFUNCTION_GLOBALFILTER = findOwnMH_S("globalFilter", Object.class, Object.class);
 
     /**
      * method handle to scope getter for this ScriptFunction
      */
     public static final Call GET_SCOPE = virtualCallNoLookup(ScriptFunction.class, "getScope", ScriptObject.class);
 
-    private static final MethodHandle IS_FUNCTION_MH = findOwnMH_S("isFunctionMH", boolean.class, Object.class, ScriptFunctionData.class);
+    private static final SMethodHandle IS_FUNCTION_MH = findOwnMH_S("isFunctionMH", boolean.class, Object.class, ScriptFunctionData.class);
 
-    private static final MethodHandle IS_APPLY_FUNCTION = findOwnMH_S("isApplyFunction", boolean.class, boolean.class, Object.class, Object.class);
+    private static final SMethodHandle IS_APPLY_FUNCTION = findOwnMH_S("isApplyFunction", boolean.class, boolean.class, Object.class, Object.class);
 
-    private static final MethodHandle IS_NONSTRICT_FUNCTION = findOwnMH_S("isNonStrictFunction", boolean.class, Object.class, Object.class, ScriptFunctionData.class);
+    private static final SMethodHandle IS_NONSTRICT_FUNCTION = findOwnMH_S("isNonStrictFunction", boolean.class, Object.class, Object.class, ScriptFunctionData.class);
 
-    private static final MethodHandle ADD_ZEROTH_ELEMENT = findOwnMH_S("addZerothElement", Object[].class, Object[].class, Object.class);
+    private static final SMethodHandle ADD_ZEROTH_ELEMENT = findOwnMH_S("addZerothElement", Object[].class, Object[].class, Object.class);
 
-    private static final MethodHandle WRAP_THIS = MH.findStatic(MethodHandles.lookup(), ScriptFunctionData.class, "wrapThis", MH.type(Object.class, Object.class));
+    private static final SMethodHandle WRAP_THIS = MH.findStatic(MethodHandles.lookup(), ScriptFunctionData.class, "wrapThis", MH.type(Object.class, Object.class));
 
     // various property maps used for different kinds of functions
     // property map for anonymous function that serves as Function.prototype
@@ -223,7 +223,7 @@ public class ScriptFunction extends ScriptObject {
      */
     private ScriptFunction(
             final String name,
-            final MethodHandle methodHandle,
+            final SMethodHandle methodHandle,
             final PropertyMap map,
             final ScriptObject scope,
             final Specialization[] specs,
@@ -244,7 +244,7 @@ public class ScriptFunction extends ScriptObject {
      */
     private ScriptFunction(
             final String name,
-            final MethodHandle methodHandle,
+            final SMethodHandle methodHandle,
             final ScriptObject scope,
             final Specialization[] specs,
             final int flags) {
@@ -260,7 +260,7 @@ public class ScriptFunction extends ScriptObject {
      * @param specs specialized versions of this method, if available, null
      * otherwise
      */
-    protected ScriptFunction(final String name, final MethodHandle invokeHandle, final Specialization[] specs) {
+    protected ScriptFunction(final String name, final SMethodHandle invokeHandle, final Specialization[] specs) {
         this(name, invokeHandle, map$, null, specs, ScriptFunctionData.IS_BUILTIN_CONSTRUCTOR, Global.instance());
     }
 
@@ -274,7 +274,7 @@ public class ScriptFunction extends ScriptObject {
      * @param specs specialized versions of this method, if available, null
      * otherwise
      */
-    protected ScriptFunction(final String name, final MethodHandle invokeHandle, final PropertyMap map, final Specialization[] specs) {
+    protected ScriptFunction(final String name, final SMethodHandle invokeHandle, final PropertyMap map, final Specialization[] specs) {
         this(name, invokeHandle, map.addAll(map$), null, specs, ScriptFunctionData.IS_BUILTIN_CONSTRUCTOR, Global.instance());
     }
 
@@ -317,7 +317,7 @@ public class ScriptFunction extends ScriptObject {
     }
 
     // builtin function create helper factory
-    private static ScriptFunction createBuiltin(final String name, final MethodHandle methodHandle, final Specialization[] specs, final int flags) {
+    private static ScriptFunction createBuiltin(final String name, final SMethodHandle methodHandle, final Specialization[] specs, final int flags) {
         final ScriptFunction func = new ScriptFunction(name, methodHandle, null, specs, flags);
         func.setPrototype(UNDEFINED);
         // Non-constructor built-in functions do not have "prototype" property
@@ -335,7 +335,7 @@ public class ScriptFunction extends ScriptObject {
      * otherwise
      * @return new ScriptFunction
      */
-    public static ScriptFunction createBuiltin(final String name, final MethodHandle methodHandle, final Specialization[] specs) {
+    public static ScriptFunction createBuiltin(final String name, final SMethodHandle methodHandle, final Specialization[] specs) {
         return ScriptFunction.createBuiltin(name, methodHandle, specs, ScriptFunctionData.IS_BUILTIN);
     }
 
@@ -346,7 +346,7 @@ public class ScriptFunction extends ScriptObject {
      * @param methodHandle handle for invocation
      * @return new ScriptFunction
      */
-    public static ScriptFunction createBuiltin(final String name, final MethodHandle methodHandle) {
+    public static ScriptFunction createBuiltin(final String name, final SMethodHandle methodHandle) {
         return ScriptFunction.createBuiltin(name, methodHandle, null);
     }
 
@@ -357,7 +357,7 @@ public class ScriptFunction extends ScriptObject {
      * @param methodHandle handle for invocation
      * @return new ScriptFunction
      */
-    public static ScriptFunction createStrictBuiltin(final String name, final MethodHandle methodHandle) {
+    public static ScriptFunction createStrictBuiltin(final String name, final SMethodHandle methodHandle) {
         return ScriptFunction.createBuiltin(name, methodHandle, null, ScriptFunctionData.IS_BUILTIN | ScriptFunctionData.IS_STRICT);
     }
 
@@ -400,7 +400,7 @@ public class ScriptFunction extends ScriptObject {
      * @return synchronized function
      */
     public final ScriptFunction createSynchronized(final Object sync) {
-        final MethodHandle mh = MH.insertArguments(ScriptFunction.INVOKE_SYNC, 0, this, sync);
+        final SMethodHandle mh = MH.insertArguments(ScriptFunction.INVOKE_SYNC, 0, this, sync);
         return createBuiltin(getName(), mh);
     }
 
@@ -610,7 +610,7 @@ public class ScriptFunction extends ScriptObject {
      * @param self self reference
      * @return bound invoke handle
      */
-    public final MethodHandle getBoundInvokeHandle(final Object self) {
+    public final SMethodHandle getBoundInvokeHandle(final Object self) {
         return MH.bindTo(bindToCalleeIfNeeded(data.getGenericInvoker(scope)), self);
     }
 
@@ -623,7 +623,7 @@ public class ScriptFunction extends ScriptObject {
      * function instance.
      * @return the potentially bound method handle
      */
-    private MethodHandle bindToCalleeIfNeeded(final MethodHandle methodHandle) {
+    private SMethodHandle bindToCalleeIfNeeded(final SMethodHandle methodHandle) {
         return ScriptFunctionData.needsCallee(methodHandle) ? MH.bindTo(methodHandle, this) : methodHandle;
 
     }
@@ -833,7 +833,7 @@ public class ScriptFunction extends ScriptObject {
 
         if (isUnstable && !isApplyOrCall) {
             //megamorphic - replace call with apply
-            final MethodHandle handle;
+            final SMethodHandle handle;
             //ensure that the callsite is vararg so apply can consume it
             if (type.parameterCount() == 3 && type.parameterType(2) == Object[].class) {
                 // Vararg call site
@@ -848,12 +848,12 @@ public class ScriptFunction extends ScriptObject {
             return new GuardedInvocation(
                     handle,
                     null,
-                    (SwitchPoint) null,
+                    (SSwitchPoint) null,
                     ClassCastException.class);
         }
 
-        MethodHandle boundHandle;
-        MethodHandle guard = null;
+        SMethodHandle boundHandle;
+        SMethodHandle guard = null;
 
         // Special handling of Function.apply and Function.call. Note we must be invoking
         if (isApplyOrCall && !isUnstable) {
@@ -873,7 +873,7 @@ public class ScriptFunction extends ScriptObject {
         final Collection<CompiledFunction> forbidden = new HashSet<>();
 
         //check for special fast versions of the compiled function
-        final List<SwitchPoint> sps = new ArrayList<>();
+        final List<SSwitchPoint> sps = new ArrayList<>();
         Class<? extends Throwable> exceptionGuard = null;
 
         while (cf.isSpecialization()) {
@@ -901,7 +901,7 @@ public class ScriptFunction extends ScriptObject {
         }
 
         final GuardedInvocation bestInvoker = cf.createFunctionInvocation(type.returnType(), programPoint);
-        final MethodHandle callHandle = bestInvoker.getInvocation();
+        final SMethodHandle callHandle = bestInvoker.getInvocation();
 
         if (data.needsCallee()) {
             if (scopeCall && needsWrappedThis()) {
@@ -949,7 +949,7 @@ public class ScriptFunction extends ScriptObject {
         if (bestInvoker.getSwitchPoints() != null) {
             sps.addAll(Arrays.asList(bestInvoker.getSwitchPoints()));
         }
-        final SwitchPoint[] spsArray = sps.isEmpty() ? null : sps.toArray(new SwitchPoint[sps.size()]);
+        final SSwitchPoint[] spsArray = sps.isEmpty() ? null : sps.toArray(new SSwitchPoint[sps.size()]);
 
         return new GuardedInvocation(
                 boundHandle,
@@ -981,7 +981,7 @@ public class ScriptFunction extends ScriptObject {
 
         //box call back to apply
         CallSiteDescriptor appliedDesc = desc;
-        final SwitchPoint applyToCallSwitchPoint = Global.getBuiltinFunctionApplySwitchPoint();
+        final SSwitchPoint applyToCallSwitchPoint = Global.getBuiltinFunctionApplySwitchPoint();
         //enough to change the proto switchPoint here
 
         final boolean isApplyToCall = NashornCallSiteDescriptor.isApplyToCall(desc);
@@ -1064,7 +1064,7 @@ public class ScriptFunction extends ScriptObject {
         assert appliedRequest != null; // Bootstrap.isCallable() returned true for args[1], so it must produce a linkage.
 
         final Class<?> applyFnType = descType.parameterType(0);
-        MethodHandle inv = appliedInvocation.getInvocation(); //method handle from apply invocation. the applied function invocation
+        SMethodHandle inv = appliedInvocation.getInvocation(); //method handle from apply invocation. the applied function invocation
 
         if (isApply && !isFailedApplyToCall) {
             if (passesArgs) {
@@ -1104,7 +1104,7 @@ public class ScriptFunction extends ScriptObject {
             inv = MH.dropArguments(inv, 4 + i, dropArgs.parameterType(i));
         }
 
-        MethodHandle guard = appliedInvocation.getGuard();
+        SMethodHandle guard = appliedInvocation.getGuard();
         // If the guard checks the value of "this" but we aren't passing thisArg, insert the default one
         if (!passesThis && guard.type().parameterCount() > 1) {
             guard = bindImplicitThis(appliedFn, guard);
@@ -1114,7 +1114,7 @@ public class ScriptFunction extends ScriptObject {
         // We need to account for the dropped (apply|call) function argument.
         guard = MH.dropArguments(guard, 0, descType.parameterType(0));
         // Take the "isApplyFunction" guard, and bind it to this function.
-        MethodHandle applyFnGuard = MH.insertArguments(IS_APPLY_FUNCTION, 2, this); //TODO replace this with switchpoint
+        SMethodHandle applyFnGuard = MH.insertArguments(IS_APPLY_FUNCTION, 2, this); //TODO replace this with switchpoint
         // Adapt the guard to receive all the arguments that the original guard does.
         applyFnGuard = MH.dropArguments(applyFnGuard, 2, guardType.parameterArray());
         // Fold the original function guard into our apply guard.
@@ -1165,7 +1165,7 @@ public class ScriptFunction extends ScriptObject {
                 spreadGuardArguments(spreadInvocation.getGuard(), descType));
     }
 
-    private static MethodHandle spreadGuardArguments(final MethodHandle guard, final MethodType descType) {
+    private static SMethodHandle spreadGuardArguments(final SMethodHandle guard, final MethodType descType) {
         final MethodType guardType = guard.type();
         final int guardParamCount = guardType.parameterCount();
         final int descParamCount = descType.parameterCount();
@@ -1175,7 +1175,7 @@ public class ScriptFunction extends ScriptObject {
             return guard;
         }
 
-        final MethodHandle arrayConvertingGuard;
+        final SMethodHandle arrayConvertingGuard;
         // If the last parameter type of the guard is an array, then it is already itself a guard for a vararg apply
         // invocation. We must filter the last argument with toApplyArgs otherwise deeper levels of nesting will fail
         // with ClassCastException of NativeArray to Object[].
@@ -1188,8 +1188,8 @@ public class ScriptFunction extends ScriptObject {
         return ScriptObject.adaptHandleToVarArgCallSite(arrayConvertingGuard, descParamCount);
     }
 
-    private static MethodHandle bindImplicitThis(final Object fn, final MethodHandle mh) {
-        final MethodHandle bound;
+    private static SMethodHandle bindImplicitThis(final Object fn, final SMethodHandle mh) {
+        final SMethodHandle bound;
         if (fn instanceof ScriptFunction && ((ScriptFunction) fn).needsWrappedThis()) {
             bound = MH.filterArguments(mh, 1, SCRIPTFUNCTION_GLOBALFILTER);
         } else {
@@ -1204,11 +1204,11 @@ public class ScriptFunction extends ScriptObject {
      * These don't want a callee parameter, so bind that. Name binding is
      * optional.
      */
-    MethodHandle getCallMethodHandle(final MethodType type, final String bindName) {
+    SMethodHandle getCallMethodHandle(final MethodType type, final String bindName) {
         return pairArguments(bindToNameIfNeeded(bindToCalleeIfNeeded(data.getGenericInvoker(scope)), bindName), type);
     }
 
-    private static MethodHandle bindToNameIfNeeded(final MethodHandle methodHandle, final String bindName) {
+    private static SMethodHandle bindToNameIfNeeded(final SMethodHandle methodHandle, final String bindName) {
         if (bindName == null) {
             return methodHandle;
         }
@@ -1234,7 +1234,7 @@ public class ScriptFunction extends ScriptObject {
      *
      * @return method handle for guard
      */
-    private static MethodHandle getFunctionGuard(final ScriptFunction function, final int flags) {
+    private static SMethodHandle getFunctionGuard(final ScriptFunction function, final int flags) {
         assert function.data != null;
         // Built-in functions have a 1-1 correspondence to their ScriptFunctionData, so we can use a cheaper identity
         // comparison for them.
@@ -1254,7 +1254,7 @@ public class ScriptFunction extends ScriptObject {
      *
      * @return method handle for guard
      */
-    private static MethodHandle getNonStrictFunctionGuard(final ScriptFunction function) {
+    private static SMethodHandle getNonStrictFunctionGuard(final ScriptFunction function) {
         assert function.data != null;
         return MH.insertArguments(IS_NONSTRICT_FUNCTION, 2, function.data);
     }
@@ -1295,11 +1295,11 @@ public class ScriptFunction extends ScriptObject {
         }
     }
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), ScriptFunction.class, name, MH.type(rtype, types));
     }
 
-    private static MethodHandle findOwnMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findVirtual(MethodHandles.lookup(), ScriptFunction.class, name, MH.type(rtype, types));
     }
 }

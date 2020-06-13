@@ -53,7 +53,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.Logger;
 
 /**
  * Each context owns one of these. This is basically table of accessors
- * for global properties. A global constant is evaluated to a MethodHandle.constant
+ * for global properties. A global constant is evaluated to a SMethodHandle.constant
  * for faster access and to avoid walking to proto chain looking for it.
  *
  * We put a switchpoint on the global setter, which invalidates the
@@ -93,10 +93,10 @@ public final class GlobalConstants implements Loggable {
      */
     public static final boolean GLOBAL_ONLY = true;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private static final MethodHandle INVALIDATE_SP  = virtualCall(LOOKUP, GlobalConstants.class, "invalidateSwitchPoint", Object.class, Object.class, Access.class).methodHandle();
-    private static final MethodHandle RECEIVER_GUARD = staticCall(LOOKUP, GlobalConstants.class, "receiverGuard", boolean.class, Access.class, Object.class, Object.class).methodHandle();
+    private static final SMethodHandle INVALIDATE_SP  = virtualCall(LOOKUP, GlobalConstants.class, "invalidateSwitchPoint", Object.class, Object.class, Access.class).methodHandle();
+    private static final SMethodHandle RECEIVER_GUARD = staticCall(LOOKUP, GlobalConstants.class, "receiverGuard", boolean.class, Access.class, Object.class, Object.class).methodHandle();
 
     /** Logger for constant getters */
     private final DebugLogger log;
@@ -135,7 +135,7 @@ public final class GlobalConstants implements Loggable {
         private final String name;
 
         /** switchpoint that invalidates the getters and setters for this access */
-        private SwitchPoint sp;
+        private SSwitchPoint sp;
 
         /** invalidation count for this access, i.e. how many times has this property been reset */
         private int invalidations;
@@ -145,7 +145,7 @@ public final class GlobalConstants implements Loggable {
 
         private static final int MAX_RETRIES = 2;
 
-        private Access(final String name, final SwitchPoint sp) {
+        private Access(final String name, final SSwitchPoint sp) {
             this.name      = name;
             this.sp        = sp;
         }
@@ -165,12 +165,12 @@ public final class GlobalConstants implements Loggable {
 
         private void newSwitchPoint() {
             assert hasBeenInvalidated();
-            sp = new SwitchPoint();
+            sp = new SSwitchPoint();
         }
 
         private void invalidate(final int count) {
             if (!sp.hasBeenInvalidated()) {
-                SwitchPoint.invalidateAll(new SwitchPoint[] { sp });
+                SSwitchPoint.invalidateAll(new SSwitchPoint[] { sp });
                 invalidations += count;
             }
         }
@@ -191,7 +191,7 @@ public final class GlobalConstants implements Loggable {
 
         /**
          * Invalidate the access and make sure that we never try to turn this into
-         * a MethodHandle.constant getter again
+         * a SMethodHandle.constant getter again
          */
         private void invalidateForever() {
             invalidate(MAX_RETRIES);
@@ -215,7 +215,7 @@ public final class GlobalConstants implements Loggable {
             return name;
         }
 
-        SwitchPoint getSwitchPoint() {
+        SSwitchPoint getSwitchPoint() {
             return sp;
         }
     }
@@ -291,14 +291,14 @@ public final class GlobalConstants implements Loggable {
         if (acc != null) {
             return acc;
         }
-        final SwitchPoint sp = new SwitchPoint();
+        final SSwitchPoint sp = new SSwitchPoint();
         map.put(name, acc = new Access(name, sp));
         return acc;
     }
 
     /**
      * Called from script object on property deletion to erase a property
-     * that might be linked as MethodHandle.constant and force relink
+     * that might be linked as SMethodHandle.constant and force relink
      * @param name name of property
      */
     void delete(final String name) {
@@ -381,11 +381,11 @@ public final class GlobalConstants implements Loggable {
             assert !acc.hasBeenInvalidated();
 
             // if we haven't given up on this symbol, add a switchpoint invalidation filter to the receiver parameter
-            final MethodHandle target           = inv.getInvocation();
+            final SMethodHandle target           = inv.getInvocation();
             final Class<?>     receiverType     = target.type().parameterType(0);
-            final MethodHandle boundInvalidator = MH.bindTo(INVALIDATE_SP,  this);
-            final MethodHandle invalidator      = MH.asType(boundInvalidator, boundInvalidator.type().changeParameterType(0, receiverType).changeReturnType(receiverType));
-            final MethodHandle mh               = MH.filterArguments(inv.getInvocation(), 0, MH.insertArguments(invalidator, 1, acc));
+            final SMethodHandle boundInvalidator = MH.bindTo(INVALIDATE_SP,  this);
+            final SMethodHandle invalidator      = MH.asType(boundInvalidator, boundInvalidator.type().changeParameterType(0, receiverType).changeReturnType(receiverType));
+            final SMethodHandle mh               = MH.filterArguments(inv.getInvocation(), 0, MH.insertArguments(invalidator, 1, acc));
 
             assert inv.getSwitchPoints() == null : Arrays.asList(inv.getSwitchPoints());
             log.info("Linked setter " + quote(name) + " " + acc.getSwitchPoint());
@@ -398,12 +398,12 @@ public final class GlobalConstants implements Loggable {
      * @param c constant value
      * @return method handle (with dummy receiver) that returns this constant
      */
-    public static MethodHandle staticConstantGetter(final Object c) {
+    public static SMethodHandle staticConstantGetter(final Object c) {
         return MH.dropArguments(JSType.unboxConstant(c), 0, Object.class);
     }
 
-    private MethodHandle constantGetter(final Object c) {
-        final MethodHandle mh = staticConstantGetter(c);
+    private SMethodHandle constantGetter(final Object c) {
+        final SMethodHandle mh = staticConstantGetter(c);
         if (log.isEnabled()) {
             return MethodHandleFactory.addDebugPrintout(log, Level.FINEST, mh, "getting as constant");
         }
@@ -411,7 +411,7 @@ public final class GlobalConstants implements Loggable {
     }
 
     /**
-     * Try to turn a getter into a MethodHandle.constant, if possible
+     * Try to turn a getter into a SMethodHandle.constant, if possible
      *
      * @param find      property lookup
      * @param receiver  receiver
@@ -451,10 +451,10 @@ public final class GlobalConstants implements Loggable {
                 return null;
             }
 
-            final MethodHandle cmh = constantGetter(c);
+            final SMethodHandle cmh = constantGetter(c);
 
-            MethodHandle mh;
-            MethodHandle guard;
+            SMethodHandle mh;
+            SMethodHandle guard;
 
             if (isOptimistic) {
                 if (JSType.getAccessorTypeIndex(cmh.type().returnType()) <= JSType.getAccessorTypeIndex(retType)) {
@@ -476,7 +476,7 @@ public final class GlobalConstants implements Loggable {
             }
 
             if (log.isEnabled()) {
-                log.info("Linked getter " + quote(name) + " as MethodHandle.constant() -> " + c + " " + acc.getSwitchPoint());
+                log.info("Linked getter " + quote(name) + " as SMethodHandle.constant() -> " + c + " " + acc.getSwitchPoint());
                 mh = MethodHandleFactory.addDebugPrintout(log, Level.FINE, mh, "get const " + acc);
             }
 

@@ -51,13 +51,13 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
 public final class ScriptingFunctions {
 
     /** Handle to implementation of {@link ScriptingFunctions#readLine} - Nashorn extension */
-    public static final MethodHandle READLINE = findOwnMH("readLine", Object.class, Object.class, Object.class);
+    public static final SMethodHandle READLINE = findOwnMH("readLine", Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ScriptingFunctions#readFully} - Nashorn extension */
-    public static final MethodHandle READFULLY = findOwnMH("readFully",     Object.class, Object.class, Object.class);
+    public static final SMethodHandle READFULLY = findOwnMH("readFully",     Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ScriptingFunctions#exec} - Nashorn extension */
-    public static final MethodHandle EXEC = findOwnMH("exec",     Object.class, Object.class, Object[].class);
+    public static final SMethodHandle EXEC = findOwnMH("exec",     Object.class, Object.class, Object[].class);
 
     /** EXEC name - special property used by $EXEC API. */
     public static final String EXEC_NAME = "$EXEC";
@@ -268,7 +268,7 @@ public final class ScriptingFunctions {
         return out;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), ScriptingFunctions.class, name, MH.type(rtype, types));
     }
 

@@ -117,7 +117,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.RuntimeContextLinkRequestIm
  *         return factory.createLinker();
  *     }
  *
- *     public static CallSite bootstrap(MethodHandles.Lookup lookup, String name, MethodType type) {
+ *     public static SCallSite bootstrap(SMethodHandles.Lookup lookup, String name, MethodType type) {
  *         return dynamicLinker.link(new MonomorphicCallSite(CallSiteDescriptorFactory.create(lookup, name, type)));
  *     }
  * }
@@ -216,18 +216,18 @@ public class DynamicLinker {
         return linkerServices;
     }
 
-    private static final MethodHandle RELINK = Lookup.findOwnSpecial(MethodHandles.lookup(), RELINK_METHOD_NAME,
-            MethodHandle.class, RelinkableCallSite.class, int.class, Object[].class);
+    private static final SMethodHandle RELINK = Lookup.findOwnSpecial(MethodHandles.lookup(), RELINK_METHOD_NAME,
+            SMethodHandle.class, RelinkableCallSite.class, int.class, Object[].class);
 
-    private MethodHandle createRelinkAndInvokeMethod(final RelinkableCallSite callSite, final int relinkCount) {
+    private SMethodHandle createRelinkAndInvokeMethod(final RelinkableCallSite callSite, final int relinkCount) {
         // Make a bound MH of invoke() for this linker and call site
-        final MethodHandle boundRelinker = MethodHandles.insertArguments(RELINK, 0, this, callSite, Integer.valueOf(
+        final SMethodHandle boundRelinker = SMethodHandles.insertArguments(RELINK, 0, this, callSite, Integer.valueOf(
                 relinkCount));
         // Make a MH that gathers all arguments to the invocation into an Object[]
         final MethodType type = callSite.getDescriptor().getMethodType();
-        final MethodHandle collectingRelinker = boundRelinker.asCollector(Object[].class, type.parameterCount());
-        return MethodHandles.foldArguments(MethodHandles.exactInvoker(type), collectingRelinker.asType(
-                type.changeReturnType(MethodHandle.class)));
+        final SMethodHandle collectingRelinker = boundRelinker.asCollector(Object[].class, type.parameterCount());
+        return SMethodHandles.foldArguments(SMethodHandles.exactInvoker(type), collectingRelinker.asType(
+                type.changeReturnType(SMethodHandle.class)));
     }
 
     /**
@@ -241,7 +241,7 @@ public class DynamicLinker {
      * @throws Exception rethrows any exception thrown by the linkers
      */
     @SuppressWarnings("unused")
-    private MethodHandle relink(final RelinkableCallSite callSite, final int relinkCount, final Object... arguments) throws Exception {
+    private SMethodHandle relink(final RelinkableCallSite callSite, final int relinkCount, final Object... arguments) throws Exception {
         final CallSiteDescriptor callSiteDescriptor = callSite.getDescriptor();
         final boolean unstableDetectionEnabled = unstableRelinkThreshold > 0;
         final boolean callSiteUnstable = unstableDetectionEnabled && relinkCount >= unstableRelinkThreshold;
@@ -261,10 +261,10 @@ public class DynamicLinker {
         // produced invocation into contextual invocation (by dropping the context...)
         if(runtimeContextArgCount > 0) {
             final MethodType origType = callSiteDescriptor.getMethodType();
-            final MethodHandle invocation = guardedInvocation.getInvocation();
+            final SMethodHandle invocation = guardedInvocation.getInvocation();
             if(invocation.type().parameterCount() == origType.parameterCount() - runtimeContextArgCount) {
                 final List<Class<?>> prefix = origType.parameterList().subList(1, runtimeContextArgCount + 1);
-                final MethodHandle guard = guardedInvocation.getGuard();
+                final SMethodHandle guard = guardedInvocation.getGuard();
                 guardedInvocation = guardedInvocation.dropArguments(1, prefix);
             }
         }
@@ -285,7 +285,7 @@ public class DynamicLinker {
             callSite.relink(guardedInvocation, createRelinkAndInvokeMethod(callSite, newRelinkCount));
         }
         if(syncOnRelink) {
-            MutableCallSite.syncAll(new MutableCallSite[] { (MutableCallSite)callSite });
+            SMutableCallSite.syncAll(new SMutableCallSite[] { (SMutableCallSite)callSite });
         }
         return guardedInvocation.getInvocation();
     }

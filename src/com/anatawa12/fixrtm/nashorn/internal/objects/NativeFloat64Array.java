@@ -77,20 +77,20 @@ public final class NativeFloat64Array extends ArrayBufferView {
 
     private static final class Float64ArrayData extends TypedArrayData<DoubleBuffer> {
 
-        private static final MethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "getElem", double.class, int.class).methodHandle();
-        private static final MethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "getElem", double.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
 
         private Float64ArrayData(final DoubleBuffer nb, final int start, final int end) {
             super(((DoubleBuffer)nb.position(start).limit(end)).slice(), end - start);
         }
 
         @Override
-        protected MethodHandle getGetElem() {
+        protected SMethodHandle getGetElem() {
             return GET_ELEM;
         }
 
         @Override
-        protected MethodHandle getSetElem() {
+        protected SMethodHandle getSetElem() {
             return SET_ELEM;
         }
 
@@ -123,7 +123,7 @@ public final class NativeFloat64Array extends ArrayBufferView {
         }
 
         @Override
-        public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+        public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
             if (returnType == int.class) {
                 return null;
             }

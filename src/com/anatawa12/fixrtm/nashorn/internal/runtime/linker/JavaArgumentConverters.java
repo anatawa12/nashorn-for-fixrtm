@@ -45,19 +45,19 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
  */
 final class JavaArgumentConverters {
 
-    private static final MethodHandle TO_BOOLEAN        = findOwnMH("toBoolean", Boolean.class, Object.class);
-    private static final MethodHandle TO_STRING         = findOwnMH("toString", String.class, Object.class);
-    private static final MethodHandle TO_DOUBLE         = findOwnMH("toDouble", Double.class, Object.class);
-    private static final MethodHandle TO_NUMBER         = findOwnMH("toNumber", Number.class, Object.class);
-    private static final MethodHandle TO_LONG           = findOwnMH("toLong", Long.class, Object.class);
-    private static final MethodHandle TO_LONG_PRIMITIVE = findOwnMH("toLongPrimitive", long.class, Object.class);
-    private static final MethodHandle TO_CHAR           = findOwnMH("toChar", Character.class, Object.class);
-    private static final MethodHandle TO_CHAR_PRIMITIVE = findOwnMH("toCharPrimitive", char.class, Object.class);
+    private static final SMethodHandle TO_BOOLEAN        = findOwnMH("toBoolean", Boolean.class, Object.class);
+    private static final SMethodHandle TO_STRING         = findOwnMH("toString", String.class, Object.class);
+    private static final SMethodHandle TO_DOUBLE         = findOwnMH("toDouble", Double.class, Object.class);
+    private static final SMethodHandle TO_NUMBER         = findOwnMH("toNumber", Number.class, Object.class);
+    private static final SMethodHandle TO_LONG           = findOwnMH("toLong", Long.class, Object.class);
+    private static final SMethodHandle TO_LONG_PRIMITIVE = findOwnMH("toLongPrimitive", long.class, Object.class);
+    private static final SMethodHandle TO_CHAR           = findOwnMH("toChar", Character.class, Object.class);
+    private static final SMethodHandle TO_CHAR_PRIMITIVE = findOwnMH("toCharPrimitive", char.class, Object.class);
 
     private JavaArgumentConverters() {
     }
 
-    static MethodHandle getConverter(final Class<?> targetType) {
+    static SMethodHandle getConverter(final Class<?> targetType) {
         return CONVERTERS.get(targetType);
     }
 
@@ -232,11 +232,11 @@ final class JavaArgumentConverters {
         return l == null ? 0L : l;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), JavaArgumentConverters.class, name, MH.type(rtype, types));
     }
 
-    private static final Map<Class<?>, MethodHandle> CONVERTERS = new HashMap<>();
+    private static final Map<Class<?>, SMethodHandle> CONVERTERS = new HashMap<>();
 
     static {
         CONVERTERS.put(Number.class, TO_NUMBER);

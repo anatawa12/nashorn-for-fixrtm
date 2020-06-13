@@ -322,7 +322,7 @@ public final class ApplySpecialization extends SimpleNodeVisitor implements Logg
 
         if (!Global.isBuiltinFunctionPrototypeApply()) {
             log.fine("Apply transform disabled: apply/call overridden");
-            assert !Global.isBuiltinFunctionPrototypeCall() : "call and apply should have the same SwitchPoint";
+            assert !Global.isBuiltinFunctionPrototypeCall() : "call and apply should have the same SSwitchPoint";
             return false;
         }
 

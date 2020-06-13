@@ -120,7 +120,7 @@ class ObjectType extends Type {
             return STRING;
         } else if (c instanceof Handle) {
             method.visitLdcInsn(c);
-            return Type.typeFor(MethodHandle.class);
+            return Type.typeFor(SMethodHandle.class);
         } else {
             throw new UnsupportedOperationException("implementation missing for class " + c.getClass() + " value=" + c);
         }

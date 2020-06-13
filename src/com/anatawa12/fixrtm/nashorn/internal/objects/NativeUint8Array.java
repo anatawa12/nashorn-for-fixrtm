@@ -77,20 +77,20 @@ public final class NativeUint8Array extends ArrayBufferView {
 
     private static final class Uint8ArrayData extends TypedArrayData<ByteBuffer> {
 
-        private static final MethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint8ArrayData.class, "getElem", int.class, int.class).methodHandle();
-        private static final MethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint8ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint8ArrayData.class, "getElem", int.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint8ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
         private Uint8ArrayData(final ByteBuffer nb, final int start, final int end) {
             super(((ByteBuffer)nb.position(start).limit(end)).slice(), end - start);
         }
 
         @Override
-        protected MethodHandle getGetElem() {
+        protected SMethodHandle getGetElem() {
             return GET_ELEM;
         }
 
         @Override
-        protected MethodHandle getSetElem() {
+        protected SMethodHandle getSetElem() {
             return SET_ELEM;
         }
 

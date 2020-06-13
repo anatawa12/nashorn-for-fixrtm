@@ -96,5 +96,5 @@ public interface MethodTypeConversionStrategy {
      * @param newType new type
      * @return target converted to the new type.
      */
-    public MethodHandle asType(final MethodHandle target, final MethodType newType);
+    public SMethodHandle asType(final SMethodHandle target, final MethodType newType);
 }

@@ -89,11 +89,11 @@ import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.RelinkableCallSite;
 
 /**
- * A basic implementation of the {@link RelinkableCallSite} as a {@link MutableCallSite} subclass.
+ * A basic implementation of the {@link RelinkableCallSite} as a {@link SMutableCallSite} subclass.
  *
  * @author Attila Szegedi
  */
-public abstract class AbstractRelinkableCallSite extends MutableCallSite implements RelinkableCallSite {
+public abstract class AbstractRelinkableCallSite extends SMutableCallSite implements RelinkableCallSite {
     private final CallSiteDescriptor descriptor;
 
     /**
@@ -111,7 +111,7 @@ public abstract class AbstractRelinkableCallSite extends MutableCallSite impleme
     }
 
     @Override
-    public void initialize(final MethodHandle relinkAndInvoke) {
+    public void initialize(final SMethodHandle relinkAndInvoke) {
         setTarget(relinkAndInvoke);
     }
 }

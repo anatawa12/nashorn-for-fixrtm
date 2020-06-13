@@ -191,8 +191,8 @@ final class NumberArrayData extends ContinuousArrayData implements NumericElemen
         return this;
     }
 
-    private static final MethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), NumberArrayData.class, "getElem", double.class, int.class).methodHandle();
-    private static final MethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), NumberArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
+    private static final SMethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), NumberArrayData.class, "getElem", double.class, int.class).methodHandle();
+    private static final SMethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), NumberArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
 
     @SuppressWarnings("unused")
     private double getElem(final int index) {
@@ -212,7 +212,7 @@ final class NumberArrayData extends ContinuousArrayData implements NumericElemen
     }
 
     @Override
-    public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+    public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
         if (returnType == int.class) {
             return null;
         }
@@ -220,7 +220,7 @@ final class NumberArrayData extends ContinuousArrayData implements NumericElemen
     }
 
     @Override
-    public MethodHandle getElementSetter(final Class<?> elementType) {
+    public SMethodHandle getElementSetter(final Class<?> elementType) {
         return elementType.isPrimitive() ? getContinuousElementSetter(MH.asType(SET_ELEM, SET_ELEM.type().changeParameterType(2, elementType)), elementType) : null;
     }
 

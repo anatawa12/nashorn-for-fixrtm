@@ -80,7 +80,7 @@ public final class ObjectClassGenerator implements Loggable {
      * a java.lang.Number than blow up the field. Gradually, optimistic types should create almost
      * no boxed types
      */
-    private static final MethodHandle IS_TYPE_GUARD = findOwnMH("isType", boolean.class, Class.class, Object.class);
+    private static final SMethodHandle IS_TYPE_GUARD = findOwnMH("isType", boolean.class, Class.class, Object.class);
 
     /**
      * Marker for scope parameters
@@ -106,8 +106,8 @@ public final class ObjectClassGenerator implements Loggable {
     /** What type is the primitive type in dual representation */
     public static final Type PRIMITIVE_FIELD_TYPE = Type.LONG;
 
-    private static final MethodHandle GET_DIFFERENT           = findOwnMH("getDifferent", Object.class, Object.class, Class.class, MethodHandle.class, MethodHandle.class, int.class);
-    private static final MethodHandle GET_DIFFERENT_UNDEFINED = findOwnMH("getDifferentUndefined", Object.class, int.class);
+    private static final SMethodHandle GET_DIFFERENT           = findOwnMH("getDifferent", Object.class, Object.class, Class.class, SMethodHandle.class, SMethodHandle.class, int.class);
+    private static final SMethodHandle GET_DIFFERENT_UNDEFINED = findOwnMH("getDifferentUndefined", Object.class, int.class);
 
     private static boolean initialized = false;
 
@@ -230,8 +230,8 @@ public final class ObjectClassGenerator implements Loggable {
     }
 
     /**
-     * In the world of Object fields, we also have no undefined SwitchPoint, to reduce as much potential
-     * MethodHandle overhead as possible. In that case, we explicitly need to assign undefined to fields
+     * In the world of Object fields, we also have no undefined SSwitchPoint, to reduce as much potential
+     * SMethodHandle overhead as possible. In that case, we explicitly need to assign undefined to fields
      * when we initialize them.
      *
      * @param init       constructor to generate code in
@@ -501,20 +501,20 @@ public final class ObjectClassGenerator implements Loggable {
     }
 
     /** Double to long bits, used with --dual-fields for primitive double values */
-    public static final MethodHandle PACK_DOUBLE =
-        MH.explicitCastArguments(MH.findStatic(MethodHandles.publicLookup(), Double.class, "doubleToRawLongBits", MH.type(long.class, double.class)), MH.type(long.class, double.class));
+    public static final SMethodHandle PACK_DOUBLE =
+        MH.explicitCastArguments(MH.findStatic(SMethodHandles.publicLookup(), Double.class, "doubleToRawLongBits", MH.type(long.class, double.class)), MH.type(long.class, double.class));
 
     /** double bits to long, used with --dual-fields for primitive double values */
-    public static final MethodHandle UNPACK_DOUBLE =
-        MH.findStatic(MethodHandles.publicLookup(), Double.class, "longBitsToDouble", MH.type(double.class, long.class));
+    public static final SMethodHandle UNPACK_DOUBLE =
+        MH.findStatic(SMethodHandles.publicLookup(), Double.class, "longBitsToDouble", MH.type(double.class, long.class));
 
     //type != forType, so use the correct getter for forType, box it and throw
     @SuppressWarnings("unused")
-    private static Object getDifferent(final Object receiver, final Class<?> forType, final MethodHandle primitiveGetter, final MethodHandle objectGetter, final int programPoint) {
+    private static Object getDifferent(final Object receiver, final Class<?> forType, final SMethodHandle primitiveGetter, final SMethodHandle objectGetter, final int programPoint) {
         //create the sametype getter, and upcast to value. no matter what the store format is,
         //
-        final MethodHandle sameTypeGetter = getterForType(forType, primitiveGetter, objectGetter);
-        final MethodHandle mh = MH.asType(sameTypeGetter, sameTypeGetter.type().changeReturnType(Object.class));
+        final SMethodHandle sameTypeGetter = getterForType(forType, primitiveGetter, objectGetter);
+        final SMethodHandle mh = MH.asType(sameTypeGetter, sameTypeGetter.type().changeReturnType(Object.class));
         try {
             final Object value = mh.invokeExact(receiver);
             throw new UnwarrantedOptimismException(value, programPoint);
@@ -530,7 +530,7 @@ public final class ObjectClassGenerator implements Loggable {
         throw new UnwarrantedOptimismException(Undefined.getUndefined(), programPoint);
     }
 
-    private static MethodHandle getterForType(final Class<?> forType, final MethodHandle primitiveGetter, final MethodHandle objectGetter) {
+    private static SMethodHandle getterForType(final Class<?> forType, final SMethodHandle primitiveGetter, final SMethodHandle objectGetter) {
         switch (getAccessorTypeIndex(forType)) {
         case TYPE_INT_INDEX:
             return MH.explicitCastArguments(primitiveGetter, primitiveGetter.type().changeReturnType(int.class));
@@ -544,7 +544,7 @@ public final class ObjectClassGenerator implements Loggable {
     }
 
     //no optimism here. we do unconditional conversion to types
-    private static MethodHandle createGetterInner(final Class<?> forType, final Class<?> type, final MethodHandle primitiveGetter, final MethodHandle objectGetter, final List<MethodHandle> converters, final int programPoint) {
+    private static SMethodHandle createGetterInner(final Class<?> forType, final Class<?> type, final SMethodHandle primitiveGetter, final SMethodHandle objectGetter, final List<SMethodHandle> converters, final int programPoint) {
         final int fti = forType == null ? TYPE_UNDEFINED_INDEX : getAccessorTypeIndex(forType);
         final int ti  = getAccessorTypeIndex(type);
         //this means fail if forType != type
@@ -552,7 +552,7 @@ public final class ObjectClassGenerator implements Loggable {
         final boolean isPrimitiveStorage = forType != null && forType.isPrimitive();
 
         //which is the primordial getter
-        final MethodHandle getter = primitiveGetter == null ? objectGetter : isPrimitiveStorage ? primitiveGetter : objectGetter;
+        final SMethodHandle getter = primitiveGetter == null ? objectGetter : isPrimitiveStorage ? primitiveGetter : objectGetter;
 
         if (forType == null) {
             if (isOptimistic) {
@@ -583,7 +583,7 @@ public final class ObjectClassGenerator implements Loggable {
                 //e.g. stored as int,  ask for long or double
                 //e.g. stored as long, ask for double
                 assert fti != TYPE_UNDEFINED_INDEX;
-                final MethodHandle tgetter = getterForType(forType, primitiveGetter, objectGetter);
+                final SMethodHandle tgetter = getterForType(forType, primitiveGetter, objectGetter);
                 return MH.asType(tgetter, tgetter.type().changeReturnType(type));
             } else if (fti == ti) {
                 //Fast path, never throw exception - exact getter, just unpack if needed
@@ -621,7 +621,7 @@ public final class ObjectClassGenerator implements Loggable {
 
         assert !isOptimistic;
         // freely coerce the result to whatever you asked for, this is e.g. Object->int for a & b
-        final MethodHandle tgetter = getterForType(forType, primitiveGetter, objectGetter);
+        final SMethodHandle tgetter = getterForType(forType, primitiveGetter, objectGetter);
         if (fti == TYPE_OBJECT_INDEX) {
             if (fti != ti) {
                 return MH.filterReturnValue(tgetter, CONVERT_OBJECT.get(ti));
@@ -678,7 +678,7 @@ public final class ObjectClassGenerator implements Loggable {
      *
      * @return getter for the given representation that returns the given type
      */
-    public static MethodHandle createGetter(final Class<?> forType, final Class<?> type, final MethodHandle primitiveGetter, final MethodHandle objectGetter, final int programPoint) {
+    public static SMethodHandle createGetter(final Class<?> forType, final Class<?> type, final SMethodHandle primitiveGetter, final SMethodHandle objectGetter, final int programPoint) {
         return createGetterInner(
                 forType,
                 type,
@@ -701,7 +701,7 @@ public final class ObjectClassGenerator implements Loggable {
      *
      * @return the setter for the given representation that takes a {@code type}
      */
-    public static MethodHandle createSetter(final Class<?> forType, final Class<?> type, final MethodHandle primitiveSetter, final MethodHandle objectSetter) {
+    public static SMethodHandle createSetter(final Class<?> forType, final Class<?> type, final SMethodHandle primitiveSetter, final SMethodHandle objectSetter) {
         assert forType != null;
 
         final int fti = getAccessorTypeIndex(forType);
@@ -772,7 +772,7 @@ public final class ObjectClassGenerator implements Loggable {
      *  and instead of using the generic object setter, that would blow up the type and invalidate the map,
      *  unbox it and call the primitive setter instead
      */
-    public static MethodHandle createGuardBoxedPrimitiveSetter(final Class<?> forType, final MethodHandle primitiveSetter, final MethodHandle objectSetter) {
+    public static SMethodHandle createGuardBoxedPrimitiveSetter(final Class<?> forType, final SMethodHandle primitiveSetter, final SMethodHandle objectSetter) {
         final Class<? extends Number> boxedForType = getBoxedType(forType);
         //object setter that checks for primitive if current type is primitive
         return MH.guardWithTest(
@@ -797,7 +797,7 @@ public final class ObjectClassGenerator implements Loggable {
         return count / FIELD_PADDING * FIELD_PADDING + FIELD_PADDING;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), ObjectClassGenerator.class, name, MH.type(rtype, types));
     }
 

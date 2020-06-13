@@ -77,7 +77,7 @@ public abstract class ScriptFunctionData implements Serializable {
      */
     private volatile transient GenericInvokers genericInvokers;
 
-    private static final MethodHandle BIND_VAR_ARGS = findOwnMH("bindVarArgs", Object[].class, Object[].class, Object[].class);
+    private static final SMethodHandle BIND_VAR_ARGS = findOwnMH("bindVarArgs", Object[].class, Object[].class, Object[].class);
 
     /** Is this a strict mode function? */
     public static final int IS_STRICT            = 1 << 0;
@@ -138,7 +138,7 @@ public abstract class ScriptFunctionData implements Serializable {
     }
 
     CompiledFunction bind(final CompiledFunction originalInv, final ScriptFunction fn, final Object self, final Object[] args) {
-        final MethodHandle boundInvoker = bindInvokeHandle(originalInv.createComposableInvoker(), fn, self, args);
+        final SMethodHandle boundInvoker = bindInvokeHandle(originalInv.createComposableInvoker(), fn, self, args);
 
         if (isConstructor()) {
             return new CompiledFunction(boundInvoker, bindConstructHandle(originalInv.createComposableConstructor(), fn, args), null);
@@ -266,35 +266,35 @@ public abstract class ScriptFunctionData implements Serializable {
      * scope is not known, but that might cause compilation of code that will need more deoptimization passes.
      * @return generic invoker of this script function
      */
-    final MethodHandle getGenericInvoker(final ScriptObject runtimeScope) {
+    final SMethodHandle getGenericInvoker(final ScriptObject runtimeScope) {
         // This method has race conditions both on genericsInvoker and genericsInvoker.invoker, but even if invoked
         // concurrently, they'll create idempotent results, so it doesn't matter. We could alternatively implement this
         // using java.util.concurrent.AtomicReferenceFieldUpdater, but it's hardly worth it.
         final GenericInvokers lgenericInvokers = ensureGenericInvokers();
-        MethodHandle invoker = lgenericInvokers.invoker;
+        SMethodHandle invoker = lgenericInvokers.invoker;
         if(invoker == null) {
             lgenericInvokers.invoker = invoker = createGenericInvoker(runtimeScope);
         }
         return invoker;
     }
 
-    private MethodHandle createGenericInvoker(final ScriptObject runtimeScope) {
+    private SMethodHandle createGenericInvoker(final ScriptObject runtimeScope) {
         return makeGenericMethod(getGeneric(runtimeScope).createComposableInvoker());
     }
 
-    final MethodHandle getGenericConstructor(final ScriptObject runtimeScope) {
+    final SMethodHandle getGenericConstructor(final ScriptObject runtimeScope) {
         // This method has race conditions both on genericsInvoker and genericsInvoker.constructor, but even if invoked
         // concurrently, they'll create idempotent results, so it doesn't matter. We could alternatively implement this
         // using java.util.concurrent.AtomicReferenceFieldUpdater, but it's hardly worth it.
         final GenericInvokers lgenericInvokers = ensureGenericInvokers();
-        MethodHandle constructor = lgenericInvokers.constructor;
+        SMethodHandle constructor = lgenericInvokers.constructor;
         if(constructor == null) {
             lgenericInvokers.constructor = constructor = createGenericConstructor(runtimeScope);
         }
         return constructor;
     }
 
-    private MethodHandle createGenericConstructor(final ScriptObject runtimeScope) {
+    private SMethodHandle createGenericConstructor(final ScriptObject runtimeScope) {
         return makeGenericMethod(getGeneric(runtimeScope).createComposableConstructor());
     }
 
@@ -475,7 +475,7 @@ public abstract class ScriptFunctionData implements Serializable {
      * invoker still takes an initial {@code this} parameter, but it is always dropped and the bound {@code self} passed
      * to the original invoker on invocation.
      */
-    private MethodHandle bindInvokeHandle(final MethodHandle originalInvoker, final ScriptFunction targetFn, final Object self, final Object[] args) {
+    private SMethodHandle bindInvokeHandle(final SMethodHandle originalInvoker, final ScriptFunction targetFn, final Object self, final Object[] args) {
         // Is the target already bound? If it is, we won't bother binding either callee or self as they're already bound
         // in the target and will be ignored anyway.
         final boolean isTargetBound = targetFn.isBoundFunction();
@@ -485,11 +485,11 @@ public abstract class ScriptFunctionData implements Serializable {
         assert !(isTargetBound && needsCallee); // already bound functions don't need a callee
 
         final Object boundSelf = isTargetBound ? null : convertThisObject(self);
-        final MethodHandle boundInvoker;
+        final SMethodHandle boundInvoker;
 
         if (isVarArg(originalInvoker)) {
             // First, bind callee and this without arguments
-            final MethodHandle noArgBoundInvoker;
+            final SMethodHandle noArgBoundInvoker;
 
             if (isTargetBound) {
                 // Don't bind either callee or this
@@ -547,11 +547,11 @@ public abstract class ScriptFunctionData implements Serializable {
      * still takes an initial {@code this} parameter and passes it to the underlying original constructor. Finally, if
      * this script function data object has no constructor handle, null is returned.
      */
-    private static MethodHandle bindConstructHandle(final MethodHandle originalConstructor, final ScriptFunction fn, final Object[] args) {
+    private static SMethodHandle bindConstructHandle(final SMethodHandle originalConstructor, final ScriptFunction fn, final Object[] args) {
         assert originalConstructor != null;
 
         // If target function is already bound, don't bother binding the callee.
-        final MethodHandle calleeBoundConstructor = fn.isBoundFunction() ? originalConstructor :
+        final SMethodHandle calleeBoundConstructor = fn.isBoundFunction() ? originalConstructor :
             MH.dropArguments(MH.bindTo(originalConstructor, fn), 0, ScriptFunction.class);
 
         if (args.length == 0) {
@@ -590,7 +590,7 @@ public abstract class ScriptFunctionData implements Serializable {
      *
      * @return the new handle, conforming to the rules above.
      */
-    private static MethodHandle makeGenericMethod(final MethodHandle mh) {
+    private static SMethodHandle makeGenericMethod(final SMethodHandle mh) {
         final MethodType type = mh.type();
         final MethodType newType = makeGenericType(type);
         return type.equals(newType) ? mh : mh.asType(newType);
@@ -617,7 +617,7 @@ public abstract class ScriptFunctionData implements Serializable {
      * @throws Throwable if there is an exception/error with the invocation or thrown from it
      */
     Object invoke(final ScriptFunction fn, final Object self, final Object... arguments) throws Throwable {
-        final MethodHandle mh      = getGenericInvoker(fn.getScope());
+        final SMethodHandle mh      = getGenericInvoker(fn.getScope());
         final Object       selfObj = convertThisObject(self);
         final Object[]     args    = arguments == null ? ScriptRuntime.EMPTY_ARRAY : arguments;
 
@@ -673,7 +673,7 @@ public abstract class ScriptFunctionData implements Serializable {
     }
 
     Object construct(final ScriptFunction fn, final Object... arguments) throws Throwable {
-        final MethodHandle mh   = getGenericConstructor(fn.getScope());
+        final SMethodHandle mh   = getGenericConstructor(fn.getScope());
         final Object[]     args = arguments == null ? ScriptRuntime.EMPTY_ARRAY : arguments;
 
         DebuggerSupport.notifyInvoke(mh);
@@ -785,7 +785,7 @@ public abstract class ScriptFunctionData implements Serializable {
      *
      * @return the bound method handle
      */
-    private static MethodHandle varArgBinder(final MethodHandle mh, final Object[] args) {
+    private static SMethodHandle varArgBinder(final SMethodHandle mh, final Object[] args) {
         assert args != null;
         assert args.length > 0;
         return MH.filterArguments(mh, mh.type().parameterCount() - 1, MH.bindTo(BIND_VAR_ARGS, args));
@@ -802,7 +802,7 @@ public abstract class ScriptFunctionData implements Serializable {
      *
      * @return true if the method handle expects a callee, false otherwise
      */
-    protected static boolean needsCallee(final MethodHandle mh) {
+    protected static boolean needsCallee(final SMethodHandle mh) {
         return needsCallee(mh.type());
     }
 
@@ -824,7 +824,7 @@ public abstract class ScriptFunctionData implements Serializable {
      *
      * @return true if vararg
      */
-    protected static boolean isVarArg(final MethodHandle mh) {
+    protected static boolean isVarArg(final SMethodHandle mh) {
         return isVarArg(mh.type());
     }
 
@@ -860,7 +860,7 @@ public abstract class ScriptFunctionData implements Serializable {
         return concat;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), ScriptFunctionData.class, name, MH.type(rtype, types));
     }
 
@@ -870,8 +870,8 @@ public abstract class ScriptFunctionData implements Serializable {
      * to the GenericInvokers object, instead of two null references for the two method handles.
      */
     private static final class GenericInvokers {
-        volatile MethodHandle invoker;
-        volatile MethodHandle constructor;
+        volatile SMethodHandle invoker;
+        volatile SMethodHandle constructor;
     }
 
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {

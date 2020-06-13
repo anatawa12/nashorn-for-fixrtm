@@ -52,10 +52,10 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
  * represented as fields in a ScriptObject class.
  */
 public class AccessorProperty extends Property {
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private static final MethodHandle REPLACE_MAP   = findOwnMH_S("replaceMap", Object.class, Object.class, PropertyMap.class);
-    private static final MethodHandle INVALIDATE_SP = findOwnMH_S("invalidateSwitchPoint", Object.class, AccessorProperty.class, Object.class);
+    private static final SMethodHandle REPLACE_MAP   = findOwnMH_S("replaceMap", Object.class, Object.class, PropertyMap.class);
+    private static final SMethodHandle INVALIDATE_SP = findOwnMH_S("invalidateSwitchPoint", Object.class, AccessorProperty.class, Object.class);
 
     private static final int NOOF_TYPES = getNumberOfAccessorTypes();
     private static final long serialVersionUID = 3371720170182154920L;
@@ -74,10 +74,10 @@ public class AccessorProperty extends Property {
     };
 
     private static class Accessors {
-        final MethodHandle[] objectGetters;
-        final MethodHandle[] objectSetters;
-        final MethodHandle[] primitiveGetters;
-        final MethodHandle[] primitiveSetters;
+        final SMethodHandle[] objectGetters;
+        final SMethodHandle[] objectSetters;
+        final SMethodHandle[] primitiveGetters;
+        final SMethodHandle[] primitiveSetters;
 
         /**
          * Normal
@@ -85,10 +85,10 @@ public class AccessorProperty extends Property {
          */
         Accessors(final Class<?> structure) {
             final int fieldCount = getFieldCount(structure);
-            objectGetters    = new MethodHandle[fieldCount];
-            objectSetters    = new MethodHandle[fieldCount];
-            primitiveGetters = new MethodHandle[fieldCount];
-            primitiveSetters = new MethodHandle[fieldCount];
+            objectGetters    = new SMethodHandle[fieldCount];
+            objectSetters    = new SMethodHandle[fieldCount];
+            primitiveGetters = new SMethodHandle[fieldCount];
+            primitiveSetters = new SMethodHandle[fieldCount];
 
             for (int i = 0; i < fieldCount; i++) {
                 final String fieldName = getFieldName(i, Type.OBJECT);
@@ -115,7 +115,7 @@ public class AccessorProperty extends Property {
      *   produce different boun method handles wrapping the same access mechanism
      *   depending on callsite
      */
-    private transient MethodHandle[] GETTER_CACHE = new MethodHandle[NOOF_TYPES];
+    private transient SMethodHandle[] GETTER_CACHE = new SMethodHandle[NOOF_TYPES];
 
     /**
      * Create a new accessor property. Factory method used by nasgen generated code.
@@ -127,21 +127,21 @@ public class AccessorProperty extends Property {
      *
      * @return  New {@link AccessorProperty} created.
      */
-    public static AccessorProperty create(final String key, final int propertyFlags, final MethodHandle getter, final MethodHandle setter) {
+    public static AccessorProperty create(final String key, final int propertyFlags, final SMethodHandle getter, final SMethodHandle setter) {
         return new AccessorProperty(key, propertyFlags, -1, getter, setter);
     }
 
     /** Seed getter for the primitive version of this field (in -Dnashorn.fields.dual=true mode) */
-    transient MethodHandle primitiveGetter;
+    transient SMethodHandle primitiveGetter;
 
     /** Seed setter for the primitive version of this field (in -Dnashorn.fields.dual=true mode) */
-    transient MethodHandle primitiveSetter;
+    transient SMethodHandle primitiveSetter;
 
     /** Seed getter for the Object version of this field */
-    transient MethodHandle objectGetter;
+    transient SMethodHandle objectGetter;
 
     /** Seed setter for the Object version of this field */
-    transient MethodHandle objectSetter;
+    transient SMethodHandle objectSetter;
 
     /**
      * Delegate constructor for bound properties. This is used for properties created by
@@ -161,7 +161,7 @@ public class AccessorProperty extends Property {
         this.primitiveSetter = bindTo(property.primitiveSetter, delegate);
         this.objectGetter    = bindTo(property.objectGetter, delegate);
         this.objectSetter    = bindTo(property.objectSetter, delegate);
-        property.GETTER_CACHE = new MethodHandle[NOOF_TYPES];
+        property.GETTER_CACHE = new SMethodHandle[NOOF_TYPES];
         // Properties created this way are bound to a delegate
         setType(property.getType());
     }
@@ -183,10 +183,10 @@ public class AccessorProperty extends Property {
             final String key,
             final int flags,
             final int slot,
-            final MethodHandle primitiveGetter,
-            final MethodHandle primitiveSetter,
-            final MethodHandle objectGetter,
-            final MethodHandle objectSetter) {
+            final SMethodHandle primitiveGetter,
+            final SMethodHandle primitiveSetter,
+            final SMethodHandle objectGetter,
+            final SMethodHandle objectSetter) {
         super(key, flags, slot);
         assert getClass() != AccessorProperty.class;
         this.primitiveGetter = primitiveGetter;
@@ -209,7 +209,7 @@ public class AccessorProperty extends Property {
      * @param getter the property getter
      * @param setter the property setter or null if non writable, non configurable
      */
-    private AccessorProperty(final String key, final int flags, final int slot, final MethodHandle getter, final MethodHandle setter) {
+    private AccessorProperty(final String key, final int flags, final int slot, final SMethodHandle getter, final SMethodHandle setter) {
         super(key, flags | IS_BUILTIN | DUAL_FIELDS | (getter.type().returnType().isPrimitive() ? IS_NASGEN_PRIMITIVE : 0), slot);
         assert !isSpill();
 
@@ -266,7 +266,7 @@ public class AccessorProperty extends Property {
 
         if (isParameter() && hasArguments()) {
             //parameters are always stored in an object array, which may or may not be a good idea
-            final MethodHandle arguments = MH.getter(LOOKUP, structure, "arguments", ScriptObject.class);
+            final SMethodHandle arguments = MH.getter(LOOKUP, structure, "arguments", ScriptObject.class);
             objectGetter = MH.asType(MH.insertArguments(MH.filterArguments(ScriptObject.GET_ARGUMENT.methodHandle(), 0, arguments), 1, slot), Lookup.GET_OBJECT_TYPE);
             objectSetter = MH.asType(MH.insertArguments(MH.filterArguments(ScriptObject.SET_ARGUMENT.methodHandle(), 0, arguments), 1, slot), Lookup.SET_OBJECT_TYPE);
             primitiveGetter = null;
@@ -322,7 +322,7 @@ public class AccessorProperty extends Property {
     protected AccessorProperty(final AccessorProperty property, final Class<?> newType) {
         super(property, property.getFlags());
 
-        this.GETTER_CACHE    = newType != property.getLocalType() ? new MethodHandle[NOOF_TYPES] : property.GETTER_CACHE;
+        this.GETTER_CACHE    = newType != property.getLocalType() ? new SMethodHandle[NOOF_TYPES] : property.GETTER_CACHE;
         this.primitiveGetter = property.primitiveGetter;
         this.primitiveSetter = property.primitiveSetter;
         this.objectGetter    = property.objectGetter;
@@ -366,10 +366,10 @@ public class AccessorProperty extends Property {
     private void readObject(final ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
         // Restore getters array
-        GETTER_CACHE = new MethodHandle[NOOF_TYPES];
+        GETTER_CACHE = new SMethodHandle[NOOF_TYPES];
     }
 
-    private static MethodHandle bindTo(final MethodHandle mh, final Object receiver) {
+    private static SMethodHandle bindTo(final SMethodHandle mh, final Object receiver) {
         if (mh == null) {
             return null;
         }
@@ -495,7 +495,7 @@ public class AccessorProperty extends Property {
     }
 
     @Override
-    public MethodHandle getGetter(final Class<?> type) {
+    public SMethodHandle getGetter(final Class<?> type) {
         final int i = getAccessorTypeIndex(type);
 
         assert type == int.class ||
@@ -506,9 +506,9 @@ public class AccessorProperty extends Property {
         checkUndeclared();
 
         //all this does is add a return value filter for object fields only
-        final MethodHandle[] getterCache = GETTER_CACHE;
-        final MethodHandle cachedGetter = getterCache[i];
-        final MethodHandle getter;
+        final SMethodHandle[] getterCache = GETTER_CACHE;
+        final SMethodHandle cachedGetter = getterCache[i];
+        final SMethodHandle getter;
         if (cachedGetter != null) {
             getter = cachedGetter;
         } else {
@@ -529,7 +529,7 @@ public class AccessorProperty extends Property {
     }
 
     @Override
-    public MethodHandle getOptimisticGetter(final Class<?> type, final int programPoint) {
+    public SMethodHandle getOptimisticGetter(final Class<?> type, final int programPoint) {
         // nasgen generated primitive fields like Math.PI have only one known unchangeable primitive type
         if (objectGetter == null) {
             return getOptimisticPrimitiveGetter(type, programPoint);
@@ -549,8 +549,8 @@ public class AccessorProperty extends Property {
             "get");
     }
 
-    private MethodHandle getOptimisticPrimitiveGetter(final Class<?> type, final int programPoint) {
-        final MethodHandle g = getGetter(getLocalType());
+    private SMethodHandle getOptimisticPrimitiveGetter(final Class<?> type, final int programPoint) {
+        final SMethodHandle g = getGetter(getLocalType());
         return MH.asType(OptimisticReturnFilters.filterOptimisticReturnValue(g, type, programPoint), g.type().changeReturnType(type));
     }
 
@@ -582,12 +582,12 @@ public class AccessorProperty extends Property {
     @SuppressWarnings("unused")
     private static Object invalidateSwitchPoint(final AccessorProperty property, final Object obj) {
          if (!property.builtinSwitchPoint.hasBeenInvalidated()) {
-            SwitchPoint.invalidateAll(new SwitchPoint[] { property.builtinSwitchPoint });
+            SSwitchPoint.invalidateAll(new SSwitchPoint[] { property.builtinSwitchPoint });
         }
         return obj;
     }
 
-    private MethodHandle generateSetter(final Class<?> forType, final Class<?> type) {
+    private SMethodHandle generateSetter(final Class<?> forType, final Class<?> type) {
         return debug(createSetter(forType, type, primitiveSetter, objectSetter), getLocalType(), type, "set");
     }
 
@@ -600,19 +600,19 @@ public class AccessorProperty extends Property {
     }
 
     @Override
-    public MethodHandle getSetter(final Class<?> type, final PropertyMap currentMap) {
+    public SMethodHandle getSetter(final Class<?> type, final PropertyMap currentMap) {
         checkUndeclared();
 
         final int typeIndex        = getAccessorTypeIndex(type);
         final int currentTypeIndex = getAccessorTypeIndex(getLocalType());
 
         //if we are asking for an object setter, but are still a primitive type, we might try to box it
-        MethodHandle mh;
+        SMethodHandle mh;
         if (needsInvalidator(typeIndex, currentTypeIndex)) {
             final Property     newProperty = getWiderProperty(type);
             final PropertyMap  newMap      = getWiderMap(currentMap, newProperty);
 
-            final MethodHandle widerSetter = newProperty.getSetter(type, newMap);
+            final SMethodHandle widerSetter = newProperty.getSetter(type, newMap);
             final Class<?>     ct = getLocalType();
             mh = MH.filterArguments(widerSetter, 0, MH.insertArguments(debugReplace(ct, type, currentMap, newMap) , 1, newMap));
             if (ct != null && ct.isPrimitive() && !type.isPrimitive()) {
@@ -645,7 +645,7 @@ public class AccessorProperty extends Property {
         return canChangeType() && typeIndex > currentTypeIndex;
     }
 
-    private MethodHandle debug(final MethodHandle mh, final Class<?> forType, final Class<?> type, final String tag) {
+    private SMethodHandle debug(final SMethodHandle mh, final Class<?> forType, final Class<?> type, final String tag) {
         if (!Context.DEBUG || !Global.hasInstance()) {
             return mh;
         }
@@ -667,7 +667,7 @@ public class AccessorProperty extends Property {
                 });
     }
 
-    private MethodHandle debugReplace(final Class<?> oldType, final Class<?> newType, final PropertyMap oldMap, final PropertyMap newMap) {
+    private SMethodHandle debugReplace(final Class<?> oldType, final Class<?> newType, final PropertyMap oldMap, final PropertyMap newMap) {
         if (!Context.DEBUG || !Global.hasInstance()) {
             return REPLACE_MAP;
         }
@@ -675,7 +675,7 @@ public class AccessorProperty extends Property {
         final Context context = Context.getContextTrusted();
         assert context != null;
 
-        MethodHandle mh = context.addLoggingToHandle(
+        SMethodHandle mh = context.addLoggingToHandle(
                 ObjectClassGenerator.class,
                 REPLACE_MAP,
                 new Supplier<String>() {
@@ -700,7 +700,7 @@ public class AccessorProperty extends Property {
         return mh;
     }
 
-    private static MethodHandle debugInvalidate(final MethodHandle invalidator, final String key) {
+    private static SMethodHandle debugInvalidate(final SMethodHandle invalidator, final String key) {
         if (!Context.DEBUG || !Global.hasInstance()) {
             return invalidator;
         }
@@ -719,7 +719,7 @@ public class AccessorProperty extends Property {
                 });
     }
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(LOOKUP, AccessorProperty.class, name, MH.type(rtype, types));
     }
 }

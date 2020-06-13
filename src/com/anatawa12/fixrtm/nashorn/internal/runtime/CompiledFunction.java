@@ -61,10 +61,10 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger;
  */
 final class CompiledFunction {
 
-    private static final MethodHandle NEWFILTER = findOwnMH("newFilter", Object.class, Object.class, Object.class);
-    private static final MethodHandle RELINK_COMPOSABLE_INVOKER = findOwnMH("relinkComposableInvoker", void.class, CallSite.class, CompiledFunction.class, boolean.class);
-    private static final MethodHandle HANDLE_REWRITE_EXCEPTION = findOwnMH("handleRewriteException", MethodHandle.class, CompiledFunction.class, OptimismInfo.class, RewriteException.class);
-    private static final MethodHandle RESTOF_INVOKER = MethodHandles.exactInvoker(MethodType.methodType(Object.class, RewriteException.class));
+    private static final SMethodHandle NEWFILTER = findOwnMH("newFilter", Object.class, Object.class, Object.class);
+    private static final SMethodHandle RELINK_COMPOSABLE_INVOKER = findOwnMH("relinkComposableInvoker", void.class, SCallSite.class, CompiledFunction.class, boolean.class);
+    private static final SMethodHandle HANDLE_REWRITE_EXCEPTION = findOwnMH("handleRewriteException", SMethodHandle.class, CompiledFunction.class, OptimismInfo.class, RewriteException.class);
+    private static final SMethodHandle RESTOF_INVOKER = SMethodHandles.exactInvoker(MethodType.methodType(Object.class, RewriteException.class));
 
     private final DebugLogger log;
 
@@ -76,27 +76,27 @@ final class CompiledFunction {
      * fallback, while the target is more specific, we still need the
      * more specific type for sorting
      */
-    private MethodHandle invoker;
-    private MethodHandle constructor;
+    private SMethodHandle invoker;
+    private SMethodHandle constructor;
     private OptimismInfo optimismInfo;
     private final int flags; // from FunctionNode
     private final MethodType callSiteType;
 
     private final Specialization specialization;
 
-    CompiledFunction(final MethodHandle invoker) {
+    CompiledFunction(final SMethodHandle invoker) {
         this(invoker, null, null);
     }
 
-    static CompiledFunction createBuiltInConstructor(final MethodHandle invoker, final Specialization specialization) {
+    static CompiledFunction createBuiltInConstructor(final SMethodHandle invoker, final Specialization specialization) {
         return new CompiledFunction(MH.insertArguments(invoker, 0, false), createConstructorFromInvoker(MH.insertArguments(invoker, 0, true)), specialization);
     }
 
-    CompiledFunction(final MethodHandle invoker, final MethodHandle constructor, final Specialization specialization) {
+    CompiledFunction(final SMethodHandle invoker, final SMethodHandle constructor, final Specialization specialization) {
         this(invoker, constructor, 0, null, specialization, DebugLogger.DISABLED_LOGGER);
     }
 
-    CompiledFunction(final MethodHandle invoker, final MethodHandle constructor, final int flags, final MethodType callSiteType, final Specialization specialization, final DebugLogger log) {
+    CompiledFunction(final SMethodHandle invoker, final SMethodHandle constructor, final int flags, final MethodType callSiteType, final Specialization specialization, final DebugLogger log) {
         this.specialization = specialization;
         if (specialization != null && specialization.isOptimistic()) {
             /*
@@ -121,7 +121,7 @@ final class CompiledFunction {
         this.log = log;
     }
 
-    CompiledFunction(final MethodHandle invoker, final RecompilableScriptFunctionData functionData,
+    CompiledFunction(final SMethodHandle invoker, final RecompilableScriptFunctionData functionData,
             final Map<Integer, Type> invalidatedProgramPoints, final MethodType callSiteType, final int flags) {
         this(invoker, null, flags, callSiteType, null, functionData.getLogger());
         if ((flags & FunctionNode.IS_DEOPTIMIZABLE) != 0) {
@@ -131,7 +131,7 @@ final class CompiledFunction {
         }
     }
 
-    static CompiledFunction createBuiltInConstructor(final MethodHandle invoker) {
+    static CompiledFunction createBuiltInConstructor(final SMethodHandle invoker) {
         return new CompiledFunction(MH.insertArguments(invoker, 0, false), createConstructorFromInvoker(MH.insertArguments(invoker, 0, true)), null);
     }
 
@@ -208,7 +208,7 @@ final class CompiledFunction {
      * needs to regenerate its code to always point at the latest generated code version.
      * @return a guaranteed composable invoker method handle for this function.
      */
-    MethodHandle createComposableInvoker() {
+    SMethodHandle createComposableInvoker() {
         return createComposableInvoker(false);
     }
 
@@ -220,7 +220,7 @@ final class CompiledFunction {
      * all other cases, use {@link #createComposableConstructor()}.
      * @return a direct constructor method handle for this function.
      */
-    private MethodHandle getConstructor() {
+    private SMethodHandle getConstructor() {
         if (constructor == null) {
             constructor = createConstructorFromInvoker(createInvokerForPessimisticCaller());
         }
@@ -233,7 +233,7 @@ final class CompiledFunction {
      * program point available).
      * @return a version of the invoker intended for a pessimistic caller.
      */
-    private MethodHandle createInvokerForPessimisticCaller() {
+    private SMethodHandle createInvokerForPessimisticCaller() {
         return createInvoker(Object.class, INVALID_PROGRAM_POINT);
     }
 
@@ -243,15 +243,15 @@ final class CompiledFunction {
      * @param invoker         invoker
      * @return the composed constructor
      */
-    private static MethodHandle createConstructorFromInvoker(final MethodHandle invoker) {
+    private static SMethodHandle createConstructorFromInvoker(final SMethodHandle invoker) {
         final boolean needsCallee = ScriptFunctionData.needsCallee(invoker);
         // If it was (callee, this, args...), permute it to (this, callee, args...). We're doing this because having
         // "this" in the first argument position is what allows the elegant folded composition of
         // (newFilter x constructor x allocator) further down below in the code. Also, ensure the composite constructor
         // always returns Object.
-        final MethodHandle swapped = needsCallee ? swapCalleeAndThis(invoker) : invoker;
+        final SMethodHandle swapped = needsCallee ? swapCalleeAndThis(invoker) : invoker;
 
-        final MethodHandle returnsObject = MH.asType(swapped, swapped.type().changeReturnType(Object.class));
+        final SMethodHandle returnsObject = MH.asType(swapped, swapped.type().changeReturnType(Object.class));
 
         final MethodType ctorType = returnsObject.type();
 
@@ -263,7 +263,7 @@ final class CompiledFunction {
         // Fold constructor into newFilter that replaces the return value from the constructor with the originally
         // allocated value when the originally allocated value is a JS primitive (String, Boolean, Number).
         // (result, this, [callee, ]args...) x (this, [callee, ]args...) => (this, [callee, ]args...)
-        final MethodHandle filtered = MH.foldArguments(MH.dropArguments(NEWFILTER, 2, ctorArgs), returnsObject);
+        final SMethodHandle filtered = MH.foldArguments(MH.dropArguments(NEWFILTER, 2, ctorArgs), returnsObject);
 
         // allocate() takes a ScriptFunction and returns a newly allocated ScriptObject...
         if (needsCallee) {
@@ -284,7 +284,7 @@ final class CompiledFunction {
      * @param mh a method handle with order of arguments {@code (callee, this, ...)}
      * @return a method handle with order of arguments {@code (this, callee, ...)}
      */
-    private static MethodHandle swapCalleeAndThis(final MethodHandle mh) {
+    private static SMethodHandle swapCalleeAndThis(final SMethodHandle mh) {
         final MethodType type = mh.type();
         assert type.parameterType(0) == ScriptFunction.class : type;
         assert type.parameterType(1) == Object.class : type;
@@ -295,7 +295,7 @@ final class CompiledFunction {
         for (int i = 2; i < reorder.length; ++i) {
             reorder[i] = i;
         }
-        return MethodHandles.permuteArguments(mh, newType, reorder);
+        return SMethodHandles.permuteArguments(mh, newType, reorder);
     }
 
     /**
@@ -307,7 +307,7 @@ final class CompiledFunction {
      * to always point at the latest generated code version.
      * @return a guaranteed composable constructor method handle for this function.
      */
-    MethodHandle createComposableConstructor() {
+    SMethodHandle createComposableConstructor() {
         return createComposableInvoker(true);
     }
 
@@ -561,8 +561,8 @@ final class CompiledFunction {
         return optimismInfo != null;
     }
 
-    private MethodHandle createComposableInvoker(final boolean isConstructor) {
-        final MethodHandle handle = getInvokerOrConstructor(isConstructor);
+    private SMethodHandle createComposableInvoker(final boolean isConstructor) {
+        final SMethodHandle handle = getInvokerOrConstructor(isConstructor);
 
         // If compiled function is not optimistic, it can't ever change its invoker/constructor, so just return them
         // directly.
@@ -572,16 +572,16 @@ final class CompiledFunction {
 
         // Otherwise, we need a new level of indirection; need to introduce a mutable call site that can relink itself
         // to the compiled function's changed target whenever the optimistic assumptions are invalidated.
-        final CallSite cs = new MutableCallSite(handle.type());
+        final SCallSite cs = new SMutableCallSite(handle.type());
         relinkComposableInvoker(cs, this, isConstructor);
         return cs.dynamicInvoker();
     }
 
     private static class HandleAndAssumptions {
-        final MethodHandle handle;
-        final SwitchPoint assumptions;
+        final SMethodHandle handle;
+        final SSwitchPoint assumptions;
 
-        HandleAndAssumptions(final MethodHandle handle, final SwitchPoint assumptions) {
+        HandleAndAssumptions(final SMethodHandle handle, final SSwitchPoint assumptions) {
             this.handle = handle;
             this.assumptions = assumptions;
         }
@@ -606,10 +606,10 @@ final class CompiledFunction {
      * switch point that is guaranteed to not have been invalidated before the call to this method (or null if the
      * function can't be further deoptimized).
      */
-    private synchronized HandleAndAssumptions getValidOptimisticInvocation(final Supplier<MethodHandle> invocationSupplier) {
+    private synchronized HandleAndAssumptions getValidOptimisticInvocation(final Supplier<SMethodHandle> invocationSupplier) {
         for(;;) {
-            final MethodHandle handle = invocationSupplier.get();
-            final SwitchPoint assumptions = canBeDeoptimized() ? optimismInfo.optimisticAssumptions : null;
+            final SMethodHandle handle = invocationSupplier.get();
+            final SSwitchPoint assumptions = canBeDeoptimized() ? optimismInfo.optimisticAssumptions : null;
             if(assumptions != null && assumptions.hasBeenInvalidated()) {
                 // We can be in a situation where one thread is in the middle of a deoptimizing compilation when we hit
                 // this and thus, it has invalidated the old switch point, but hasn't created the new one yet. Note that
@@ -630,26 +630,26 @@ final class CompiledFunction {
         }
     }
 
-    private static void relinkComposableInvoker(final CallSite cs, final CompiledFunction inv, final boolean constructor) {
-        final HandleAndAssumptions handleAndAssumptions = inv.getValidOptimisticInvocation(new Supplier<MethodHandle>() {
+    private static void relinkComposableInvoker(final SCallSite cs, final CompiledFunction inv, final boolean constructor) {
+        final HandleAndAssumptions handleAndAssumptions = inv.getValidOptimisticInvocation(new Supplier<SMethodHandle>() {
             @Override
-            public MethodHandle get() {
+            public SMethodHandle get() {
                 return inv.getInvokerOrConstructor(constructor);
             }
         });
-        final MethodHandle handle = handleAndAssumptions.handle;
-        final SwitchPoint assumptions = handleAndAssumptions.assumptions;
-        final MethodHandle target;
+        final SMethodHandle handle = handleAndAssumptions.handle;
+        final SSwitchPoint assumptions = handleAndAssumptions.assumptions;
+        final SMethodHandle target;
         if(assumptions == null) {
             target = handle;
         } else {
-            final MethodHandle relink = MethodHandles.insertArguments(RELINK_COMPOSABLE_INVOKER, 0, cs, inv, constructor);
-            target = assumptions.guardWithTest(handle, MethodHandles.foldArguments(cs.dynamicInvoker(), relink));
+            final SMethodHandle relink = SMethodHandles.insertArguments(RELINK_COMPOSABLE_INVOKER, 0, cs, inv, constructor);
+            target = assumptions.guardWithTest(handle, SMethodHandles.foldArguments(cs.dynamicInvoker(), relink));
         }
         cs.setTarget(target.asType(cs.type()));
     }
 
-    private MethodHandle getInvokerOrConstructor(final boolean selectCtor) {
+    private SMethodHandle getInvokerOrConstructor(final boolean selectCtor) {
         return selectCtor ? getConstructor() : createInvokerForPessimisticCaller();
     }
 
@@ -662,9 +662,9 @@ final class CompiledFunction {
      * @return a guarded invocation for an ordinary (non-constructor) invocation of this function.
      */
     GuardedInvocation createFunctionInvocation(final Class<?> callSiteReturnType, final int callerProgramPoint) {
-        return getValidOptimisticInvocation(new Supplier<MethodHandle>() {
+        return getValidOptimisticInvocation(new Supplier<SMethodHandle>() {
             @Override
-            public MethodHandle get() {
+            public SMethodHandle get() {
                 return createInvoker(callSiteReturnType, callerProgramPoint);
             }
         }).createInvocation();
@@ -679,19 +679,19 @@ final class CompiledFunction {
      * @return a guarded invocation for invocation of this function as a constructor.
      */
     GuardedInvocation createConstructorInvocation() {
-        return getValidOptimisticInvocation(new Supplier<MethodHandle>() {
+        return getValidOptimisticInvocation(new Supplier<SMethodHandle>() {
             @Override
-            public MethodHandle get() {
+            public SMethodHandle get() {
                 return getConstructor();
             }
         }).createInvocation();
     }
 
-    private MethodHandle createInvoker(final Class<?> callSiteReturnType, final int callerProgramPoint) {
+    private SMethodHandle createInvoker(final Class<?> callSiteReturnType, final int callerProgramPoint) {
         final boolean isOptimistic = canBeDeoptimized();
-        MethodHandle handleRewriteException = isOptimistic ? createRewriteExceptionHandler() : null;
+        SMethodHandle handleRewriteException = isOptimistic ? createRewriteExceptionHandler() : null;
 
-        MethodHandle inv = invoker;
+        SMethodHandle inv = invoker;
         if(isValid(callerProgramPoint)) {
             inv = OptimisticReturnFilters.filterOptimisticReturnValue(inv, callSiteReturnType, callerProgramPoint);
             inv = changeReturnType(inv, callSiteReturnType);
@@ -708,22 +708,22 @@ final class CompiledFunction {
 
         if(isOptimistic) {
             assert handleRewriteException != null;
-            final MethodHandle typedHandleRewriteException = changeReturnType(handleRewriteException, inv.type().returnType());
+            final SMethodHandle typedHandleRewriteException = changeReturnType(handleRewriteException, inv.type().returnType());
             return MH.catchException(inv, RewriteException.class, typedHandleRewriteException);
         }
         return inv;
     }
 
-    private MethodHandle createRewriteExceptionHandler() {
+    private SMethodHandle createRewriteExceptionHandler() {
         return MH.foldArguments(RESTOF_INVOKER, MH.insertArguments(HANDLE_REWRITE_EXCEPTION, 0, this, optimismInfo));
     }
 
-    private static MethodHandle changeReturnType(final MethodHandle mh, final Class<?> newReturnType) {
+    private static SMethodHandle changeReturnType(final SMethodHandle mh, final Class<?> newReturnType) {
         return Bootstrap.getLinkerServices().asType(mh, mh.type().changeReturnType(newReturnType));
     }
 
     @SuppressWarnings("unused")
-    private static MethodHandle handleRewriteException(final CompiledFunction function, final OptimismInfo oldOptimismInfo, final RewriteException re) {
+    private static SMethodHandle handleRewriteException(final CompiledFunction function, final OptimismInfo oldOptimismInfo, final RewriteException re) {
         return function.handleRewriteException(oldOptimismInfo, re);
     }
 
@@ -798,7 +798,7 @@ final class CompiledFunction {
      * @param re the rewrite exception that was raised
      * @return the method handle for the rest-of method, for folding composition.
      */
-    private synchronized MethodHandle handleRewriteException(final OptimismInfo oldOptInfo, final RewriteException re) {
+    private synchronized SMethodHandle handleRewriteException(final OptimismInfo oldOptInfo, final RewriteException re) {
         if (log.isEnabled()) {
             log.info(
                     new RecompilationEvent(
@@ -863,12 +863,12 @@ final class CompiledFunction {
             log.finest("Looking up invoker...");
         }
 
-        final MethodHandle newInvoker = effectiveOptInfo.data.lookup(fn);
+        final SMethodHandle newInvoker = effectiveOptInfo.data.lookup(fn);
         invoker     = newInvoker.asType(type.changeReturnType(newInvoker.type().returnType()));
         constructor = null; // Will be regenerated when needed
 
         log.info("Done: ", invoker);
-        final MethodHandle restOf = restOfHandle(effectiveOptInfo, compiler.compile(fn, CompilationPhases.GENERATE_BYTECODE_AND_INSTALL_RESTOF), canBeDeoptimized);
+        final SMethodHandle restOf = restOfHandle(effectiveOptInfo, compiler.compile(fn, CompilationPhases.GENERATE_BYTECODE_AND_INSTALL_RESTOF), canBeDeoptimized);
 
         // Note that we only adjust the switch point after we set the invoker/constructor. This is important.
         if (canBeDeoptimized) {
@@ -881,10 +881,10 @@ final class CompiledFunction {
         return restOf;
     }
 
-    private MethodHandle restOfHandle(final OptimismInfo info, final FunctionNode restOfFunction, final boolean canBeDeoptimized) {
+    private SMethodHandle restOfHandle(final OptimismInfo info, final FunctionNode restOfFunction, final boolean canBeDeoptimized) {
         assert info != null;
         assert restOfFunction.getCompileUnit().getUnitClassName().contains("restOf");
-        final MethodHandle restOf =
+        final SMethodHandle restOf =
                 changeReturnType(
                         info.data.lookupCodeMethod(
                                 restOfFunction.getCompileUnit().getCode(),
@@ -905,7 +905,7 @@ final class CompiledFunction {
         // TODO: this is pointing to its owning ScriptFunctionData. Re-evaluate if that's okay.
         private final RecompilableScriptFunctionData data;
         private final Map<Integer, Type> invalidatedProgramPoints;
-        private SwitchPoint optimisticAssumptions;
+        private SSwitchPoint optimisticAssumptions;
         private final DebugLogger log;
 
         OptimismInfo(final RecompilableScriptFunctionData data, final Map<Integer, Type> invalidatedProgramPoints) {
@@ -916,7 +916,7 @@ final class CompiledFunction {
         }
 
         private void newOptimisticAssumptions() {
-            optimisticAssumptions = new SwitchPoint();
+            optimisticAssumptions = new SSwitchPoint();
         }
 
         boolean requestRecompile(final RewriteException e) {
@@ -934,7 +934,7 @@ final class CompiledFunction {
                 return false;
             }
 
-            SwitchPoint.invalidateAll(new SwitchPoint[] { optimisticAssumptions });
+            SSwitchPoint.invalidateAll(new SSwitchPoint[] { optimisticAssumptions });
 
             return true;
         }
@@ -967,7 +967,7 @@ final class CompiledFunction {
         return (result instanceof ScriptObject || !JSType.isPrimitive(result))? result : allocation;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), CompiledFunction.class, name, MH.type(rtype, types));
     }
 }

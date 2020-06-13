@@ -124,7 +124,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.TypeBasedGuardingDynamicLink
  * would cause selection ambiguity (that is extremely rare).</p>
  * <p><strong>Variable argument invocation</strong> is handled for both methods and constructors.</p>
  * <p>Currently, only public fields and methods are supported. Any Lookup objects passed in the
- * {@link LinkRequest}s are ignored and {@link MethodHandles#publicLookup()} is used instead.</p>
+ * {@link LinkRequest}s are ignored and {@link SMethodHandles#publicLookup()} is used instead.</p>
  *
  * @author Attila Szegedi
  */

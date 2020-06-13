@@ -209,12 +209,12 @@ public abstract class ArrayData {
         }
 
         @Override
-        public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+        public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
             return null;
         }
 
         @Override
-        public MethodHandle getElementSetter(final Class<?> elementType) {
+        public SMethodHandle getElementSetter(final Class<?> elementType) {
             return null;
         }
 
@@ -825,7 +825,7 @@ public abstract class ArrayData {
         return index + 1;
     }
 
-    static Object invoke(final MethodHandle mh, final Object arg) {
+    static Object invoke(final SMethodHandle mh, final Object arg) {
         try {
             return mh.invoke(arg);
         } catch (final RuntimeException | Error e) {

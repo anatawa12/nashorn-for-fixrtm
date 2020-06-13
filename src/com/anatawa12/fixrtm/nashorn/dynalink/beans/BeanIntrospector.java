@@ -93,12 +93,12 @@ class BeanIntrospector extends FacetIntrospector {
     }
 
     @Override
-    Map<String, MethodHandle> getInnerClassGetters() {
+    Map<String, SMethodHandle> getInnerClassGetters() {
         return Collections.emptyMap(); // NOTE: non-static inner classes are also on StaticClassIntrospector.
     }
 
     @Override
-    MethodHandle editMethodHandle(final MethodHandle mh) {
+    SMethodHandle editMethodHandle(final SMethodHandle mh) {
         return mh;
     }
 }

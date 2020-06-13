@@ -54,7 +54,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
  */
 public class ListAdapter extends AbstractList<Object> implements RandomAccess, Deque<Object> {
     // Invoker creator for methods that add to the start or end of the list: PUSH and UNSHIFT. Takes fn, this, and value, returns void.
-    private static final Callable<MethodHandle> ADD_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, Object.class);
+    private static final Callable<SMethodHandle> ADD_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, Object.class);
 
     // PUSH adds to the start of the list
     private static final Object PUSH = new Object();
@@ -62,7 +62,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
     private static final Object UNSHIFT = new Object();
 
     // Invoker creator for methods that remove from the tail or head of the list: POP and SHIFT. Takes fn, this, returns Object.
-    private static final Callable<MethodHandle> REMOVE_INVOKER_CREATOR = invokerCreator(Object.class, Object.class, JSObject.class);
+    private static final Callable<SMethodHandle> REMOVE_INVOKER_CREATOR = invokerCreator(Object.class, Object.class, JSObject.class);
 
     // POP removes from the start of the list
     private static final Object POP = new Object();
@@ -71,11 +71,11 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
 
     // SPLICE can be used to add a value in the middle of the list.
     private static final Object SPLICE_ADD = new Object();
-    private static final Callable<MethodHandle> SPLICE_ADD_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, int.class, int.class, Object.class);
+    private static final Callable<SMethodHandle> SPLICE_ADD_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, int.class, int.class, Object.class);
 
     // SPLICE can also be used to remove values from the middle of the list.
     private static final Object SPLICE_REMOVE = new Object();
-    private static final Callable<MethodHandle> SPLICE_REMOVE_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, int.class, int.class);
+    private static final Callable<SMethodHandle> SPLICE_REMOVE_INVOKER_CREATOR = invokerCreator(void.class, Object.class, JSObject.class, int.class, int.class);
 
     /** wrapped object */
     final JSObject obj;
@@ -396,16 +396,16 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
         return false;
     }
 
-    private static Callable<MethodHandle> invokerCreator(final Class<?> rtype, final Class<?>... ptypes) {
-        return new Callable<MethodHandle>() {
+    private static Callable<SMethodHandle> invokerCreator(final Class<?> rtype, final Class<?>... ptypes) {
+        return new Callable<SMethodHandle>() {
             @Override
-            public MethodHandle call() {
+            public SMethodHandle call() {
                 return Bootstrap.createDynamicInvoker("dyn:call", rtype, ptypes);
             }
         };
     }
 
-    private MethodHandle getDynamicInvoker(final Object key, final Callable<MethodHandle> creator) {
+    private SMethodHandle getDynamicInvoker(final Object key, final Callable<SMethodHandle> creator) {
         return global.getDynamicInvoker(key, creator);
     }
 }

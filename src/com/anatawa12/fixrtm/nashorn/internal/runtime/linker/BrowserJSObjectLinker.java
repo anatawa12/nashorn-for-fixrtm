@@ -140,12 +140,12 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
             return inv;
         }
         final String name = desc.getNameToken(CallSiteDescriptor.NAME_OPERAND);
-        final MethodHandle getter = MH.insertArguments(JSOBJECT_GETMEMBER, 1, name);
+        final SMethodHandle getter = MH.insertArguments(JSOBJECT_GETMEMBER, 1, name);
         return new GuardedInvocation(getter, IS_JSOBJECT_GUARD);
     }
 
     private static GuardedInvocation findGetIndexMethod(final GuardedInvocation inv) {
-        final MethodHandle getter = MH.insertArguments(JSOBJECTLINKER_GET, 0, inv.getInvocation());
+        final SMethodHandle getter = MH.insertArguments(JSOBJECTLINKER_GET, 0, inv.getInvocation());
         return inv.replaceMethods(getter, inv.getGuard());
     }
 
@@ -153,7 +153,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
         if (inv != null) {
             return inv;
         }
-        final MethodHandle getter = MH.insertArguments(JSOBJECT_SETMEMBER, 1, desc.getNameToken(2));
+        final SMethodHandle getter = MH.insertArguments(JSOBJECT_SETMEMBER, 1, desc.getNameToken(2));
         return new GuardedInvocation(getter, IS_JSOBJECT_GUARD);
     }
 
@@ -162,7 +162,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     }
 
     private static GuardedInvocation findCallMethod(final CallSiteDescriptor desc) {
-        final MethodHandle call = MH.insertArguments(JSOBJECT_CALL, 1, "call");
+        final SMethodHandle call = MH.insertArguments(JSOBJECT_CALL, 1, "call");
         return new GuardedInvocation(MH.asCollector(call, Object[].class, desc.getMethodType().parameterCount() - 1), IS_JSOBJECT_GUARD);
     }
 
@@ -172,7 +172,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     }
 
     @SuppressWarnings("unused")
-    private static Object get(final MethodHandle fallback, final Object jsobj, final Object key) throws Throwable {
+    private static Object get(final SMethodHandle fallback, final Object jsobj, final Object key) throws Throwable {
         if (key instanceof Integer) {
             return JSOBJECT_GETSLOT.invokeExact(jsobj, (int)key);
         } else if (key instanceof Number) {
@@ -208,11 +208,11 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
 
     private static final MethodHandleFunctionality MH = MethodHandleFactory.getFunctionality();
     // method handles of the current class
-    private static final MethodHandle IS_JSOBJECT_GUARD  = findOwnMH_S("isJSObject", boolean.class, Object.class);
-    private static final MethodHandle JSOBJECTLINKER_GET = findOwnMH_S("get", Object.class, MethodHandle.class, Object.class, Object.class);
-    private static final MethodHandle JSOBJECTLINKER_PUT = findOwnMH_S("put", Void.TYPE, Object.class, Object.class, Object.class);
+    private static final SMethodHandle IS_JSOBJECT_GUARD  = findOwnMH_S("isJSObject", boolean.class, Object.class);
+    private static final SMethodHandle JSOBJECTLINKER_GET = findOwnMH_S("get", Object.class, SMethodHandle.class, Object.class, Object.class);
+    private static final SMethodHandle JSOBJECTLINKER_PUT = findOwnMH_S("put", Void.TYPE, Object.class, Object.class, Object.class);
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
             return MH.findStatic(MethodHandles.lookup(), BrowserJSObjectLinker.class, name, MH.type(rtype, types));
     }
 
@@ -221,15 +221,15 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     // method handles when we hit a subclass of JSObject first time.
     static class JSObjectHandles {
         // method handles of JSObject class
-        static final MethodHandle JSOBJECT_GETMEMBER     = findJSObjectMH_V("getMember", Object.class, String.class).asType(MH.type(Object.class, Object.class, String.class));
-        static final MethodHandle JSOBJECT_GETSLOT       = findJSObjectMH_V("getSlot", Object.class, int.class).asType(MH.type(Object.class, Object.class, int.class));
-        static final MethodHandle JSOBJECT_SETMEMBER     = findJSObjectMH_V("setMember", Void.TYPE, String.class, Object.class).asType(MH.type(Void.TYPE, Object.class, String.class, Object.class));
-        static final MethodHandle JSOBJECT_SETSLOT       = findJSObjectMH_V("setSlot", Void.TYPE, int.class, Object.class).asType(MH.type(Void.TYPE, Object.class, int.class, Object.class));
-        static final MethodHandle JSOBJECT_CALL          = findJSObjectMH_V("call", Object.class, String.class, Object[].class).asType(MH.type(Object.class, Object.class, String.class, Object[].class));
+        static final SMethodHandle JSOBJECT_GETMEMBER     = findJSObjectMH_V("getMember", Object.class, String.class).asType(MH.type(Object.class, Object.class, String.class));
+        static final SMethodHandle JSOBJECT_GETSLOT       = findJSObjectMH_V("getSlot", Object.class, int.class).asType(MH.type(Object.class, Object.class, int.class));
+        static final SMethodHandle JSOBJECT_SETMEMBER     = findJSObjectMH_V("setMember", Void.TYPE, String.class, Object.class).asType(MH.type(Void.TYPE, Object.class, String.class, Object.class));
+        static final SMethodHandle JSOBJECT_SETSLOT       = findJSObjectMH_V("setSlot", Void.TYPE, int.class, Object.class).asType(MH.type(Void.TYPE, Object.class, int.class, Object.class));
+        static final SMethodHandle JSOBJECT_CALL          = findJSObjectMH_V("call", Object.class, String.class, Object[].class).asType(MH.type(Object.class, Object.class, String.class, Object[].class));
 
-        private static MethodHandle findJSObjectMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
+        private static SMethodHandle findJSObjectMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
             checkJSObjectClass();
-            return MH.findVirtual(MethodHandles.publicLookup(), jsObjectClass, name, MH.type(rtype, types));
+            return MH.findVirtual(SMethodHandles.publicLookup(), jsObjectClass, name, MH.type(rtype, types));
         }
     }
 }

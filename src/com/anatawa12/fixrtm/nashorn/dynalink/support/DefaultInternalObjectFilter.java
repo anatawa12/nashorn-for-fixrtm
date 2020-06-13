@@ -96,12 +96,12 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
  * are declared to be {@link Object}.
  */
 public class DefaultInternalObjectFilter implements MethodHandleTransformer {
-    private static final MethodHandle FILTER_VARARGS = new Lookup(MethodHandles.lookup()).findStatic(
-            DefaultInternalObjectFilter.class, "filterVarArgs", MethodType.methodType(Object[].class, MethodHandle.class, Object[].class));
+    private static final SMethodHandle FILTER_VARARGS = new Lookup(MethodHandles.lookup()).findStatic(
+            DefaultInternalObjectFilter.class, "filterVarArgs", MethodType.methodType(Object[].class, SMethodHandle.class, Object[].class));
 
-    private final MethodHandle parameterFilter;
-    private final MethodHandle returnFilter;
-    private final MethodHandle varArgFilter;
+    private final SMethodHandle parameterFilter;
+    private final SMethodHandle returnFilter;
+    private final SMethodHandle varArgFilter;
 
     /**
      * Creates a new filter.
@@ -109,20 +109,20 @@ public class DefaultInternalObjectFilter implements MethodHandleTransformer {
      * @param returnFilter the filter for return values. Must be of type {@code Object(Object)}, or null.
      * @throws IllegalArgumentException if one or both filters are not of the expected type.
      */
-    public DefaultInternalObjectFilter(final MethodHandle parameterFilter, final MethodHandle returnFilter) {
+    public DefaultInternalObjectFilter(final SMethodHandle parameterFilter, final SMethodHandle returnFilter) {
         this.parameterFilter = checkHandle(parameterFilter, "parameterFilter");
         this.returnFilter = checkHandle(returnFilter, "returnFilter");
         this.varArgFilter = parameterFilter == null ? null : FILTER_VARARGS.bindTo(parameterFilter);
     }
 
     @Override
-    public MethodHandle transform(final MethodHandle target) {
+    public SMethodHandle transform(final SMethodHandle target) {
         assert target != null;
-        MethodHandle[] filters = null;
+        SMethodHandle[] filters = null;
         final MethodType type = target.type();
         final boolean isVarArg = target.isVarargsCollector();
         final int paramCount = type.parameterCount();
-        final MethodHandle paramsFiltered;
+        final SMethodHandle paramsFiltered;
         // Filter parameters
         if (parameterFilter != null) {
             int firstFilter = -1;
@@ -133,23 +133,23 @@ public class DefaultInternalObjectFilter implements MethodHandleTransformer {
                 if (filterVarArg || paramType == Object.class) {
                     if (filters == null) {
                         firstFilter = i;
-                        filters = new MethodHandle[paramCount - firstFilter];
+                        filters = new SMethodHandle[paramCount - firstFilter];
                     }
                     filters[i - firstFilter] = filterVarArg ? varArgFilter : parameterFilter;
                 }
             }
-            paramsFiltered = filters != null ? MethodHandles.filterArguments(target, firstFilter, filters) : target;
+            paramsFiltered = filters != null ? SMethodHandles.filterArguments(target, firstFilter, filters) : target;
         } else {
             paramsFiltered = target;
         }
         // Filter return value if needed
-        final MethodHandle returnFiltered = returnFilter != null && type.returnType() == Object.class ? MethodHandles.filterReturnValue(paramsFiltered, returnFilter) : paramsFiltered;
+        final SMethodHandle returnFiltered = returnFilter != null && type.returnType() == Object.class ? SMethodHandles.filterReturnValue(paramsFiltered, returnFilter) : paramsFiltered;
         // Preserve varargs collector state
         return isVarArg && !returnFiltered.isVarargsCollector() ? returnFiltered.asVarargsCollector(type.parameterType(paramCount - 1)) : returnFiltered;
 
     }
 
-    private static MethodHandle checkHandle(final MethodHandle handle, final String handleKind) {
+    private static SMethodHandle checkHandle(final SMethodHandle handle, final String handleKind) {
         if (handle != null) {
             final MethodType objectObjectType = MethodType.methodType(Object.class, Object.class);
             if (!handle.type().equals(objectObjectType)) {
@@ -160,7 +160,7 @@ public class DefaultInternalObjectFilter implements MethodHandleTransformer {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] filterVarArgs(final MethodHandle parameterFilter, final Object[] args) throws Throwable {
+    private static Object[] filterVarArgs(final SMethodHandle parameterFilter, final Object[] args) throws Throwable {
         Object[] newArgs = null;
         for(int i = 0; i < args.length; ++i) {
             final Object arg = args[i];

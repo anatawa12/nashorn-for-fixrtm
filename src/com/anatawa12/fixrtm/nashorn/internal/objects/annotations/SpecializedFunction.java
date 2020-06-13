@@ -159,7 +159,7 @@ public @interface SpecializedFunction {
          *
          * @return methodhandle for guard, or null if no guard is needed
          */
-        public MethodHandle getGuard() {
+        public SMethodHandle getGuard() {
             return null;
         }
 

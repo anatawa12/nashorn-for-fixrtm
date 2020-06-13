@@ -127,17 +127,17 @@ public class LinkerServicesImpl implements LinkerServices {
     }
 
     @Override
-    public MethodHandle asType(final MethodHandle handle, final MethodType fromType) {
+    public SMethodHandle asType(final SMethodHandle handle, final MethodType fromType) {
         return typeConverterFactory.asType(handle, fromType);
     }
 
     @Override
-    public MethodHandle asTypeLosslessReturn(final MethodHandle handle, final MethodType fromType) {
+    public SMethodHandle asTypeLosslessReturn(final SMethodHandle handle, final MethodType fromType) {
         return Implementation.asTypeLosslessReturn(this, handle, fromType);
     }
 
     @Override
-    public MethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
+    public SMethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
         return typeConverterFactory.getTypeConverter(sourceType, targetType);
     }
 
@@ -158,7 +158,7 @@ public class LinkerServicesImpl implements LinkerServices {
     }
 
     @Override
-    public MethodHandle filterInternalObjects(final MethodHandle target) {
+    public SMethodHandle filterInternalObjects(final SMethodHandle target) {
         return internalObjectsFilter != null ? internalObjectsFilter.transform(target) : target;
     }
 

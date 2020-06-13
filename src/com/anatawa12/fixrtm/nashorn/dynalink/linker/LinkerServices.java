@@ -100,24 +100,24 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
  */
 public interface LinkerServices {
     /**
-     * Similar to {@link MethodHandle#asType(MethodType)} except it also hooks in method handles produced by
+     * Similar to {@link SMethodHandle#asType(MethodType)} except it also hooks in method handles produced by
      * {@link GuardingTypeConverterFactory} implementations, providing for language-specific type coercing of
-     * parameters. It will apply {@link MethodHandle#asType(MethodType)} for all primitive-to-primitive,
+     * parameters. It will apply {@link SMethodHandle#asType(MethodType)} for all primitive-to-primitive,
      * wrapper-to-primitive, primitive-to-wrapper conversions as well as for all upcasts. For all other conversions,
-     * it'll insert {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)} with composite filters
+     * it'll insert {@link SMethodHandles#filterArguments(SMethodHandle, int, SMethodHandle...)} with composite filters
      * provided by {@link GuardingTypeConverterFactory} implementations.
      *
      * @param handle target method handle
      * @param fromType the types of source arguments
-     * @return a method handle that is a suitable combination of {@link MethodHandle#asType(MethodType)},
-     * {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}, and
-     * {@link MethodHandles#filterReturnValue(MethodHandle, MethodHandle)} with
+     * @return a method handle that is a suitable combination of {@link SMethodHandle#asType(MethodType)},
+     * {@link SMethodHandles#filterArguments(SMethodHandle, int, SMethodHandle...)}, and
+     * {@link SMethodHandles#filterReturnValue(SMethodHandle, SMethodHandle)} with
      * {@link GuardingTypeConverterFactory}-produced type converters as filters.
      */
-    public MethodHandle asType(MethodHandle handle, MethodType fromType);
+    public SMethodHandle asType(SMethodHandle handle, MethodType fromType);
 
     /**
-     * Similar to {@link #asType(MethodHandle, MethodType)} except it only converts the return type of the method handle
+     * Similar to {@link #asType(SMethodHandle, MethodType)} except it only converts the return type of the method handle
      * when it can be done using a conversion that loses neither precision nor magnitude, otherwise it leaves it
      * unchanged. The idea is that other conversions should not be performed by individual linkers, but instead the
      * {@link DynamicLinkerFactory#setPrelinkFilter(com.anatawa12.fixrtm.nashorn.dynalink.GuardedInvocationFilter) pre-link filter of
@@ -126,23 +126,23 @@ public interface LinkerServices {
      *
      * @param handle target method handle
      * @param fromType the types of source arguments
-     * @return a method handle that is a suitable combination of {@link MethodHandle#asType(MethodType)}, and
-     * {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)} with
+     * @return a method handle that is a suitable combination of {@link SMethodHandle#asType(MethodType)}, and
+     * {@link SMethodHandles#filterArguments(SMethodHandle, int, SMethodHandle...)} with
      * {@link GuardingTypeConverterFactory}-produced type converters as filters.
      */
-    public MethodHandle asTypeLosslessReturn(MethodHandle handle, MethodType fromType);
+    public SMethodHandle asTypeLosslessReturn(SMethodHandle handle, MethodType fromType);
 
     /**
      * Given a source and target type, returns a method handle that converts between them. Never returns null; in worst
      * case it will return an identity conversion (that might fail for some values at runtime). You rarely need to use
-     * this method directly; you should mostly rely on {@link #asType(MethodHandle, MethodType)} instead. You really
+     * this method directly; you should mostly rely on {@link #asType(SMethodHandle, MethodType)} instead. You really
      * only need this method if you have a piece of your program that is written in Java, and you need to reuse existing
      * type conversion machinery in a non-invokedynamic context.
      * @param sourceType the type to convert from
      * @param targetType the type to convert to
      * @return a method handle performing the conversion.
      */
-    public MethodHandle getTypeConverter(Class<?> sourceType, Class<?> targetType);
+    public SMethodHandle getTypeConverter(Class<?> sourceType, Class<?> targetType);
 
     /**
      * Returns true if there might exist a conversion between the requested types (either an automatic JVM conversion,
@@ -187,7 +187,7 @@ public interface LinkerServices {
      * @param target the target method handle
      * @return a method handle with parameters and/or return type potentially filtered for wrapping and unwrapping.
      */
-    public MethodHandle filterInternalObjects(final MethodHandle target);
+    public SMethodHandle filterInternalObjects(final SMethodHandle target);
 
     /**
      * If we could just use Java 8 constructs, then {@code asTypeSafeReturn} would be a method with default
@@ -195,13 +195,13 @@ public interface LinkerServices {
      */
     public static class Implementation {
         /**
-         * Default implementation for {@link LinkerServices#asTypeLosslessReturn(MethodHandle, MethodType)}.
+         * Default implementation for {@link LinkerServices#asTypeLosslessReturn(SMethodHandle, MethodType)}.
          * @param linkerServices the linker services that delegates to this implementation
          * @param handle the passed handle
          * @param fromType the passed type
          * @return the converted method handle, as per the {@code asTypeSafeReturn} semantics.
          */
-        public static MethodHandle asTypeLosslessReturn(final LinkerServices linkerServices, final MethodHandle handle, final MethodType fromType) {
+        public static SMethodHandle asTypeLosslessReturn(final LinkerServices linkerServices, final SMethodHandle handle, final MethodType fromType) {
             final Class<?> handleReturnType = handle.type().returnType();
             return linkerServices.asType(handle, TypeUtilities.isConvertibleWithoutLoss(handleReturnType, fromType.returnType()) ?
                     fromType : fromType.changeReturnType(handleReturnType));

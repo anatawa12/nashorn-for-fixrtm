@@ -58,7 +58,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
  */
 public final class JavaAdapterServices {
     private static final ThreadLocal<ScriptObject> classOverrides = new ThreadLocal<>();
-    private static final MethodHandle NO_PERMISSIONS_INVOKER = createNoPermissionsInvoker();
+    private static final SMethodHandle NO_PERMISSIONS_INVOKER = createNoPermissionsInvoker();
 
     private JavaAdapterServices() {
     }
@@ -72,7 +72,7 @@ public final class JavaAdapterServices {
      * @param type the method type it has to conform to
      * @return the appropriately adapted method handle for invoking the script function.
      */
-    public static MethodHandle getHandle(final ScriptFunction fn, final MethodType type) {
+    public static SMethodHandle getHandle(final ScriptFunction fn, final MethodType type) {
         // JS "this" will be global object or undefined depending on if 'fn' is strict or not
         return bindAndAdaptHandle(fn, fn.isStrict()? ScriptRuntime.UNDEFINED : Context.getGlobal(), type);
     }
@@ -89,7 +89,7 @@ public final class JavaAdapterServices {
      * property is either null or undefined, or "toString" was requested as the name, but the object doesn't directly
      * define it but just inherits it through prototype.
      */
-    public static MethodHandle getHandle(final Object obj, final String name, final MethodType type) {
+    public static SMethodHandle getHandle(final Object obj, final String name, final MethodType type) {
         if (! (obj instanceof ScriptObject)) {
             throw typeError("not.an.object", ScriptRuntime.safeToString(obj));
         }
@@ -130,7 +130,7 @@ public final class JavaAdapterServices {
      * @param arg the argument to pass to the handle.
      * @throws Throwable if anything goes wrong.
      */
-    public static void invokeNoPermissions(final MethodHandle method, final Object arg) throws Throwable {
+    public static void invokeNoPermissions(final SMethodHandle method, final Object arg) throws Throwable {
         NO_PERMISSIONS_INVOKER.invokeExact(method, arg);
     }
 
@@ -154,17 +154,17 @@ public final class JavaAdapterServices {
         classOverrides.set(overrides);
     }
 
-    private static MethodHandle bindAndAdaptHandle(final ScriptFunction fn, final Object self, final MethodType type) {
+    private static SMethodHandle bindAndAdaptHandle(final ScriptFunction fn, final Object self, final MethodType type) {
         return Bootstrap.getLinkerServices().asType(ScriptObject.pairArguments(fn.getBoundInvokeHandle(self), type, false), type);
     }
 
-    private static MethodHandle createNoPermissionsInvoker() {
+    private static SMethodHandle createNoPermissionsInvoker() {
         final String className = "NoPermissionsInvoker";
 
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_7, ACC_PUBLIC | ACC_SUPER | ACC_FINAL, className, null, "java/lang/Object", null);
         final Type objectType = Type.getType(Object.class);
-        final Type methodHandleType = Type.getType(MethodHandle.class);
+        final Type methodHandleType = Type.getType(SMethodHandle.class);
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "invoke",
                 Type.getMethodDescriptor(Type.VOID_TYPE, methodHandleType, objectType), null, null));
         mv.visitCode();
@@ -196,7 +196,7 @@ public final class JavaAdapterServices {
 
         try {
             return MethodHandles.lookup().findStatic(Class.forName(className, true, loader), "invoke",
-                    MethodType.methodType(void.class, MethodHandle.class, Object.class));
+                    MethodType.methodType(void.class, SMethodHandle.class, Object.class));
         } catch(final ReflectiveOperationException e) {
             throw new AssertionError(e.getMessage(), e);
         }
@@ -208,7 +208,7 @@ public final class JavaAdapterServices {
      * @param returnType the return type
      * @return the converter for the expected return type
      */
-    public static MethodHandle getObjectConverter(final Class<?> returnType) {
+    public static SMethodHandle getObjectConverter(final Class<?> returnType) {
         return Bootstrap.getLinkerServices().getTypeConverter(Object.class, returnType);
     }
 

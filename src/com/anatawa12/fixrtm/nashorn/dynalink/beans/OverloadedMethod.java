@@ -104,15 +104,15 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
  * @author Attila Szegedi
  */
 class OverloadedMethod {
-    private final Map<ClassString, MethodHandle> argTypesToMethods = new ConcurrentHashMap<>();
+    private final Map<ClassString, SMethodHandle> argTypesToMethods = new ConcurrentHashMap<>();
     private final OverloadedDynamicMethod parent;
     private final MethodType callSiteType;
-    private final MethodHandle invoker;
+    private final SMethodHandle invoker;
     private final LinkerServices linkerServices;
-    private final ArrayList<MethodHandle> fixArgMethods;
-    private final ArrayList<MethodHandle> varArgMethods;
+    private final ArrayList<SMethodHandle> fixArgMethods;
+    private final ArrayList<SMethodHandle> varArgMethods;
 
-    OverloadedMethod(final List<MethodHandle> methodHandles, final OverloadedDynamicMethod parent, final MethodType callSiteType,
+    OverloadedMethod(final List<SMethodHandle> methodHandles, final OverloadedDynamicMethod parent, final MethodType callSiteType,
             final LinkerServices linkerServices) {
         this.parent = parent;
         final Class<?> commonRetType = getCommonReturnType(methodHandles);
@@ -122,9 +122,9 @@ class OverloadedMethod {
         fixArgMethods = new ArrayList<>(methodHandles.size());
         varArgMethods = new ArrayList<>(methodHandles.size());
         final int argNum = callSiteType.parameterCount();
-        for(MethodHandle mh: methodHandles) {
+        for(SMethodHandle mh: methodHandles) {
             if(mh.isVarargsCollector()) {
-                final MethodHandle asFixed = mh.asFixedArity();
+                final SMethodHandle asFixed = mh.asFixedArity();
                 if(argNum == asFixed.type().parameterCount()) {
                     fixArgMethods.add(asFixed);
                 }
@@ -136,31 +136,31 @@ class OverloadedMethod {
         fixArgMethods.trimToSize();
         varArgMethods.trimToSize();
 
-        final MethodHandle bound = SELECT_METHOD.bindTo(this);
-        final MethodHandle collecting = SingleDynamicMethod.collectArguments(bound, argNum).asType(
-                callSiteType.changeReturnType(MethodHandle.class));
-        invoker = linkerServices.asTypeLosslessReturn(MethodHandles.foldArguments(
-                MethodHandles.exactInvoker(this.callSiteType), collecting), callSiteType);
+        final SMethodHandle bound = SELECT_METHOD.bindTo(this);
+        final SMethodHandle collecting = SingleDynamicMethod.collectArguments(bound, argNum).asType(
+                callSiteType.changeReturnType(SMethodHandle.class));
+        invoker = linkerServices.asTypeLosslessReturn(SMethodHandles.foldArguments(
+                SMethodHandles.exactInvoker(this.callSiteType), collecting), callSiteType);
     }
 
-    MethodHandle getInvoker() {
+    SMethodHandle getInvoker() {
         return invoker;
     }
 
-    private static final MethodHandle SELECT_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(), "selectMethod",
-            MethodHandle.class, Object[].class);
+    private static final SMethodHandle SELECT_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(), "selectMethod",
+            SMethodHandle.class, Object[].class);
 
     @SuppressWarnings("unused")
-    private MethodHandle selectMethod(final Object[] args) throws NoSuchMethodException {
+    private SMethodHandle selectMethod(final Object[] args) throws NoSuchMethodException {
         final Class<?>[] argTypes = new Class<?>[args.length];
         for(int i = 0; i < argTypes.length; ++i) {
             final Object arg = args[i];
             argTypes[i] = arg == null ? ClassString.NULL_CLASS : arg.getClass();
         }
         final ClassString classString = new ClassString(argTypes);
-        MethodHandle method = argTypesToMethods.get(classString);
+        SMethodHandle method = argTypesToMethods.get(classString);
         if(method == null) {
-            List<MethodHandle> methods = classString.getMaximallySpecifics(fixArgMethods, linkerServices, false);
+            List<SMethodHandle> methods = classString.getMaximallySpecifics(fixArgMethods, linkerServices, false);
             if(methods.isEmpty()) {
                 methods = classString.getMaximallySpecifics(varArgMethods, linkerServices, true);
             }
@@ -188,11 +188,11 @@ class OverloadedMethod {
         return method;
     }
 
-    private MethodHandle getNoSuchMethodThrower(final Class<?>[] argTypes) {
-        return adaptThrower(MethodHandles.insertArguments(THROW_NO_SUCH_METHOD, 0, this, argTypes));
+    private SMethodHandle getNoSuchMethodThrower(final Class<?>[] argTypes) {
+        return adaptThrower(SMethodHandles.insertArguments(THROW_NO_SUCH_METHOD, 0, this, argTypes));
     }
 
-    private static final MethodHandle THROW_NO_SUCH_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
+    private static final SMethodHandle THROW_NO_SUCH_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
             "throwNoSuchMethod", void.class, Class[].class);
 
     @SuppressWarnings("unused")
@@ -206,19 +206,19 @@ class OverloadedMethod {
                 parent.getName() + " match the argument types " + argTypesString(argTypes));
     }
 
-    private MethodHandle getAmbiguousMethodThrower(final Class<?>[] argTypes, final List<MethodHandle> methods) {
-        return adaptThrower(MethodHandles.insertArguments(THROW_AMBIGUOUS_METHOD, 0, this, argTypes, methods));
+    private SMethodHandle getAmbiguousMethodThrower(final Class<?>[] argTypes, final List<SMethodHandle> methods) {
+        return adaptThrower(SMethodHandles.insertArguments(THROW_AMBIGUOUS_METHOD, 0, this, argTypes, methods));
     }
 
-    private MethodHandle adaptThrower(final MethodHandle rawThrower) {
-        return MethodHandles.dropArguments(rawThrower, 0, callSiteType.parameterList()).asType(callSiteType);
+    private SMethodHandle adaptThrower(final SMethodHandle rawThrower) {
+        return SMethodHandles.dropArguments(rawThrower, 0, callSiteType.parameterList()).asType(callSiteType);
     }
 
-    private static final MethodHandle THROW_AMBIGUOUS_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
+    private static final SMethodHandle THROW_AMBIGUOUS_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
             "throwAmbiguousMethod", void.class, Class[].class, List.class);
 
     @SuppressWarnings("unused")
-    private void throwAmbiguousMethod(final Class<?>[] argTypes, final List<MethodHandle> methods) throws NoSuchMethodException {
+    private void throwAmbiguousMethod(final Class<?>[] argTypes, final List<SMethodHandle> methods) throws NoSuchMethodException {
         final String arity = methods.get(0).isVarargsCollector() ? "variable" : "fixed";
         throw new NoSuchMethodException("Can't unambiguously select between " + arity + " arity signatures " +
                 getSignatureList(methods) + " of the method " + parent.getName() + " for argument types " +
@@ -231,9 +231,9 @@ class OverloadedMethod {
         return b.append(']').toString();
     }
 
-    private static String getSignatureList(final List<MethodHandle> methods) {
+    private static String getSignatureList(final List<SMethodHandle> methods) {
         final StringBuilder b = new StringBuilder().append('[');
-        final Iterator<MethodHandle> it = methods.iterator();
+        final Iterator<SMethodHandle> it = methods.iterator();
         if(it.hasNext()) {
             appendSig(b, it.next());
             while(it.hasNext()) {
@@ -243,7 +243,7 @@ class OverloadedMethod {
         return b.append(']').toString();
     }
 
-    private static void appendSig(final StringBuilder b, final MethodHandle m) {
+    private static void appendSig(final StringBuilder b, final SMethodHandle m) {
         b.append('(');
         appendTypes(b, m.type().parameterArray(), m.isVarargsCollector());
         b.append(')');
@@ -266,8 +266,8 @@ class OverloadedMethod {
         }
     }
 
-    private static Class<?> getCommonReturnType(final List<MethodHandle> methodHandles) {
-        final Iterator<MethodHandle> it = methodHandles.iterator();
+    private static Class<?> getCommonReturnType(final List<SMethodHandle> methodHandles) {
+        final Iterator<SMethodHandle> it = methodHandles.iterator();
         Class<?> retType = it.next().type().returnType();
         while(it.hasNext()) {
             retType = TypeUtilities.getCommonLosslessConversionType(retType, it.next().type().returnType());

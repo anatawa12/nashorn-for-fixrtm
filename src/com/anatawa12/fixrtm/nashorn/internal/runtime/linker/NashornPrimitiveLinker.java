@@ -49,7 +49,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
  */
 final class NashornPrimitiveLinker implements TypeBasedGuardingDynamicLinker, GuardingTypeConverterFactory, ConversionComparator {
     private static final GuardedTypeConversion VOID_TO_OBJECT = new GuardedTypeConversion(
-            new GuardedInvocation(MethodHandles.constant(Object.class, ScriptRuntime.UNDEFINED)), true);
+            new GuardedInvocation(SMethodHandles.constant(Object.class, ScriptRuntime.UNDEFINED)), true);
 
     @Override
     public boolean canLinkType(final Class<?> type) {
@@ -81,7 +81,7 @@ final class NashornPrimitiveLinker implements TypeBasedGuardingDynamicLinker, Gu
      */
     @Override
     public GuardedTypeConversion convertToType(final Class<?> sourceType, final Class<?> targetType) {
-        final MethodHandle mh = JavaArgumentConverters.getConverter(targetType);
+        final SMethodHandle mh = JavaArgumentConverters.getConverter(targetType);
         if (mh == null) {
             if(targetType == Object.class && sourceType == void.class) {
                 return VOID_TO_OBJECT;
@@ -175,9 +175,9 @@ final class NashornPrimitiveLinker implements TypeBasedGuardingDynamicLinker, Gu
         return JSType.isString(o) || o instanceof Boolean || JSType.isNumber(o) || o == null;
     }
 
-    private static final MethodHandle GUARD_PRIMITIVE = findOwnMH("isJavaScriptPrimitive", boolean.class, Object.class);
+    private static final SMethodHandle GUARD_PRIMITIVE = findOwnMH("isJavaScriptPrimitive", boolean.class, Object.class);
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NashornPrimitiveLinker.class, name, MH.type(rtype, types));
     }
 }

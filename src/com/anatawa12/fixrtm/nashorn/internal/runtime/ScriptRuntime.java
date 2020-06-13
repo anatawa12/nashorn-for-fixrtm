@@ -381,7 +381,7 @@ public final class ScriptRuntime {
     /**
      * Call a function given self and args. If the number of the arguments is known in advance, you can likely achieve
      * better performance by {@link Bootstrap#createDynamicInvoker(String, Class, Class...) creating a dynamic invoker}
-     * for operation {@code "dyn:call"}, then using its {@link MethodHandle#invokeExact(Object...)} method instead.
+     * for operation {@code "dyn:call"}, then using its {@link SMethodHandle#invokeExact(Object...)} method instead.
      *
      * @param target ScriptFunction object.
      * @param self   Receiver in call.
@@ -1045,9 +1045,9 @@ public final class ScriptRuntime {
      */
     public static void invalidateReservedBuiltinName(final String name) {
         final Context context = Context.getContextTrusted();
-        final SwitchPoint sp = context.getBuiltinSwitchPoint(name);
+        final SSwitchPoint sp = context.getBuiltinSwitchPoint(name);
         assert sp != null;
         context.getLogger(ApplySpecialization.class).info("Overwrote special name '" + name +"' - invalidating switchpoint");
-        SwitchPoint.invalidateAll(new SwitchPoint[] { sp });
+        SSwitchPoint.invalidateAll(new SSwitchPoint[] { sp });
     }
 }

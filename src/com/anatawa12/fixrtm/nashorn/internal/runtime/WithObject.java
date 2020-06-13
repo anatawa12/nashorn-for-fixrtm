@@ -46,11 +46,11 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornGuards;
  *
  */
 public final class WithObject extends Scope {
-    private static final MethodHandle WITHEXPRESSIONGUARD    = findOwnMH("withExpressionGuard",  boolean.class, Object.class, PropertyMap.class, SwitchPoint[].class);
-    private static final MethodHandle WITHEXPRESSIONFILTER   = findOwnMH("withFilterExpression", Object.class, Object.class);
-    private static final MethodHandle WITHSCOPEFILTER        = findOwnMH("withFilterScope",      Object.class, Object.class);
-    private static final MethodHandle BIND_TO_EXPRESSION_OBJ = findOwnMH("bindToExpression",     Object.class, Object.class, Object.class);
-    private static final MethodHandle BIND_TO_EXPRESSION_FN  = findOwnMH("bindToExpression",     Object.class, ScriptFunction.class, Object.class);
+    private static final SMethodHandle WITHEXPRESSIONGUARD    = findOwnMH("withExpressionGuard",  boolean.class, Object.class, PropertyMap.class, SSwitchPoint[].class);
+    private static final SMethodHandle WITHEXPRESSIONFILTER   = findOwnMH("withFilterExpression", Object.class, Object.class);
+    private static final SMethodHandle WITHSCOPEFILTER        = findOwnMH("withFilterScope",      Object.class, Object.class);
+    private static final SMethodHandle BIND_TO_EXPRESSION_OBJ = findOwnMH("bindToExpression",     Object.class, Object.class, Object.class);
+    private static final SMethodHandle BIND_TO_EXPRESSION_FN  = findOwnMH("bindToExpression",     Object.class, ScriptFunction.class, Object.class);
 
     /** With expression object. */
     private final ScriptObject expression;
@@ -253,7 +253,7 @@ public final class WithObject extends Scope {
         return proto;
     }
 
-    private static GuardedInvocation fixReceiverType(final GuardedInvocation link, final MethodHandle filter) {
+    private static GuardedInvocation fixReceiverType(final GuardedInvocation link, final SMethodHandle filter) {
         // The receiver may be an Object or a ScriptObject.
         final MethodType invType = link.getInvocation().type();
         final MethodType newInvType = invType.changeParameterType(0, filter.type().returnType());
@@ -267,7 +267,7 @@ public final class WithObject extends Scope {
             return fixReceiverType(link, WITHEXPRESSIONFILTER).filterArguments(0, WITHEXPRESSIONFILTER);
         }
 
-        final MethodHandle linkInvocation      = link.getInvocation();
+        final SMethodHandle linkInvocation      = link.getInvocation();
         final MethodType   linkType            = linkInvocation.type();
         final boolean      linkReturnsFunction = ScriptFunction.class.isAssignableFrom(linkType.returnType());
 
@@ -294,8 +294,8 @@ public final class WithObject extends Scope {
 
     private GuardedInvocation fixScopeCallSite(final GuardedInvocation link, final String name, final ScriptObject owner) {
         final GuardedInvocation newLink             = fixReceiverType(link, WITHSCOPEFILTER);
-        final MethodHandle      expressionGuard     = expressionGuard(name, owner);
-        final MethodHandle      filterGuardReceiver = filterGuardReceiver(newLink, WITHSCOPEFILTER);
+        final SMethodHandle      expressionGuard     = expressionGuard(name, owner);
+        final SMethodHandle      filterGuardReceiver = filterGuardReceiver(newLink, WITHSCOPEFILTER);
         return link.replaceMethods(
                 filterReceiver(
                         newLink.getInvocation(),
@@ -305,21 +305,21 @@ public final class WithObject extends Scope {
                         filterGuardReceiver));
     }
 
-    private static MethodHandle filterGuardReceiver(final GuardedInvocation link, final MethodHandle receiverFilter) {
-        final MethodHandle test = link.getGuard();
+    private static SMethodHandle filterGuardReceiver(final GuardedInvocation link, final SMethodHandle receiverFilter) {
+        final SMethodHandle test = link.getGuard();
         if (test == null) {
             return null;
         }
 
         final Class<?> receiverType = test.type().parameterType(0);
-        final MethodHandle filter = MH.asType(receiverFilter,
+        final SMethodHandle filter = MH.asType(receiverFilter,
                 receiverFilter.type().changeParameterType(0, receiverType).
                 changeReturnType(receiverType));
 
         return filterReceiver(test, filter);
     }
 
-    private static MethodHandle filterReceiver(final MethodHandle mh, final MethodHandle receiverFilter) {
+    private static SMethodHandle filterReceiver(final SMethodHandle mh, final SMethodHandle receiverFilter) {
         //With expression filter == receiverFilter, i.e. receiver is cast to withobject and its expression returned
         return MH.filterArguments(mh, 0, receiverFilter.asType(receiverFilter.type().changeReturnType(mh.type().parameterType(0))));
     }
@@ -358,20 +358,20 @@ public final class WithObject extends Scope {
         return fn.createBound(withFilterExpression(receiver), ScriptRuntime.EMPTY_ARRAY);
     }
 
-    private MethodHandle expressionGuard(final String name, final ScriptObject owner) {
+    private SMethodHandle expressionGuard(final String name, final ScriptObject owner) {
         final PropertyMap map = expression.getMap();
-        final SwitchPoint[] sp = expression.getProtoSwitchPoints(name, owner);
+        final SSwitchPoint[] sp = expression.getProtoSwitchPoints(name, owner);
         return MH.insertArguments(WITHEXPRESSIONGUARD, 1, map, sp);
     }
 
     @SuppressWarnings("unused")
-    private static boolean withExpressionGuard(final Object receiver, final PropertyMap map, final SwitchPoint[] sp) {
+    private static boolean withExpressionGuard(final Object receiver, final PropertyMap map, final SSwitchPoint[] sp) {
         return ((WithObject)receiver).expression.getMap() == map && !hasBeenInvalidated(sp);
     }
 
-    private static boolean hasBeenInvalidated(final SwitchPoint[] switchPoints) {
+    private static boolean hasBeenInvalidated(final SSwitchPoint[] switchPoints) {
         if (switchPoints != null) {
-            for (final SwitchPoint switchPoint : switchPoints) {
+            for (final SSwitchPoint switchPoint : switchPoints) {
                 if (switchPoint.hasBeenInvalidated()) {
                     return true;
                 }
@@ -397,7 +397,7 @@ public final class WithObject extends Scope {
         return expression;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), WithObject.class, name, MH.type(rtype, types));
     }
 }

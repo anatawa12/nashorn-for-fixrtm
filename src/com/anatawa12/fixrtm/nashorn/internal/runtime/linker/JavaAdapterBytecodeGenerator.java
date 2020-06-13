@@ -158,7 +158,7 @@ final class JavaAdapterBytecodeGenerator {
     private static final Type SCRIPT_FUNCTION_TYPE = Type.getType(ScriptFunction.class);
     private static final Type STRING_TYPE = Type.getType(String.class);
     private static final Type METHOD_TYPE_TYPE = Type.getType(MethodType.class);
-    private static final Type METHOD_HANDLE_TYPE = Type.getType(MethodHandle.class);
+    private static final Type METHOD_HANDLE_TYPE = Type.getType(SMethodHandle.class);
     private static final String GET_HANDLE_OBJECT_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
             OBJECT_TYPE, STRING_TYPE, METHOD_TYPE_TYPE);
     private static final String GET_HANDLE_FUNCTION_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
@@ -382,7 +382,7 @@ final class JavaAdapterBytecodeGenerator {
             mv.ifeq(notAFunction);
             mv.checkcast(SCRIPT_FUNCTION_TYPE);
 
-            // Assign MethodHandle fields through invoking getHandle() for a ScriptFunction, only assigning the SAM
+            // Assign SMethodHandle fields through invoking getHandle() for a ScriptFunction, only assigning the SAM
             // method(s).
             for (final MethodInfo mi : methodInfos) {
                 if(mi.getName().equals(samName)) {
@@ -399,7 +399,7 @@ final class JavaAdapterBytecodeGenerator {
         } else {
             initGlobal = null;
         }
-        // Assign MethodHandle fields through invoking getHandle() for a ScriptObject
+        // Assign SMethodHandle fields through invoking getHandle() for a ScriptObject
         for (final MethodInfo mi : methodInfos) {
             mv.dup();
             mv.aconst(mi.getName());
@@ -569,7 +569,7 @@ final class JavaAdapterBytecodeGenerator {
         // Get a descriptor to the appropriate "JavaAdapterFactory.getHandle" method.
         final String getHandleDescriptor = fromFunction ? GET_HANDLE_FUNCTION_DESCRIPTOR : GET_HANDLE_OBJECT_DESCRIPTOR;
 
-        // Assign MethodHandle fields through invoking getHandle()
+        // Assign SMethodHandle fields through invoking getHandle()
         for (final MethodInfo mi : methodInfos) {
             mv.visitVarInsn(ALOAD, 0);
             if (fromFunction && !mi.getName().equals(samName)) {
@@ -1080,7 +1080,7 @@ final class JavaAdapterBytecodeGenerator {
 
     private void generateFinalizerDelegate(final String finalizerDelegateName) {
         // Generate a delegate that will be invoked from the no-permission trampoline. Note it can be private, as we'll
-        // refer to it with a MethodHandle constant pool entry in the overridden finalize() method (see
+        // refer to it with a SMethodHandle constant pool entry in the overridden finalize() method (see
         // generateFinalizerOverride()).
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PRIVATE | ACC_STATIC,
                 finalizerDelegateName, Type.getMethodDescriptor(Type.VOID_TYPE, OBJECT_TYPE), null, null));
@@ -1097,7 +1097,7 @@ final class JavaAdapterBytecodeGenerator {
     private void generateFinalizerOverride(final String finalizerDelegateName) {
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PUBLIC, "finalize",
                 VOID_NOARG_METHOD_DESCRIPTOR, null, null));
-        // Overridden finalizer will take a MethodHandle to the finalizer delegating method, ...
+        // Overridden finalizer will take a SMethodHandle to the finalizer delegating method, ...
         mv.aconst(new Handle(Opcodes.H_INVOKESTATIC, generatedClassName, finalizerDelegateName,
                 Type.getMethodDescriptor(Type.VOID_TYPE, OBJECT_TYPE)));
         mv.visitVarInsn(ALOAD, 0);

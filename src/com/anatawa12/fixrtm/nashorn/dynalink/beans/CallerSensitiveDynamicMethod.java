@@ -145,9 +145,9 @@ class CallerSensitiveDynamicMethod extends SingleDynamicMethod {
     }
 
     @Override
-    MethodHandle getTarget(final MethodHandles.Lookup lookup) {
+    SMethodHandle getTarget(final SMethodHandles.Lookup lookup) {
         if(target instanceof Method) {
-            final MethodHandle mh = Lookup.unreflect(lookup, (Method)target);
+            final SMethodHandle mh = Lookup.unreflect(lookup, (Method)target);
             if(Modifier.isStatic(((Member)target).getModifiers())) {
                 return StaticClassIntrospector.editStaticMethodHandle(mh);
             }

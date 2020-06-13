@@ -113,10 +113,10 @@ class MaximallySpecific {
         abstract MethodType getMethodType(T t);
     }
 
-    private static final MethodTypeGetter<MethodHandle> METHOD_HANDLE_TYPE_GETTER =
-            new MethodTypeGetter<MethodHandle>() {
+    private static final MethodTypeGetter<SMethodHandle> METHOD_HANDLE_TYPE_GETTER =
+            new MethodTypeGetter<SMethodHandle>() {
         @Override
-        MethodType getMethodType(final MethodHandle t) {
+        MethodType getMethodType(final SMethodHandle t) {
             return t.type();
         }
     };
@@ -138,7 +138,7 @@ class MaximallySpecific {
       * @param argTypes concrete argument types for the invocation
       * @return the list of maximally specific method handles.
       */
-     static List<MethodHandle> getMaximallySpecificMethodHandles(final List<MethodHandle> methods, final boolean varArgs,
+     static List<SMethodHandle> getMaximallySpecificMethodHandles(final List<SMethodHandle> methods, final boolean varArgs,
              final Class<?>[] argTypes, final LinkerServices ls) {
          return getMaximallySpecificMethods(methods, varArgs, argTypes, ls, METHOD_HANDLE_TYPE_GETTER);
      }

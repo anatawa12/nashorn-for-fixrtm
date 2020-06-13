@@ -119,7 +119,7 @@ abstract class DynamicMethod {
      * @param linkerServices linker services. Used for language-specific type conversions.
      * @return an invocation suitable for calling the method from the specified call site.
      */
-    abstract MethodHandle getInvocation(CallSiteDescriptor callSiteDescriptor, LinkerServices linkerServices);
+    abstract SMethodHandle getInvocation(CallSiteDescriptor callSiteDescriptor, LinkerServices linkerServices);
 
     /**
      * Returns a single dynamic method representing a single underlying Java method (possibly selected among several

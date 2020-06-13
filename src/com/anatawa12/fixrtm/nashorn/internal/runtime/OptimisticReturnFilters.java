@@ -42,8 +42,8 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescr
  * Optimistic return value filters
  */
 public final class OptimisticReturnFilters {
-    private static final MethodHandle[] ENSURE_INT;
-    private static final MethodHandle[] ENSURE_NUMBER;
+    private static final SMethodHandle[] ENSURE_INT;
+    private static final SMethodHandle[] ENSURE_NUMBER;
 
     // These extend the type index constants in JSType
     private static final int VOID_TYPE_INDEX;
@@ -53,8 +53,8 @@ public final class OptimisticReturnFilters {
     private static final int FLOAT_TYPE_INDEX;
 
     static {
-        final MethodHandle INT_DOUBLE = findOwnMH("ensureInt", int.class, double.class, int.class);
-        ENSURE_INT = new MethodHandle[] {
+        final SMethodHandle INT_DOUBLE = findOwnMH("ensureInt", int.class, double.class, int.class);
+        ENSURE_INT = new SMethodHandle[] {
                 null,
                 INT_DOUBLE,
                 findOwnMH("ensureInt", int.class, Object.class, int.class),
@@ -71,7 +71,7 @@ public final class OptimisticReturnFilters {
         LONG_TYPE_INDEX = ENSURE_INT.length - 2;
         FLOAT_TYPE_INDEX = ENSURE_INT.length - 1;
 
-        ENSURE_NUMBER = new MethodHandle[] {
+        ENSURE_NUMBER = new SMethodHandle[] {
                 null,
                 null,
                 findOwnMH("ensureNumber", double.class, Object.class, int.class),
@@ -91,7 +91,7 @@ public final class OptimisticReturnFilters {
      * @param programPoint program point
      * @return filtered method
      */
-    public static MethodHandle filterOptimisticReturnValue(final MethodHandle mh, final Class<?> expectedReturnType, final int programPoint) {
+    public static SMethodHandle filterOptimisticReturnValue(final SMethodHandle mh, final Class<?> expectedReturnType, final int programPoint) {
         if(!isValid(programPoint)) {
             return mh;
         }
@@ -102,7 +102,7 @@ public final class OptimisticReturnFilters {
             return mh;
         }
 
-        final MethodHandle guard = getOptimisticTypeGuard(expectedReturnType, actualReturnType);
+        final SMethodHandle guard = getOptimisticTypeGuard(expectedReturnType, actualReturnType);
         return guard == null ? mh : MH.filterReturnValue(mh, MH.insertArguments(guard, guard.type().parameterCount() - 1, programPoint));
     }
 
@@ -121,8 +121,8 @@ public final class OptimisticReturnFilters {
                 NashornCallSiteDescriptor.getProgramPoint(desc)), inv.getGuard());
     }
 
-    private static MethodHandle getOptimisticTypeGuard(final Class<?> actual, final Class<?> provable) {
-        final MethodHandle guard;
+    private static SMethodHandle getOptimisticTypeGuard(final Class<?> actual, final Class<?> provable) {
+        final SMethodHandle guard;
         final int provableTypeIndex = getProvableTypeIndex(provable);
         if (actual == int.class) {
             guard = ENSURE_INT[provableTypeIndex];
@@ -133,7 +133,7 @@ public final class OptimisticReturnFilters {
             assert !actual.isPrimitive() : actual + ", " + provable;
         }
         if(guard != null && !(provable.isPrimitive())) {
-            // Make sure filtering a MethodHandle(...)String works with a filter MethodHandle(Object, int)... Note that
+            // Make sure filtering a SMethodHandle(...)String works with a filter SMethodHandle(Object, int)... Note that
             // if the return type of the method is incompatible with Number, then the guard will always throw an
             // UnwarrantedOperationException when invoked, but we must link it anyway as we need the guarded function to
             // successfully execute and return the non-convertible return value that it'll put into the thrown
@@ -253,7 +253,7 @@ public final class OptimisticReturnFilters {
         throw new UnwarrantedOptimismException(arg, programPoint, Type.OBJECT);
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), OptimisticReturnFilters.class, name, MH.type(rtype, types));
     }
 }

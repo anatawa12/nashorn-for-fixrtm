@@ -44,10 +44,10 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 public final class ShellFunctions {
 
     /** Handle to implementation of {@link ShellFunctions#input} - Nashorn extension */
-    public static final MethodHandle INPUT = findOwnMH("input", Object.class, Object.class, Object.class, Object.class);
+    public static final SMethodHandle INPUT = findOwnMH("input", Object.class, Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ShellFunctions#evalinput} - Nashorn extension */
-    public static final MethodHandle EVALINPUT = findOwnMH("evalinput",     Object.class, Object.class, Object.class, Object.class);
+    public static final SMethodHandle EVALINPUT = findOwnMH("evalinput",     Object.class, Object.class, Object.class, Object.class);
 
     private ShellFunctions() {
     }
@@ -98,7 +98,7 @@ public final class ShellFunctions {
         return Global.eval(self, input(self, endMarker, prompt));
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), ShellFunctions.class, name, MH.type(rtype, types));
     }
 }

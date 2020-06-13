@@ -75,8 +75,8 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
  */
 public final class NativeJavaPackage extends ScriptObject {
     private static final MethodHandleFunctionality MH = MethodHandleFactory.getFunctionality();
-    private static final MethodHandle CLASS_NOT_FOUND = findOwnMH("classNotFound", Void.TYPE, NativeJavaPackage.class);
-    private static final MethodHandle TYPE_GUARD = Guards.getClassGuard(NativeJavaPackage.class);
+    private static final SMethodHandle CLASS_NOT_FOUND = findOwnMH("classNotFound", Void.TYPE, NativeJavaPackage.class);
+    private static final SMethodHandle TYPE_GUARD = Guards.getClassGuard(NativeJavaPackage.class);
 
     /** Full name of package (includes path.) */
     private final String name;
@@ -219,7 +219,7 @@ public final class NativeJavaPackage extends ScriptObject {
         return noSuchProperty(desc, request);
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NativeJavaPackage.class, name, MH.type(rtype, types));
     }
 

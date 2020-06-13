@@ -117,7 +117,7 @@ public class CallSiteDescriptorFactory {
      * passed arguments to be space efficient; i.e. if you  only use the public lookup, you'll get back an
      * implementation that doesn't waste space on storing the lookup object.
      * @param lookup the lookup that determines access rights at the call site. If your language runtime doesn't have
-     * equivalents of Java access concepts, just use {@link MethodHandles#publicLookup()}. Must not be null.
+     * equivalents of Java access concepts, just use {@link SMethodHandles#publicLookup()}. Must not be null.
      * @param name the name of the method at the call site. Must not be null.
      * @param methodType the type of the method at the call site. Must not be null.
      * @return a call site descriptor representing the input. Note that although the method name is "create", it will
@@ -170,7 +170,7 @@ public class CallSiteDescriptorFactory {
     }
 
     private static boolean isPublicLookup(final Lookup lookup) {
-        return lookup == MethodHandles.publicLookup();
+        return lookup == SMethodHandles.publicLookup();
     }
 
     /**

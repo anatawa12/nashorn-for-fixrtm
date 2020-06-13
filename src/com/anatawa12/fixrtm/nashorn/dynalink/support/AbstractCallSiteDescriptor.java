@@ -102,7 +102,7 @@ public abstract class AbstractCallSiteDescriptor implements CallSiteDescriptor {
 
    @Override
    public Lookup getLookup() {
-       return MethodHandles.publicLookup();
+       return SMethodHandles.publicLookup();
    }
 
     @Override
@@ -139,7 +139,7 @@ public abstract class AbstractCallSiteDescriptor implements CallSiteDescriptor {
 
     @Override
     public int hashCode() {
-        final MethodHandles.Lookup lookup = getLookup();
+        final SMethodHandles.Lookup lookup = getLookup();
         int h = lookup.lookupClass().hashCode() + 31 * lookup.lookupModes();
         final int c = getNameTokenCount();
         for(int i = 0; i < c; ++i) {

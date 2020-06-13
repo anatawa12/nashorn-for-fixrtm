@@ -78,20 +78,20 @@ public final class NativeInt16Array extends ArrayBufferView {
 
     private static final class Int16ArrayData extends TypedArrayData<ShortBuffer> {
 
-        private static final MethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Int16ArrayData.class, "getElem", int.class, int.class).methodHandle();
-        private static final MethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Int16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Int16ArrayData.class, "getElem", int.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Int16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
         private Int16ArrayData(final ShortBuffer nb, final int start, final int end) {
             super(((ShortBuffer)nb.position(start).limit(end)).slice(), end - start);
         }
 
         @Override
-        protected MethodHandle getGetElem() {
+        protected SMethodHandle getGetElem() {
             return GET_ELEM;
         }
 
         @Override
-        protected MethodHandle getSetElem() {
+        protected SMethodHandle getSetElem() {
             return SET_ELEM;
         }
 

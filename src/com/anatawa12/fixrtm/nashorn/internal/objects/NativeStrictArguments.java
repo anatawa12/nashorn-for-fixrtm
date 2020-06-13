@@ -46,9 +46,9 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayData;
  */
 public final class NativeStrictArguments extends ScriptObject {
 
-    private static final MethodHandle G$LENGTH = findOwnMH("G$length", Object.class, Object.class);
+    private static final SMethodHandle G$LENGTH = findOwnMH("G$length", Object.class, Object.class);
 
-    private static final MethodHandle S$LENGTH = findOwnMH("S$length", void.class, Object.class, Object.class);
+    private static final SMethodHandle S$LENGTH = findOwnMH("S$length", void.class, Object.class, Object.class);
 
     // property map for strict mode arguments object
     private static final PropertyMap map$;
@@ -148,7 +148,7 @@ public final class NativeStrictArguments extends ScriptObject {
         this.length = length;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NativeStrictArguments.class, name, MH.type(rtype, types));
     }
 }

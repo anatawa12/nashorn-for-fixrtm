@@ -44,8 +44,8 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.Specialization;
 @SuppressWarnings("javadoc")
 public interface StringConstants {
     // standard jdk types, methods
-    static final Type TYPE_METHODHANDLE         = Type.getType(MethodHandle.class);
-    static final Type TYPE_METHODHANDLE_ARRAY   = Type.getType(MethodHandle[].class);
+    static final Type TYPE_METHODHANDLE         = Type.getType(SMethodHandle.class);
+    static final Type TYPE_METHODHANDLE_ARRAY   = Type.getType(SMethodHandle[].class);
     static final Type TYPE_SPECIALIZATION       = Type.getType(Specialization.class);
     static final Type TYPE_SPECIALIZATION_ARRAY = Type.getType(Specialization[].class);
     static final Type TYPE_OBJECT               = Type.getType(Object.class);

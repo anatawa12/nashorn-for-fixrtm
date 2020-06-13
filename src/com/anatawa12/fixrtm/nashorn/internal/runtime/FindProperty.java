@@ -83,8 +83,8 @@ public final class FindProperty {
      *
      * @return method handle for the getter
      */
-    public MethodHandle getGetter(final Class<?> type, final int programPoint, final LinkRequest request) {
-        MethodHandle getter;
+    public SMethodHandle getGetter(final Class<?> type, final int programPoint, final LinkRequest request) {
+        SMethodHandle getter;
         if (isValid(programPoint)) {
             getter = property.getOptimisticGetter(type, programPoint);
         } else {
@@ -113,8 +113,8 @@ public final class FindProperty {
      *
      * @return method handle for the getter
      */
-    public MethodHandle getSetter(final Class<?> type, final boolean strict, final LinkRequest request) {
-        MethodHandle setter = property.getSetter(type, getOwner().getMap());
+    public SMethodHandle getSetter(final Class<?> type, final boolean strict, final LinkRequest request) {
+        SMethodHandle setter = property.getSetter(type, getOwner().getMap());
         if (property instanceof UserAccessorProperty) {
             setter =  MH.insertArguments(setter, 1, UserAccessorProperty.getINVOKE_UA_SETTER(type), strict ? property.getKey() : null);
             property.setType(type);
@@ -125,13 +125,13 @@ public final class FindProperty {
     }
 
     // Fold an accessor getter into the method handle of a user accessor property.
-    private MethodHandle insertAccessorsGetter(final UserAccessorProperty uap, final LinkRequest request, final MethodHandle mh) {
-        MethodHandle superGetter = uap.getAccessorsGetter();
+    private SMethodHandle insertAccessorsGetter(final UserAccessorProperty uap, final LinkRequest request, final SMethodHandle mh) {
+        SMethodHandle superGetter = uap.getAccessorsGetter();
         if (isInherited()) {
             superGetter = ScriptObject.addProtoFilter(superGetter, getProtoChainLength());
         }
         if (request != null && !(request.getReceiver() instanceof ScriptObject)) {
-            final MethodHandle wrapFilter = Global.getPrimitiveWrapFilter(request.getReceiver());
+            final SMethodHandle wrapFilter = Global.getPrimitiveWrapFilter(request.getReceiver());
             superGetter = MH.filterArguments(superGetter, 0, wrapFilter.asType(wrapFilter.type().changeReturnType(superGetter.type().parameterType(0))));
         }
         superGetter = MH.asType(superGetter, superGetter.type().changeParameterType(0, Object.class));

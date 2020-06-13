@@ -76,7 +76,7 @@ public enum JSType {
     /** Max value for an uint32 in JavaScript */
     public static final long MAX_UINT = 0xFFFF_FFFFL;
 
-    private static final MethodHandles.Lookup JSTYPE_LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup JSTYPE_LOOKUP = MethodHandles.lookup();
 
     /** JavaScript compliant conversion function from Object to boolean */
     public static final Call TO_BOOLEAN = staticCall(JSTYPE_LOOKUP, JSType.class, "toBoolean", boolean.class, Object.class);
@@ -200,7 +200,7 @@ public enum JSType {
     public static final int TYPE_OBJECT_INDEX = 2; //getAccessorTypeIndex(Object.class);
 
     /** object conversion quickies with JS semantics - used for return value and parameter filter */
-    public static final List<MethodHandle> CONVERT_OBJECT = toUnmodifiableList(
+    public static final List<SMethodHandle> CONVERT_OBJECT = toUnmodifiableList(
         JSType.TO_INT32.methodHandle(),
         JSType.TO_NUMBER.methodHandle(),
         null
@@ -210,7 +210,7 @@ public enum JSType {
      * object conversion quickies with JS semantics - used for return value and parameter filter, optimistic
      * throws exception upon incompatible type (asking for a narrower one than the storage)
      */
-    public static final List<MethodHandle> CONVERT_OBJECT_OPTIMISTIC = toUnmodifiableList(
+    public static final List<SMethodHandle> CONVERT_OBJECT_OPTIMISTIC = toUnmodifiableList(
         JSType.TO_INT32_OPTIMISTIC.methodHandle(),
         JSType.TO_NUMBER_OPTIMISTIC.methodHandle(),
         null
@@ -231,7 +231,7 @@ public enum JSType {
      * Method handles for getters that return undefined coerced
      * to the appropriate type
      */
-    public static final List<MethodHandle> GET_UNDEFINED = toUnmodifiableList(
+    public static final List<SMethodHandle> GET_UNDEFINED = toUnmodifiableList(
         MH.constant(int.class, UNDEFINED_INT),
         MH.constant(double.class, UNDEFINED_DOUBLE),
         MH.constant(Object.class, Undefined.getUndefined())
@@ -1315,7 +1315,7 @@ public enum JSType {
 
         final int l = src.length;
         final Object dst = Array.newInstance(componentType, l);
-        final MethodHandle converter = Bootstrap.getLinkerServices().getTypeConverter(Object.class, componentType);
+        final SMethodHandle converter = Bootstrap.getLinkerServices().getTypeConverter(Object.class, componentType);
         try {
             for (int i = 0; i < src.length; i++) {
                 Array.set(dst, i, invoke(converter, src[i]));
@@ -1692,7 +1692,7 @@ public enum JSType {
         return toNumber(toPrimitive(obj, Number.class));
     }
 
-    private static Object invoke(final MethodHandle mh, final Object arg) {
+    private static Object invoke(final SMethodHandle mh, final Object arg) {
         try {
             return mh.invoke(arg);
         } catch (final RuntimeException | Error e) {
@@ -1708,7 +1708,7 @@ public enum JSType {
      * @param o object
      * @return constant function that returns object
      */
-    public static MethodHandle unboxConstant(final Object o) {
+    public static SMethodHandle unboxConstant(final Object o) {
         if (o != null) {
             if (o.getClass() == Integer.class) {
                 return MH.constant(int.class, ((Integer)o).intValue());
@@ -1736,7 +1736,7 @@ public enum JSType {
         }
     }
 
-    private static final List<MethodHandle> toUnmodifiableList(final MethodHandle... methodHandles) {
+    private static final List<SMethodHandle> toUnmodifiableList(final SMethodHandle... methodHandles) {
         return Collections.unmodifiableList(Arrays.asList(methodHandles));
     }
 }

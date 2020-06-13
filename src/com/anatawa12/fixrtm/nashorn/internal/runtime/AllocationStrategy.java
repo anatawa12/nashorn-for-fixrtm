@@ -40,7 +40,7 @@ import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 final public class AllocationStrategy implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
     /** Number of fields in the allocated object */
     private final int fieldCount;
@@ -52,7 +52,7 @@ final public class AllocationStrategy implements Serializable {
     private transient String allocatorClassName;
 
     /** lazily generated allocator */
-    private transient MethodHandle allocator;
+    private transient SMethodHandle allocator;
 
     /** Last used allocator map */
     private transient AllocatorMap lastMap;

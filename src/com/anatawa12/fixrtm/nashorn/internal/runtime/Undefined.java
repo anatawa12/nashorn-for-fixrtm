@@ -48,7 +48,7 @@ public final class Undefined extends DefaultPropertyAccess {
     private static final Undefined EMPTY     = new Undefined();
 
     // Guard used for indexed property access/set on the Undefined instance
-    private static final MethodHandle UNDEFINED_GUARD = Guards.getIdentityGuard(UNDEFINED);
+    private static final SMethodHandle UNDEFINED_GUARD = Guards.getIdentityGuard(UNDEFINED);
 
     /**
      * Get the value of {@code undefined}, this is represented as a global singleton
@@ -133,8 +133,8 @@ public final class Undefined extends DefaultPropertyAccess {
         return typeError(msg, name != null && !name.isEmpty()? name : null);
     }
 
-    private static final MethodHandle GET_METHOD = findOwnMH("get", Object.class, Object.class);
-    private static final MethodHandle SET_METHOD = MH.insertArguments(findOwnMH("set", void.class, Object.class, Object.class, int.class), 3, NashornCallSiteDescriptor.CALLSITE_STRICT);
+    private static final SMethodHandle GET_METHOD = findOwnMH("get", Object.class, Object.class);
+    private static final SMethodHandle SET_METHOD = MH.insertArguments(findOwnMH("set", void.class, Object.class, Object.class, int.class), 3, NashornCallSiteDescriptor.CALLSITE_STRICT);
 
     private static GuardedInvocation findGetMethod(final CallSiteDescriptor desc) {
         return new GuardedInvocation(MH.insertArguments(GET_METHOD, 1, desc.getNameToken(2)), UNDEFINED_GUARD).asType(desc);
@@ -177,7 +177,7 @@ public final class Undefined extends DefaultPropertyAccess {
         return false;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findVirtual(MethodHandles.lookup(), Undefined.class, name, MH.type(rtype, types));
     }
 }

@@ -336,7 +336,7 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
                     return null;
                 }
                 return clazz.cast(JavaAdapterFactory.getConstructor(realSelf.getClass(), clazz,
-                        MethodHandles.publicLookup()).invoke(realSelf));
+                        SMethodHandles.publicLookup()).invoke(realSelf));
             } finally {
                 if (globalChanged) {
                     Context.setGlobal(oldGlobal);

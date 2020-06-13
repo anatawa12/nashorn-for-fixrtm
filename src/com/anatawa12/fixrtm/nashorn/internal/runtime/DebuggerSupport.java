@@ -105,7 +105,7 @@ final class DebuggerSupport {
      *
      * @param mh script class method about to be invoked.
      */
-    static void notifyInvoke(final MethodHandle mh) {
+    static void notifyInvoke(final SMethodHandle mh) {
         // Do nothing here. This is placeholder method on which a
         // debugger can place a breakpoint so that it can access the
         // (script class) method handle that is about to be invoked.

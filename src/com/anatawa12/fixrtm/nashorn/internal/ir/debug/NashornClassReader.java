@@ -539,7 +539,7 @@ public class NashornClassReader extends ClassReader {
         //14
         "<error>",
         //15
-        "MethodHandle",
+        "SMethodHandle",
         //16
         "MethodType",
         //17

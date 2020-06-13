@@ -175,8 +175,8 @@ final class ObjectArrayData extends ContinuousArrayData implements AnyElements {
         return this;
     }
 
-    private static final MethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "getElem", Object.class, int.class).methodHandle();
-    private static final MethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "setElem", void.class, int.class, Object.class).methodHandle();
+    private static final SMethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "getElem", Object.class, int.class).methodHandle();
+    private static final SMethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "setElem", void.class, int.class, Object.class).methodHandle();
 
     @SuppressWarnings("unused")
     private Object getElem(final int index) {
@@ -196,7 +196,7 @@ final class ObjectArrayData extends ContinuousArrayData implements AnyElements {
     }
 
     @Override
-    public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+    public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
         if (returnType.isPrimitive()) {
             return null;
         }
@@ -204,7 +204,7 @@ final class ObjectArrayData extends ContinuousArrayData implements AnyElements {
     }
 
     @Override
-    public MethodHandle getElementSetter(final Class<?> elementType) {
+    public SMethodHandle getElementSetter(final Class<?> elementType) {
         return getContinuousElementSetter(SET_ELEM, Object.class);
     }
 

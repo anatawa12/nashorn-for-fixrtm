@@ -690,7 +690,7 @@ public final class NativeRegExp extends ScriptObject {
         int previousLastIndex = 0;
         final StringBuilder sb = new StringBuilder();
 
-        final MethodHandle invoker = function == null ? null : getReplaceValueInvoker();
+        final SMethodHandle invoker = function == null ? null : getReplaceValueInvoker();
         final Object self = function == null || Bootstrap.isStrictCallable(function) ? UNDEFINED : Global.instance();
 
         do {
@@ -802,18 +802,18 @@ public final class NativeRegExp extends ScriptObject {
 
     private static final Object REPLACE_VALUE = new Object();
 
-    private static final MethodHandle getReplaceValueInvoker() {
+    private static final SMethodHandle getReplaceValueInvoker() {
         return Global.instance().getDynamicInvoker(REPLACE_VALUE,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call",
                             String.class, Object.class, Object.class, Object[].class);
                     }
                 });
     }
 
-    private String callReplaceValue(final MethodHandle invoker, final Object function, final Object self, final RegExpMatcher matcher, final String string) throws Throwable {
+    private String callReplaceValue(final SMethodHandle invoker, final Object function, final Object self, final RegExpMatcher matcher, final String string) throws Throwable {
         final Object[] groups = groups(matcher);
         final Object[] args   = Arrays.copyOf(groups, groups.length + 2);
 

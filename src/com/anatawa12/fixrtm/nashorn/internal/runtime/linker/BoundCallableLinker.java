@@ -114,19 +114,19 @@ final class BoundCallableLinker implements TypeBasedGuardingDynamicLinker {
         }
 
         // Bind (callable[, boundThis], boundArgs) to the delegate handle
-        final MethodHandle boundHandle = MethodHandles.insertArguments(inv.getInvocation(), 0,
+        final SMethodHandle boundHandle = SMethodHandles.insertArguments(inv.getInvocation(), 0,
                 Arrays.copyOf(newArgs, firstArgIndex + boundArgs.length));
         final Class<?> p0Type = type.parameterType(0);
-        final MethodHandle droppingHandle;
+        final SMethodHandle droppingHandle;
         if (isCall) {
             // Ignore incoming boundCallable and this
-            droppingHandle = MethodHandles.dropArguments(boundHandle, 0, p0Type, type.parameterType(1));
+            droppingHandle = SMethodHandles.dropArguments(boundHandle, 0, p0Type, type.parameterType(1));
         } else {
             // Ignore incoming boundCallable
-            droppingHandle = MethodHandles.dropArguments(boundHandle, 0, p0Type);
+            droppingHandle = SMethodHandles.dropArguments(boundHandle, 0, p0Type);
         }
         // Identity guard on boundCallable object
-        final MethodHandle newGuard = Guards.getIdentityGuard(boundCallable);
+        final SMethodHandle newGuard = Guards.getIdentityGuard(boundCallable);
         return inv.replaceMethods(droppingHandle, newGuard.asType(newGuard.type().changeParameterType(0, p0Type)));
     }
 }

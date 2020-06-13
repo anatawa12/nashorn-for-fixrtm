@@ -53,7 +53,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.UserAccessorProperty;
 public final class PrimitiveLookup {
 
     /** Method handle to link setters on primitive base. See ES5 8.7.2. */
-    private static final MethodHandle PRIMITIVE_SETTER = findOwnMH("primitiveSetter",
+    private static final SMethodHandle PRIMITIVE_SETTER = findOwnMH("primitiveSetter",
             MH.type(void.class, ScriptObject.class, Object.class, Object.class, boolean.class, Object.class));
 
 
@@ -75,8 +75,8 @@ public final class PrimitiveLookup {
      * type {@code receiverClass}.
      */
     public static GuardedInvocation lookupPrimitive(final LinkRequest request, final Class<?> receiverClass,
-                                                    final ScriptObject wrappedReceiver, final MethodHandle wrapFilter,
-                                                    final MethodHandle protoFilter) {
+                                                    final ScriptObject wrappedReceiver, final SMethodHandle wrapFilter,
+                                                    final SMethodHandle protoFilter) {
         return lookupPrimitive(request, Guards.getInstanceOfGuard(receiverClass), wrappedReceiver, wrapFilter, protoFilter);
     }
 
@@ -94,9 +94,9 @@ public final class PrimitiveLookup {
      * @return a guarded invocation representing the operation at the call site when performed on a JavaScript primitive
      * type (that is implied by both {@code guard} and {@code wrappedReceiver}).
      */
-    public static GuardedInvocation lookupPrimitive(final LinkRequest request, final MethodHandle guard,
-                                                    final ScriptObject wrappedReceiver, final MethodHandle wrapFilter,
-                                                    final MethodHandle protoFilter) {
+    public static GuardedInvocation lookupPrimitive(final LinkRequest request, final SMethodHandle guard,
+                                                    final ScriptObject wrappedReceiver, final SMethodHandle wrapFilter,
+                                                    final SMethodHandle protoFilter) {
         final CallSiteDescriptor desc = request.getCallSiteDescriptor();
         final String name;
         final FindProperty find;
@@ -124,7 +124,7 @@ public final class PrimitiveLookup {
                     return null;
                 }
 
-                final SwitchPoint sp = find.getProperty().getBuiltinSwitchPoint(); //can use this instead of proto filter
+                final SSwitchPoint sp = find.getProperty().getBuiltinSwitchPoint(); //can use this instead of proto filter
                 if (sp instanceof Context.BuiltinSwitchPoint && !sp.hasBeenInvalidated()) {
                     return new GuardedInvocation(GlobalConstants.staticConstantGetter(find.getObjectValue()), guard, sp, null);
                 }
@@ -136,10 +136,10 @@ public final class PrimitiveLookup {
                     final GuardedInvocation link = proto.lookup(desc, request);
 
                     if (link != null) {
-                        final MethodHandle invocation = link.getInvocation(); //this contains the builtin switchpoint
-                        final MethodHandle adaptedInvocation = MH.asType(invocation, invocation.type().changeParameterType(0, Object.class));
-                        final MethodHandle method = MH.filterArguments(adaptedInvocation, 0, protoFilter);
-                        final MethodHandle protoGuard = MH.filterArguments(link.getGuard(), 0, protoFilter);
+                        final SMethodHandle invocation = link.getInvocation(); //this contains the builtin switchpoint
+                        final SMethodHandle adaptedInvocation = MH.asType(invocation, invocation.type().changeParameterType(0, Object.class));
+                        final SMethodHandle method = MH.filterArguments(adaptedInvocation, 0, protoFilter);
+                        final SMethodHandle protoGuard = MH.filterArguments(link.getGuard(), 0, protoFilter);
                         return new GuardedInvocation(method, NashornGuards.combineGuards(guard, protoGuard));
                     }
                 }
@@ -154,7 +154,7 @@ public final class PrimitiveLookup {
 
         final GuardedInvocation link = wrappedReceiver.lookup(desc, request);
         if (link != null) {
-            MethodHandle method = link.getInvocation();
+            SMethodHandle method = link.getInvocation();
             final Class<?> receiverType = method.type().parameterType(0);
             if (receiverType != Object.class) {
                 final MethodType wrapType = wrapFilter.type();
@@ -168,10 +168,10 @@ public final class PrimitiveLookup {
         return null;
     }
 
-    private static GuardedInvocation getPrimitiveSetter(final String name, final MethodHandle guard,
-                                                        final MethodHandle wrapFilter, final boolean isStrict) {
-        MethodHandle filter = MH.asType(wrapFilter, wrapFilter.type().changeReturnType(ScriptObject.class));
-        final MethodHandle target;
+    private static GuardedInvocation getPrimitiveSetter(final String name, final SMethodHandle guard,
+                                                        final SMethodHandle wrapFilter, final boolean isStrict) {
+        SMethodHandle filter = MH.asType(wrapFilter, wrapFilter.type().changeReturnType(ScriptObject.class));
+        final SMethodHandle target;
 
         if (name == null) {
             filter = MH.dropArguments(filter, 1, Object.class, Object.class);
@@ -201,7 +201,7 @@ public final class PrimitiveLookup {
         find.setValue(value, strict);
     }
 
-    private static MethodHandle findOwnMH(final String name, final MethodType type) {
+    private static SMethodHandle findOwnMH(final String name, final MethodType type) {
         return MH.findStatic(MethodHandles.lookup(), PrimitiveLookup.class, name, type);
     }
 }

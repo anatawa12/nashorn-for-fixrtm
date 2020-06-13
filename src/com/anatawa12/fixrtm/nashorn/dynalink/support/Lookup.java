@@ -91,27 +91,27 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * A wrapper around MethodHandles.Lookup that masks checked exceptions in those cases when you're looking up methods
+ * A wrapper around SMethodHandles.Lookup that masks checked exceptions in those cases when you're looking up methods
  * within your own codebase (therefore it is an error if they are not present).
  *
  * @author Attila Szegedi
  */
 public class Lookup {
-    private final MethodHandles.Lookup lookup;
+    private final SMethodHandles.Lookup lookup;
 
     /**
      * Creates a new instance, bound to an instance of {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup}.
      *
      * @param lookup the {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup} it delegates to.
      */
-    public Lookup(final MethodHandles.Lookup lookup) {
+    public Lookup(final SMethodHandles.Lookup lookup) {
         this.lookup = lookup;
     }
 
     /**
-     * A canonical Lookup object that wraps {@link MethodHandles#publicLookup()}.
+     * A canonical Lookup object that wraps {@link SMethodHandles#publicLookup()}.
      */
-    public static final Lookup PUBLIC = new Lookup(MethodHandles.publicLookup());
+    public static final Lookup PUBLIC = new Lookup(SMethodHandles.publicLookup());
 
     /**
      * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflect(Method)}, converting any encountered
@@ -120,7 +120,7 @@ public class Lookup {
      * @param m the method to unreflect
      * @return the unreflected method handle.
      */
-    public MethodHandle unreflect(final Method m) {
+    public SMethodHandle unreflect(final Method m) {
         return unreflect(lookup, m);
     }
 
@@ -132,7 +132,7 @@ public class Lookup {
      * @param m the method to unreflect
      * @return the unreflected method handle.
      */
-    public static MethodHandle unreflect(final MethodHandles.Lookup lookup, final Method m) {
+    public static SMethodHandle unreflect(final SMethodHandles.Lookup lookup, final Method m) {
         try {
             return lookup.unreflect(m);
         } catch(final IllegalAccessException e) {
@@ -149,7 +149,7 @@ public class Lookup {
      * @param f the field for which a getter is unreflected
      * @return the unreflected field getter handle.
      */
-    public MethodHandle unreflectGetter(final Field f) {
+    public SMethodHandle unreflectGetter(final Field f) {
         try {
             return lookup.unreflectGetter(f);
         } catch(final IllegalAccessException e) {
@@ -171,7 +171,7 @@ public class Lookup {
      * @throws IllegalAccessError if the field is inaccessible.
      * @throws NoSuchFieldError if the field does not exist.
      */
-    public MethodHandle findGetter(final Class<?>refc, final String name, final Class<?> type) {
+    public SMethodHandle findGetter(final Class<?>refc, final String name, final Class<?> type) {
         try {
             return lookup.findGetter(refc, name, type);
         } catch(final IllegalAccessException e) {
@@ -194,7 +194,7 @@ public class Lookup {
      * @param f the field for which a setter is unreflected
      * @return the unreflected field setter handle.
      */
-    public MethodHandle unreflectSetter(final Field f) {
+    public SMethodHandle unreflectSetter(final Field f) {
         try {
             return lookup.unreflectSetter(f);
         } catch(final IllegalAccessException e) {
@@ -211,7 +211,7 @@ public class Lookup {
      * @param c the constructor to unreflect
      * @return the unreflected constructor handle.
      */
-    public MethodHandle unreflectConstructor(final Constructor<?> c) {
+    public SMethodHandle unreflectConstructor(final Constructor<?> c) {
         return unreflectConstructor(lookup, c);
     }
 
@@ -223,7 +223,7 @@ public class Lookup {
      * @param c the constructor to unreflect
      * @return the unreflected constructor handle.
      */
-    public static MethodHandle unreflectConstructor(final MethodHandles.Lookup lookup, final Constructor<?> c) {
+    public static SMethodHandle unreflectConstructor(final SMethodHandles.Lookup lookup, final Constructor<?> c) {
         try {
             return lookup.unreflectConstructor(c);
         } catch(final IllegalAccessException e) {
@@ -244,7 +244,7 @@ public class Lookup {
      * @throws IllegalAccessError if the method is inaccessible.
      * @throws NoSuchMethodError if the method does not exist.
      */
-    public MethodHandle findSpecial(final Class<?> declaringClass, final String name, final MethodType type) {
+    public SMethodHandle findSpecial(final Class<?> declaringClass, final String name, final MethodType type) {
         try {
             return lookup.findSpecial(declaringClass, name, type, declaringClass);
         } catch(final IllegalAccessException e) {
@@ -275,7 +275,7 @@ public class Lookup {
      * @throws IllegalAccessError if the method is inaccessible.
      * @throws NoSuchMethodError if the method does not exist.
      */
-    public MethodHandle findStatic(final Class<?> declaringClass, final String name, final MethodType type) {
+    public SMethodHandle findStatic(final Class<?> declaringClass, final String name, final MethodType type) {
         try {
             return lookup.findStatic(declaringClass, name, type);
         } catch(final IllegalAccessException e) {
@@ -302,7 +302,7 @@ public class Lookup {
      * @throws IllegalAccessError if the method is inaccessible.
      * @throws NoSuchMethodError if the method does not exist.
      */
-    public MethodHandle findVirtual(final Class<?> declaringClass, final String name, final MethodType type) {
+    public SMethodHandle findVirtual(final Class<?> declaringClass, final String name, final MethodType type) {
         try {
             return lookup.findVirtual(declaringClass, name, type);
         } catch(final IllegalAccessException e) {
@@ -327,7 +327,7 @@ public class Lookup {
      * @param ptypes the parameter types of the method
      * @return the method handle for the method
      */
-    public static MethodHandle findOwnSpecial(final MethodHandles.Lookup lookup, final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public static SMethodHandle findOwnSpecial(final SMethodHandles.Lookup lookup, final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return new Lookup(lookup).findOwnSpecial(name, rtype, ptypes);
     }
 
@@ -341,7 +341,7 @@ public class Lookup {
      * @param ptypes the parameter types of the method
      * @return the method handle for the method
      */
-    public MethodHandle findOwnSpecial(final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public SMethodHandle findOwnSpecial(final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return findSpecial(lookup.lookupClass(), name, MethodType.methodType(rtype, ptypes));
     }
 
@@ -355,7 +355,7 @@ public class Lookup {
      * @param ptypes the parameter types of the method
      * @return the method handle for the method
      */
-    public static MethodHandle findOwnStatic(final MethodHandles.Lookup lookup, final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public static SMethodHandle findOwnStatic(final SMethodHandles.Lookup lookup, final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return new Lookup(lookup).findOwnStatic(name, rtype, ptypes);
     }
 
@@ -368,7 +368,7 @@ public class Lookup {
      * @param ptypes the parameter types of the method
      * @return the method handle for the method
      */
-    public MethodHandle findOwnStatic(final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public SMethodHandle findOwnStatic(final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return findStatic(lookup.lookupClass(), name, MethodType.methodType(rtype, ptypes));
     }
 }

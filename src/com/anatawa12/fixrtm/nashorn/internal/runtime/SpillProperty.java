@@ -36,24 +36,24 @@ import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 public class SpillProperty extends AccessorProperty {
     private static final long serialVersionUID = 3028496245198669460L;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private static final MethodHandle PARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "primitiveSpill",  long[].class), MH.type(long[].class, Object.class));
-    private static final MethodHandle OARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "objectSpill",  Object[].class), MH.type(Object[].class, Object.class));
+    private static final SMethodHandle PARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "primitiveSpill",  long[].class), MH.type(long[].class, Object.class));
+    private static final SMethodHandle OARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "objectSpill",  Object[].class), MH.type(Object[].class, Object.class));
 
-    private static final MethodHandle OBJECT_GETTER    = MH.filterArguments(MH.arrayElementGetter(Object[].class), 0, OARRAY_GETTER);
-    private static final MethodHandle PRIMITIVE_GETTER = MH.filterArguments(MH.arrayElementGetter(long[].class), 0, PARRAY_GETTER);
-    private static final MethodHandle OBJECT_SETTER    = MH.filterArguments(MH.arrayElementSetter(Object[].class), 0, OARRAY_GETTER);
-    private static final MethodHandle PRIMITIVE_SETTER = MH.filterArguments(MH.arrayElementSetter(long[].class), 0, PARRAY_GETTER);
+    private static final SMethodHandle OBJECT_GETTER    = MH.filterArguments(MH.arrayElementGetter(Object[].class), 0, OARRAY_GETTER);
+    private static final SMethodHandle PRIMITIVE_GETTER = MH.filterArguments(MH.arrayElementGetter(long[].class), 0, PARRAY_GETTER);
+    private static final SMethodHandle OBJECT_SETTER    = MH.filterArguments(MH.arrayElementSetter(Object[].class), 0, OARRAY_GETTER);
+    private static final SMethodHandle PRIMITIVE_SETTER = MH.filterArguments(MH.arrayElementSetter(long[].class), 0, PARRAY_GETTER);
 
     private static class Accessors {
-        private MethodHandle objectGetter;
-        private MethodHandle objectSetter;
-        private MethodHandle primitiveGetter;
-        private MethodHandle primitiveSetter;
+        private SMethodHandle objectGetter;
+        private SMethodHandle objectSetter;
+        private SMethodHandle primitiveGetter;
+        private SMethodHandle primitiveSetter;
 
         private final int slot;
-        private final MethodHandle ensureSpillSize;
+        private final SMethodHandle ensureSpillSize;
 
         private static Accessors ACCESSOR_CACHE[] = new Accessors[512];
 
@@ -77,7 +77,7 @@ public class SpillProperty extends AccessorProperty {
             }
         }
 
-        static MethodHandle getCached(final int slot, final boolean isPrimitive, final boolean isGetter) {
+        static SMethodHandle getCached(final int slot, final boolean isPrimitive, final boolean isGetter) {
             //Reference<Accessors> ref = ACCESSOR_CACHE.get(slot);
             ensure(slot);
             Accessors acc = ACCESSOR_CACHE[slot];
@@ -89,15 +89,15 @@ public class SpillProperty extends AccessorProperty {
             return acc.getOrCreate(isPrimitive, isGetter);
         }
 
-        private static MethodHandle primordial(final boolean isPrimitive, final boolean isGetter) {
+        private static SMethodHandle primordial(final boolean isPrimitive, final boolean isGetter) {
             if (isPrimitive) {
                 return isGetter ? PRIMITIVE_GETTER : PRIMITIVE_SETTER;
             }
             return isGetter ? OBJECT_GETTER : OBJECT_SETTER;
         }
 
-        MethodHandle getOrCreate(final boolean isPrimitive, final boolean isGetter) {
-            MethodHandle accessor;
+        SMethodHandle getOrCreate(final boolean isPrimitive, final boolean isGetter) {
+            SMethodHandle accessor;
 
             accessor = getInner(isPrimitive, isGetter);
             if (accessor != null) {
@@ -114,7 +114,7 @@ public class SpillProperty extends AccessorProperty {
             return accessor;
         }
 
-        void setInner(final boolean isPrimitive, final boolean isGetter, final MethodHandle mh) {
+        void setInner(final boolean isPrimitive, final boolean isGetter, final SMethodHandle mh) {
             if (isPrimitive) {
                 if (isGetter) {
                     primitiveGetter = mh;
@@ -130,7 +130,7 @@ public class SpillProperty extends AccessorProperty {
             }
         }
 
-        MethodHandle getInner(final boolean isPrimitive, final boolean isGetter) {
+        SMethodHandle getInner(final boolean isPrimitive, final boolean isGetter) {
             if (isPrimitive) {
                 return isGetter ? primitiveGetter : primitiveSetter;
             }
@@ -138,16 +138,16 @@ public class SpillProperty extends AccessorProperty {
         }
     }
 
-    private static MethodHandle primitiveGetter(final int slot, final int flags) {
+    private static SMethodHandle primitiveGetter(final int slot, final int flags) {
         return (flags & DUAL_FIELDS) == DUAL_FIELDS ? Accessors.getCached(slot, true, true) : null;
     }
-    private static MethodHandle primitiveSetter(final int slot, final int flags) {
+    private static SMethodHandle primitiveSetter(final int slot, final int flags) {
         return (flags & DUAL_FIELDS) == DUAL_FIELDS ? Accessors.getCached(slot, true, false) : null;
     }
-    private static MethodHandle objectGetter(final int slot) {
+    private static SMethodHandle objectGetter(final int slot) {
         return Accessors.getCached(slot, false, true);
     }
-    private static MethodHandle objectSetter(final int slot) {
+    private static SMethodHandle objectSetter(final int slot) {
         return Accessors.getCached(slot, false, false);
     }
 

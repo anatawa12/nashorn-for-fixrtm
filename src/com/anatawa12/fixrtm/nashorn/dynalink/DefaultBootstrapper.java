@@ -93,7 +93,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
  * default behavior can use with minimal setup. When first referenced, it will create a dynamic linker with default
  * settings for the {@link DynamicLinkerFactory}, and its bootstrap methods will create {@link MonomorphicCallSite} for
  * all call sites. It has two bootstrap methods: one creates call sites that use the
- * {@link MethodHandles#publicLookup()} as the lookup for all call sites and disregard the one passed in as the caller,
+ * {@link SMethodHandles#publicLookup()} as the lookup for all call sites and disregard the one passed in as the caller,
  * and one that just uses the passed caller as the lookup scope. Using the public lookup one is advised if your language
  * runtime has no concept of interacting with Java visibility scopes, as it results in a more lightweight runtime
  * information.
@@ -117,7 +117,7 @@ public class DefaultBootstrapper {
      * @param type the method signature at the call site
      * @return a new {@link MonomorphicCallSite} linked with the default dynamic linker.
      */
-    public static CallSite bootstrap(final MethodHandles.Lookup caller, final String name, final MethodType type) {
+    public static SCallSite bootstrap(final SMethodHandles.Lookup caller, final String name, final MethodType type) {
         return bootstrapInternal(caller, name, type);
     }
 
@@ -128,16 +128,16 @@ public class DefaultBootstrapper {
      * {@link #bootstrap(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup, String, MethodType)} instead
      *
      * @param caller the caller's lookup. It is ignored as the call sites will be created with
-     * {@link MethodHandles#publicLookup()} instead.
+     * {@link SMethodHandles#publicLookup()} instead.
      * @param name the name of the method at the call site
      * @param type the method signature at the call site
      * @return a new {@link MonomorphicCallSite} linked with the default dynamic linker.
      */
-    public static CallSite publicBootstrap(final MethodHandles.Lookup caller, final String name, final MethodType type) {
-        return bootstrapInternal(MethodHandles.publicLookup(), name, type);
+    public static SCallSite publicBootstrap(final SMethodHandles.Lookup caller, final String name, final MethodType type) {
+        return bootstrapInternal(SMethodHandles.publicLookup(), name, type);
     }
 
-    private static CallSite bootstrapInternal(final MethodHandles.Lookup caller, final String name, final MethodType type) {
+    private static SCallSite bootstrapInternal(final SMethodHandles.Lookup caller, final String name, final MethodType type) {
         return dynamicLinker.link(new MonomorphicCallSite(CallSiteDescriptorFactory.create(caller, name, type)));
     }
 }

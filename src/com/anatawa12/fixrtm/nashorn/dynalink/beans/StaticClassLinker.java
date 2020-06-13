@@ -128,7 +128,7 @@ class StaticClassLinker implements TypeBasedGuardingDynamicLinker {
          */
         private static DynamicMethod createConstructorMethod(final Class<?> clazz) {
             if(clazz.isArray()) {
-                final MethodHandle boundArrayCtor = ARRAY_CTOR.bindTo(clazz.getComponentType());
+                final SMethodHandle boundArrayCtor = ARRAY_CTOR.bindTo(clazz.getComponentType());
                 return new SimpleDynamicMethod(StaticClassIntrospector.editConstructorMethodHandle(
                         boundArrayCtor.asType(boundArrayCtor.type().changeReturnType(clazz))), clazz, "<init>");
             }
@@ -153,7 +153,7 @@ class StaticClassLinker implements TypeBasedGuardingDynamicLinker {
             final CallSiteDescriptor desc = request.getCallSiteDescriptor();
             final String op = desc.getNameToken(CallSiteDescriptor.OPERATOR);
             if("new" == op && constructor != null) {
-                final MethodHandle ctorInvocation = constructor.getInvocation(desc, linkerServices);
+                final SMethodHandle ctorInvocation = constructor.getInvocation(desc, linkerServices);
                 if(ctorInvocation != null) {
                     return new GuardedInvocation(ctorInvocation, getClassGuard(desc.getMethodType()));
                 }
@@ -198,9 +198,9 @@ class StaticClassLinker implements TypeBasedGuardingDynamicLinker {
         return type == StaticClass.class;
     }
 
-    /*private*/ static final MethodHandle GET_CLASS;
-    /*private*/ static final MethodHandle IS_CLASS;
-    /*private*/ static final MethodHandle ARRAY_CTOR = Lookup.PUBLIC.findStatic(Array.class, "newInstance",
+    /*private*/ static final SMethodHandle GET_CLASS;
+    /*private*/ static final SMethodHandle IS_CLASS;
+    /*private*/ static final SMethodHandle ARRAY_CTOR = Lookup.PUBLIC.findStatic(Array.class, "newInstance",
             MethodType.methodType(Object.class, Class.class, int.class));
 
     static {

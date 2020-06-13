@@ -229,7 +229,7 @@ public class DynamicLinkerFactory {
     }
 
     /**
-     * Sets whether the linker created by this factory will invoke {@link MutableCallSite#syncAll(MutableCallSite[])}
+     * Sets whether the linker created by this factory will invoke {@link SMutableCallSite#syncAll(SMutableCallSite[])}
      * after a call site is relinked. Defaults to false. You probably want to set it to true if your runtime supports
      * multithreaded execution of dynamically linked code.
      * @param syncOnRelink true for invoking sync on relink, false otherwise.
@@ -272,13 +272,13 @@ public class DynamicLinkerFactory {
      * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asType(java.lang.invoke.MethodType)}.
      * However, sometimes language runtimes will want to customize even those conversions for their own call
      * sites. A typical example is allowing unboxing of null return values, which is by default prohibited by
-     * ordinary {@code MethodHandles.asType}. In this case, a language runtime can install its own custom
+     * ordinary {@code SMethodHandles.asType}. In this case, a language runtime can install its own custom
      * automatic conversion strategy, that can deal with null values. Note that when the strategy's
      * {@link MethodTypeConversionStrategy#asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)}
      * is invoked, the custom language conversions will already have been applied to the method handle, so by
      * design the difference between the handle's current method type and the desired final type will always
      * only be ones that can be subjected to method invocation conversions. The strategy also doesn't need to
-     * invoke a final {@code MethodHandle.asType()} as the converter factory will do that as the final step.
+     * invoke a final {@code SMethodHandle.asType()} as the converter factory will do that as the final step.
      * @param autoConversionStrategy the strategy for applying method invocation conversions for the linker
      * created by this factory.
      */

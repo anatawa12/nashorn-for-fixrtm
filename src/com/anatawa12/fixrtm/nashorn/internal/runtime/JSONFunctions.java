@@ -40,11 +40,11 @@ public final class JSONFunctions {
 
     private static final Object REVIVER_INVOKER = new Object();
 
-    private static MethodHandle getREVIVER_INVOKER() {
+    private static SMethodHandle getREVIVER_INVOKER() {
         return Context.getGlobal().getDynamicInvoker(REVIVER_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", Object.class,
                              Object.class, Object.class, String.class, Object.class);
                     }

@@ -634,11 +634,11 @@ public final class NativeJava {
         // requesting the adapter class. Note that if Java.extend is invoked with no lookup object, it'll pass the
         // public lookup which'll result in generation of a no-permissions adapter. A typical situation this can happen
         // is when the extend function is bound.
-        final MethodHandles.Lookup lookup;
-        if(self instanceof MethodHandles.Lookup) {
-            lookup = (MethodHandles.Lookup)self;
+        final SMethodHandles.Lookup lookup;
+        if(self instanceof SMethodHandles.Lookup) {
+            lookup = (SMethodHandles.Lookup)self;
         } else {
-            lookup = MethodHandles.publicLookup();
+            lookup = SMethodHandles.publicLookup();
         }
         return JavaAdapterFactory.getAdapterClassFor(stypes, classOverrides, lookup);
     }

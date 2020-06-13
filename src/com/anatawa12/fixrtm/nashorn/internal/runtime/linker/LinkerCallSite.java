@@ -63,8 +63,8 @@ public class LinkerCallSite extends ChainedCallSite {
 
     private static final String PROFILEFILE = Options.getStringProperty("nashorn.profilefile", "NashornProfile.txt");
 
-    private static final MethodHandle INCREASE_MISS_COUNTER = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "increaseMissCount", MH.type(Object.class, String.class, Object.class));
-    private static final MethodHandle ON_CATCH_INVALIDATION = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "onCatchInvalidation", MH.type(ChainedCallSite.class, LinkerCallSite.class));
+    private static final SMethodHandle INCREASE_MISS_COUNTER = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "increaseMissCount", MH.type(Object.class, String.class, Object.class));
+    private static final SMethodHandle ON_CATCH_INVALIDATION = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "onCatchInvalidation", MH.type(ChainedCallSite.class, LinkerCallSite.class));
 
     private int catchInvalidations;
 
@@ -76,7 +76,7 @@ public class LinkerCallSite extends ChainedCallSite {
     }
 
     @Override
-    protected MethodHandle getPruneCatches() {
+    protected SMethodHandle getPruneCatches() {
         return MH.filterArguments(super.getPruneCatches(), 0, ON_CATCH_INVALIDATION);
     }
 
@@ -110,7 +110,7 @@ public class LinkerCallSite extends ChainedCallSite {
      * @param flags    Call site specific flags.
      * @return New LinkerCallSite.
      */
-    static LinkerCallSite newLinkerCallSite(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int flags) {
+    static LinkerCallSite newLinkerCallSite(final SMethodHandles.Lookup lookup, final String name, final MethodType type, final int flags) {
         final NashornCallSiteDescriptor desc = NashornCallSiteDescriptor.get(lookup, name, type, flags);
 
         if (desc.isProfile()) {
@@ -138,24 +138,24 @@ public class LinkerCallSite extends ChainedCallSite {
     }
 
     @Override
-    public void relink(final GuardedInvocation invocation, final MethodHandle relink) {
+    public void relink(final GuardedInvocation invocation, final SMethodHandle relink) {
         super.relink(invocation, getDebuggingRelink(relink));
     }
 
     @Override
-    public void resetAndRelink(final GuardedInvocation invocation, final MethodHandle relink) {
+    public void resetAndRelink(final GuardedInvocation invocation, final SMethodHandle relink) {
         super.resetAndRelink(invocation, getDebuggingRelink(relink));
     }
 
-    private MethodHandle getDebuggingRelink(final MethodHandle relink) {
+    private SMethodHandle getDebuggingRelink(final SMethodHandle relink) {
         if (Context.DEBUG) {
             return MH.filterArguments(relink, 0, getIncreaseMissCounter(relink.type().parameterType(0)));
         }
         return relink;
     }
 
-    private MethodHandle getIncreaseMissCounter(final Class<?> type) {
-        final MethodHandle missCounterWithDesc = MH.bindTo(INCREASE_MISS_COUNTER, getDescriptor().getName() + " @ " + getScriptLocation());
+    private SMethodHandle getIncreaseMissCounter(final Class<?> type) {
+        final SMethodHandle missCounterWithDesc = MH.bindTo(INCREASE_MISS_COUNTER, getDescriptor().getName() + " @ " + getScriptLocation());
         if (type == Object.class) {
             return missCounterWithDesc;
         }
@@ -206,11 +206,11 @@ public class LinkerCallSite extends ChainedCallSite {
         /** Total number of times call site entered. */
         private long hitCount;
 
-        private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+        private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-        private static final MethodHandle PROFILEENTRY    = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileEntry",    MH.type(Object.class, Object.class));
-        private static final MethodHandle PROFILEEXIT     = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileExit",     MH.type(Object.class, Object.class));
-        private static final MethodHandle PROFILEVOIDEXIT = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileVoidExit", MH.type(void.class));
+        private static final SMethodHandle PROFILEENTRY    = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileEntry",    MH.type(Object.class, Object.class));
+        private static final SMethodHandle PROFILEEXIT     = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileExit",     MH.type(Object.class, Object.class));
+        private static final SMethodHandle PROFILEVOIDEXIT = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileVoidExit", MH.type(void.class));
 
         /*
          * Constructor
@@ -235,12 +235,12 @@ public class LinkerCallSite extends ChainedCallSite {
         }
 
         @Override
-        public void setTarget(final MethodHandle newTarget) {
+        public void setTarget(final SMethodHandle newTarget) {
             final MethodType type   = type();
             final boolean    isVoid = type.returnType() == void.class;
             final Class<?> newSelfType = newTarget.type().parameterType(0);
 
-            MethodHandle selfFilter = MH.bindTo(PROFILEENTRY, this);
+            SMethodHandle selfFilter = MH.bindTo(PROFILEENTRY, this);
             if (newSelfType != Object.class) {
                 // new target uses a more precise 'self' type than Object.class. We need to
                 // convert the filter type. Note that the profileEntry method returns "self"
@@ -249,7 +249,7 @@ public class LinkerCallSite extends ChainedCallSite {
                 selfFilter = selfFilter.asType(selfFilterType);
             }
 
-            MethodHandle methodHandle = MH.filterArguments(newTarget, 0, selfFilter);
+            SMethodHandle methodHandle = MH.filterArguments(newTarget, 0, selfFilter);
 
             if (isVoid) {
                 methodHandle = MH.filterReturnValue(methodHandle, MH.bindTo(PROFILEVOIDEXIT, this));
@@ -344,18 +344,18 @@ public class LinkerCallSite extends ChainedCallSite {
      * Debug subclass for LinkerCallSite that allows tracing
      */
     private static class TracingLinkerCallSite extends LinkerCallSite {
-        private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+        private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-        private static final MethodHandle TRACEOBJECT = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceObject", MH.type(Object.class, MethodHandle.class, Object[].class));
-        private static final MethodHandle TRACEVOID   = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceVoid", MH.type(void.class, MethodHandle.class, Object[].class));
-        private static final MethodHandle TRACEMISS   = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceMiss", MH.type(void.class, String.class, Object[].class));
+        private static final SMethodHandle TRACEOBJECT = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceObject", MH.type(Object.class, SMethodHandle.class, Object[].class));
+        private static final SMethodHandle TRACEVOID   = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceVoid", MH.type(void.class, SMethodHandle.class, Object[].class));
+        private static final SMethodHandle TRACEMISS   = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceMiss", MH.type(void.class, String.class, Object[].class));
 
         TracingLinkerCallSite(final NashornCallSiteDescriptor desc) {
            super(desc);
         }
 
         @Override
-        public void setTarget(final MethodHandle newTarget) {
+        public void setTarget(final SMethodHandle newTarget) {
             if (!getNashornDescriptor().isTraceEnterExit()) {
                 super.setTarget(newTarget);
                 return;
@@ -364,7 +364,7 @@ public class LinkerCallSite extends ChainedCallSite {
             final MethodType type = type();
             final boolean isVoid = type.returnType() == void.class;
 
-            MethodHandle traceMethodHandle = isVoid ? TRACEVOID : TRACEOBJECT;
+            SMethodHandle traceMethodHandle = isVoid ? TRACEVOID : TRACEOBJECT;
             traceMethodHandle = MH.bindTo(traceMethodHandle, this);
             traceMethodHandle = MH.bindTo(traceMethodHandle, newTarget);
             traceMethodHandle = MH.asCollector(traceMethodHandle, Object[].class, type.parameterCount());
@@ -374,21 +374,21 @@ public class LinkerCallSite extends ChainedCallSite {
         }
 
         @Override
-        public void initialize(final MethodHandle relinkAndInvoke) {
+        public void initialize(final SMethodHandle relinkAndInvoke) {
             super.initialize(getFallbackLoggingRelink(relinkAndInvoke));
         }
 
         @Override
-        public void relink(final GuardedInvocation invocation, final MethodHandle relink) {
+        public void relink(final GuardedInvocation invocation, final SMethodHandle relink) {
             super.relink(invocation, getFallbackLoggingRelink(relink));
         }
 
         @Override
-        public void resetAndRelink(final GuardedInvocation invocation, final MethodHandle relink) {
+        public void resetAndRelink(final GuardedInvocation invocation, final SMethodHandle relink) {
             super.resetAndRelink(invocation, getFallbackLoggingRelink(relink));
         }
 
-        private MethodHandle getFallbackLoggingRelink(final MethodHandle relink) {
+        private SMethodHandle getFallbackLoggingRelink(final SMethodHandle relink) {
             if (!getNashornDescriptor().isTraceMisses()) {
                 // If we aren't tracing misses, just return relink as-is
                 return relink;
@@ -480,7 +480,7 @@ public class LinkerCallSite extends ChainedCallSite {
          * @throws Throwable if invocation fails or throws exception/error
          */
         @SuppressWarnings("unused")
-        public Object traceObject(final MethodHandle mh, final Object... args) throws Throwable {
+        public Object traceObject(final SMethodHandle mh, final Object... args) throws Throwable {
             final PrintWriter out = Context.getCurrentErr();
             tracePrint(out, "ENTER ", args, null);
             final Object result = mh.invokeWithArguments(args);
@@ -498,7 +498,7 @@ public class LinkerCallSite extends ChainedCallSite {
          * @throws Throwable if invocation fails or throws exception/error
          */
         @SuppressWarnings("unused")
-        public void traceVoid(final MethodHandle mh, final Object... args) throws Throwable {
+        public void traceVoid(final SMethodHandle mh, final Object... args) throws Throwable {
             final PrintWriter out = Context.getCurrentErr();
             tracePrint(out, "ENTER ", args, null);
             mh.invokeWithArguments(args);

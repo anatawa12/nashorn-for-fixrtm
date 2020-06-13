@@ -33,7 +33,7 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.SpecializedFunc
  * Specialization info for a {@link SpecializedFunction}
  */
 public final class Specialization {
-    private final MethodHandle mh;
+    private final SMethodHandle mh;
     private final Class<? extends LinkLogic> linkLogicClass;
     private final boolean isOptimistic;
 
@@ -42,7 +42,7 @@ public final class Specialization {
      *
      * @param mh  invoker method handler
      */
-    public Specialization(final MethodHandle mh) {
+    public Specialization(final SMethodHandle mh) {
         this(mh, false);
     }
 
@@ -53,7 +53,7 @@ public final class Specialization {
      * @param isOptimistic is this an optimistic native method, i.e. can it throw {@link UnwarrantedOptimismException}
      *   which would have to lead to a relink and return value processing
      */
-    public Specialization(final MethodHandle mh, final boolean isOptimistic) {
+    public Specialization(final SMethodHandle mh, final boolean isOptimistic) {
         this(mh, null, isOptimistic);
     }
 
@@ -66,7 +66,7 @@ public final class Specialization {
      * @param isOptimistic is this an optimistic native method, i.e. can it throw {@link UnwarrantedOptimismException}
      *   which would have to lead to a relink and return value processing
      */
-    public Specialization(final MethodHandle mh, final Class<? extends LinkLogic> linkLogicClass, final boolean isOptimistic) {
+    public Specialization(final SMethodHandle mh, final Class<? extends LinkLogic> linkLogicClass, final boolean isOptimistic) {
         this.mh             = mh;
         this.isOptimistic   = isOptimistic;
         if (linkLogicClass != null) {
@@ -83,7 +83,7 @@ public final class Specialization {
      * Get the method handle for the invoker of this ScriptFunction
      * @return the method handle
      */
-    public MethodHandle getMethodHandle() {
+    public SMethodHandle getMethodHandle() {
         return mh;
     }
 

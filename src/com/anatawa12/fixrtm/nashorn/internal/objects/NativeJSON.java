@@ -72,11 +72,11 @@ public final class NativeJSON extends ScriptObject {
 
     private static final Object JSOBJECT_INVOKER = new Object();
 
-    private static MethodHandle getJSOBJECT_INVOKER() {
+    private static SMethodHandle getJSOBJECT_INVOKER() {
         return Global.instance().getDynamicInvoker(JSOBJECT_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call",
                             Object.class, Object.class, Object.class);
                     }
@@ -85,11 +85,11 @@ public final class NativeJSON extends ScriptObject {
 
     private static final Object REPLACER_INVOKER = new Object();
 
-    private static MethodHandle getREPLACER_INVOKER() {
+    private static SMethodHandle getREPLACER_INVOKER() {
         return Global.instance().getDynamicInvoker(REPLACER_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", Object.class,
                             Object.class, Object.class, Object.class, Object.class);
                     }

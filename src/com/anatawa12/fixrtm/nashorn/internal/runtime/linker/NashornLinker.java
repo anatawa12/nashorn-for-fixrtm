@@ -65,9 +65,9 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
  * includes {@link ScriptFunction} and its subclasses) as well as {@link Undefined}.
  */
 final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTypeConverterFactory, ConversionComparator {
-    private static final ClassValue<MethodHandle> ARRAY_CONVERTERS = new ClassValue<MethodHandle>() {
+    private static final ClassValue<SMethodHandle> ARRAY_CONVERTERS = new ClassValue<SMethodHandle>() {
         @Override
-        protected MethodHandle computeValue(final Class<?> type) {
+        protected SMethodHandle computeValue(final Class<?> type) {
             return createArrayConverter(type);
         }
     };
@@ -135,7 +135,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
      * @throws Exception if something goes wrong
      */
     private static GuardedInvocation convertToTypeNoCast(final Class<?> sourceType, final Class<?> targetType) throws Exception {
-        final MethodHandle mh = JavaArgumentConverters.getConverter(targetType);
+        final SMethodHandle mh = JavaArgumentConverters.getConverter(targetType);
         if (mh != null) {
             return new GuardedInvocation(mh, canLinkTypeStatic(sourceType) ? null : IS_NASHORN_OR_UNDEFINED_TYPE);
         }
@@ -164,7 +164,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         final boolean isSourceTypeGeneric = sourceType.isAssignableFrom(ScriptFunction.class);
 
         if ((isSourceTypeGeneric || ScriptFunction.class.isAssignableFrom(sourceType)) && isAutoConvertibleFromFunction(targetType)) {
-            final MethodHandle ctor = JavaAdapterFactory.getConstructor(ScriptFunction.class, targetType, getCurrentLookup());
+            final SMethodHandle ctor = JavaAdapterFactory.getConstructor(ScriptFunction.class, targetType, getCurrentLookup());
             assert ctor != null; // if isAutoConvertibleFromFunction() returned true, then ctor must exist.
             return new GuardedInvocation(ctor, isSourceTypeGeneric ? IS_SCRIPT_FUNCTION : null);
         }
@@ -178,7 +178,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
                 return LinkerServicesImpl.getCurrentLinkRequest();
             }
         });
-        return currentRequest == null ? MethodHandles.publicLookup() : currentRequest.getCallSiteDescriptor().getLookup();
+        return currentRequest == null ? SMethodHandles.publicLookup() : currentRequest.getCallSiteDescriptor().getLookup();
     }
 
     /**
@@ -196,7 +196,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         final boolean isSourceTypeGeneric = !isSourceTypeNativeArray && sourceType.isAssignableFrom(NativeArray.class);
 
         if (isSourceTypeNativeArray || isSourceTypeGeneric) {
-            final MethodHandle guard = isSourceTypeGeneric ? IS_NATIVE_ARRAY : null;
+            final SMethodHandle guard = isSourceTypeGeneric ? IS_NATIVE_ARRAY : null;
             if(targetType.isArray()) {
                 return new GuardedInvocation(ARRAY_CONVERTERS.get(targetType), guard);
             } else if(targetType == List.class) {
@@ -212,9 +212,9 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         return null;
     }
 
-    private static MethodHandle createArrayConverter(final Class<?> type) {
+    private static SMethodHandle createArrayConverter(final Class<?> type) {
         assert type.isArray();
-        final MethodHandle converter = MH.insertArguments(JSType.TO_JAVA_ARRAY.methodHandle(), 1, type.getComponentType());
+        final SMethodHandle converter = MH.insertArguments(JSType.TO_JAVA_ARRAY.methodHandle(), 1, type.getComponentType());
         return MH.asType(converter, converter.type().changeReturnType(type));
     }
 
@@ -285,19 +285,19 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         return clazz == List.class || clazz == Collection.class || clazz == Queue.class || clazz == Deque.class;
     }
 
-    private static final MethodHandle IS_SCRIPT_OBJECT = Guards.isInstance(ScriptObject.class, MH.type(Boolean.TYPE, Object.class));
-    private static final MethodHandle IS_SCRIPT_FUNCTION = Guards.isInstance(ScriptFunction.class, MH.type(Boolean.TYPE, Object.class));
-    private static final MethodHandle IS_NATIVE_ARRAY = Guards.isOfClass(NativeArray.class, MH.type(Boolean.TYPE, Object.class));
+    private static final SMethodHandle IS_SCRIPT_OBJECT = Guards.isInstance(ScriptObject.class, MH.type(Boolean.TYPE, Object.class));
+    private static final SMethodHandle IS_SCRIPT_FUNCTION = Guards.isInstance(ScriptFunction.class, MH.type(Boolean.TYPE, Object.class));
+    private static final SMethodHandle IS_NATIVE_ARRAY = Guards.isOfClass(NativeArray.class, MH.type(Boolean.TYPE, Object.class));
 
-    private static final MethodHandle IS_NASHORN_OR_UNDEFINED_TYPE = findOwnMH("isNashornTypeOrUndefined", Boolean.TYPE, Object.class);
-    private static final MethodHandle CREATE_MIRROR = findOwnMH("createMirror", Object.class, Object.class);
+    private static final SMethodHandle IS_NASHORN_OR_UNDEFINED_TYPE = findOwnMH("isNashornTypeOrUndefined", Boolean.TYPE, Object.class);
+    private static final SMethodHandle CREATE_MIRROR = findOwnMH("createMirror", Object.class, Object.class);
 
-    private static final MethodHandle TO_COLLECTION;
-    private static final MethodHandle TO_DEQUE;
-    private static final MethodHandle TO_LIST;
-    private static final MethodHandle TO_QUEUE;
+    private static final SMethodHandle TO_COLLECTION;
+    private static final SMethodHandle TO_DEQUE;
+    private static final SMethodHandle TO_LIST;
+    private static final SMethodHandle TO_QUEUE;
     static {
-        final MethodHandle listAdapterCreate = new Lookup(MethodHandles.lookup()).findStatic(
+        final SMethodHandle listAdapterCreate = new Lookup(MethodHandles.lookup()).findStatic(
                 ListAdapter.class, "create", MethodType.methodType(ListAdapter.class, Object.class));
         TO_COLLECTION = asReturning(listAdapterCreate, Collection.class);
         TO_DEQUE = asReturning(listAdapterCreate, Deque.class);
@@ -305,7 +305,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         TO_QUEUE = asReturning(listAdapterCreate, Queue.class);
     }
 
-    private static MethodHandle asReturning(final MethodHandle mh, final Class<?> nrtype) {
+    private static SMethodHandle asReturning(final SMethodHandle mh, final Class<?> nrtype) {
         return mh.asType(mh.type().changeReturnType(nrtype));
     }
 
@@ -319,7 +319,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         return obj instanceof ScriptObject? ScriptUtils.wrap((ScriptObject)obj) : obj;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NashornLinker.class, name, MH.type(rtype, types));
     }
 }

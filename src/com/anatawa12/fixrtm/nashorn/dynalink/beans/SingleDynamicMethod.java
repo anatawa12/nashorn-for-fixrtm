@@ -101,7 +101,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
  */
 abstract class SingleDynamicMethod extends DynamicMethod {
 
-    private static final MethodHandle CAN_CONVERT_TO = Lookup.findOwnStatic(MethodHandles.lookup(), "canConvertTo", boolean.class, LinkerServices.class, Class.class, Object.class);
+    private static final SMethodHandle CAN_CONVERT_TO = Lookup.findOwnStatic(MethodHandles.lookup(), "canConvertTo", boolean.class, LinkerServices.class, Class.class, Object.class);
 
     SingleDynamicMethod(final String name) {
         super(name);
@@ -124,10 +124,10 @@ abstract class SingleDynamicMethod extends DynamicMethod {
      * @param lookup the lookup to use.
      * @return the handle to this method's target method.
      */
-    abstract MethodHandle getTarget(MethodHandles.Lookup lookup);
+    abstract SMethodHandle getTarget(SMethodHandles.Lookup lookup);
 
     @Override
-    MethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
+    SMethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
         return getInvocation(getTarget(callSiteDescriptor.getLookup()), callSiteDescriptor.getMethodType(),
                 linkerServices);
     }
@@ -161,18 +161,18 @@ abstract class SingleDynamicMethod extends DynamicMethod {
      * conversions as needed using the specified linker services, and in case that the method handle is a vararg
      * collector, matches it to the arity of the call site. The type of the return value is only changed if it can be
      * converted using a conversion that loses neither precision nor magnitude, see
-     * {@link LinkerServices#asTypeLosslessReturn(MethodHandle, MethodType)}.
+     * {@link LinkerServices#asTypeLosslessReturn(SMethodHandle, MethodType)}.
      * @param target the method handle to adapt
      * @param callSiteType the type of the call site
      * @param linkerServices the linker services used for type conversions
      * @return the adapted method handle.
      */
-    static MethodHandle getInvocation(final MethodHandle target, final MethodType callSiteType, final LinkerServices linkerServices) {
-        final MethodHandle filteredTarget = linkerServices.filterInternalObjects(target);
+    static SMethodHandle getInvocation(final SMethodHandle target, final MethodType callSiteType, final LinkerServices linkerServices) {
+        final SMethodHandle filteredTarget = linkerServices.filterInternalObjects(target);
         final MethodType methodType = filteredTarget.type();
         final int paramsLen = methodType.parameterCount();
         final boolean varArgs = target.isVarargsCollector();
-        final MethodHandle fixTarget = varArgs ? filteredTarget.asFixedArity() : filteredTarget;
+        final SMethodHandle fixTarget = varArgs ? filteredTarget.asFixedArity() : filteredTarget;
         final int fixParamsLen = varArgs ? paramsLen - 1 : paramsLen;
         final int argsLen = callSiteType.parameterCount();
         if(argsLen < fixParamsLen) {
@@ -182,11 +182,11 @@ abstract class SingleDynamicMethod extends DynamicMethod {
         // Method handle has the same number of fixed arguments as the call site type
         if(argsLen == fixParamsLen) {
             // Method handle that matches the number of actual arguments as the number of fixed arguments
-            final MethodHandle matchedMethod;
+            final SMethodHandle matchedMethod;
             if(varArgs) {
                 // If vararg, add a zero-length array of the expected type as the last argument to signify no variable
                 // arguments.
-                matchedMethod = MethodHandles.insertArguments(fixTarget, fixParamsLen, Array.newInstance(
+                matchedMethod = SMethodHandles.insertArguments(fixTarget, fixParamsLen, Array.newInstance(
                         methodType.parameterType(fixParamsLen).getComponentType(), 0));
             } else {
                 // Otherwise, just use the method
@@ -215,7 +215,7 @@ abstract class SingleDynamicMethod extends DynamicMethod {
             // This method handle takes the single argument and packs it into a newly allocated single-element array. It
             // will be used when the incoming argument can't be converted to the vararg array type (the "vararg packer"
             // method).
-            final MethodHandle varArgCollectingInvocation = createConvertingInvocation(collectArguments(fixTarget,
+            final SMethodHandle varArgCollectingInvocation = createConvertingInvocation(collectArguments(fixTarget,
                     argsLen), linkerServices, callSiteType);
 
             // Is call site type assignable from an array type (e.g. Object:int[], or Object[]:String[])
@@ -231,26 +231,26 @@ abstract class SingleDynamicMethod extends DynamicMethod {
 
             // This method handle employs language-specific conversions to convert the last argument into an array of
             // vararg type.
-            final MethodHandle arrayConvertingInvocation = createConvertingInvocation(MethodHandles.filterArguments(
+            final SMethodHandle arrayConvertingInvocation = createConvertingInvocation(SMethodHandles.filterArguments(
                     fixTarget, fixParamsLen, linkerServices.getTypeConverter(callSiteLastArgType, varArgType)),
                     linkerServices, callSiteType);
 
             // This method handle determines whether the value can be converted to the array of vararg type using a
             // language-specific conversion.
-            final MethodHandle canConvertArgToArray = MethodHandles.insertArguments(CAN_CONVERT_TO, 0, linkerServices,
+            final SMethodHandle canConvertArgToArray = SMethodHandles.insertArguments(CAN_CONVERT_TO, 0, linkerServices,
                     varArgType);
 
             // This one adjusts the previous one for the location of the argument and the call site type.
-            final MethodHandle canConvertLastArgToArray = MethodHandles.dropArguments(canConvertArgToArray, 0,
+            final SMethodHandle canConvertLastArgToArray = SMethodHandles.dropArguments(canConvertArgToArray, 0,
                     MethodType.genericMethodType(fixParamsLen).parameterList()).asType(callSiteType.changeReturnType(boolean.class));
 
             // This one takes the previous ones and combines them into a method handle that converts the argument into
             // a vararg array when it can, otherwise falls back to the vararg packer.
-            final MethodHandle convertToArrayWhenPossible = MethodHandles.guardWithTest(canConvertLastArgToArray,
+            final SMethodHandle convertToArrayWhenPossible = SMethodHandles.guardWithTest(canConvertLastArgToArray,
                     arrayConvertingInvocation, varArgCollectingInvocation);
 
             if(isAssignableFromArray) {
-                return MethodHandles.guardWithTest(
+                return SMethodHandles.guardWithTest(
                         // Is incoming parameter already a compatible array?
                         Guards.isInstance(varArgType, fixParamsLen, callSiteType),
                         // Yes: just pass it to the method
@@ -283,14 +283,14 @@ abstract class SingleDynamicMethod extends DynamicMethod {
      * @param parameterCount the total number of arguments in the new method handle
      * @return a collecting method handle
      */
-    static MethodHandle collectArguments(final MethodHandle target, final int parameterCount) {
+    static SMethodHandle collectArguments(final SMethodHandle target, final int parameterCount) {
         final MethodType methodType = target.type();
         final int fixParamsLen = methodType.parameterCount() - 1;
         final Class<?> arrayType = methodType.parameterType(fixParamsLen);
         return target.asCollector(arrayType, parameterCount - fixParamsLen);
     }
 
-    private static MethodHandle createConvertingInvocation(final MethodHandle sizedMethod,
+    private static SMethodHandle createConvertingInvocation(final SMethodHandle sizedMethod,
             final LinkerServices linkerServices, final MethodType callSiteType) {
         return linkerServices.asTypeLosslessReturn(sizedMethod, callSiteType);
     }

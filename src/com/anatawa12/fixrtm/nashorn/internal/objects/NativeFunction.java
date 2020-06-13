@@ -61,7 +61,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 public final class NativeFunction {
 
     /** apply arg converter handle */
-    public static final MethodHandle TO_APPLY_ARGS = Lookup.findOwnStatic(MethodHandles.lookup(), "toApplyArgs", Object[].class, Object.class);
+    public static final SMethodHandle TO_APPLY_ARGS = Lookup.findOwnStatic(MethodHandles.lookup(), "toApplyArgs", Object[].class, Object.class);
 
     // initialized by nasgen
     @SuppressWarnings("unused")

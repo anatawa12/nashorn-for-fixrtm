@@ -60,8 +60,8 @@ import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
  */
 public final class InvokeByName {
     private final String name;
-    private final MethodHandle getter;
-    private final MethodHandle invoker;
+    private final SMethodHandle getter;
+    private final SMethodHandle invoker;
 
     /**
      * Creates a getter and invoker for a function of the given name that takes no arguments and has a return type of
@@ -111,7 +111,7 @@ public final class InvokeByName {
      * subsequently invoked by the invoker returned by {@link #getInvoker()}.
      * @return the property getter method handle for the function.
      */
-    public MethodHandle getGetter() {
+    public SMethodHandle getGetter() {
         return getter;
     }
 
@@ -120,7 +120,7 @@ public final class InvokeByName {
      * the getter retrieved with {@link #getGetter()} on the target object.
      * @return the invoker method handle for the function.
      */
-    public MethodHandle getInvoker() {
+    public SMethodHandle getInvoker() {
         return invoker;
     }
 }

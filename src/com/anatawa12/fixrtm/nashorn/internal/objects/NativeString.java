@@ -72,9 +72,9 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
     private final CharSequence value;
 
     /** Method handle to create an object wrapper for a primitive string */
-    static final MethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeString.class, Object.class));
+    static final SMethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeString.class, Object.class));
     /** Method handle to retrieve the String prototype object */
-    private static final MethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
+    private static final SMethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
 
     // initialized by nasgen
     private static PropertyMap $nasgenmap$;
@@ -1301,7 +1301,7 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
         return key >= 0 && key < value.length();
     }
 
-    private static MethodHandle findOwnMH(final String name, final MethodType type) {
+    private static SMethodHandle findOwnMH(final String name, final MethodType type) {
         return MH.findStatic(MethodHandles.lookup(), NativeString.class, name, type);
     }
 

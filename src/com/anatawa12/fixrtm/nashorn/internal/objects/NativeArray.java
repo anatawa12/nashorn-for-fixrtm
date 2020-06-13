@@ -199,53 +199,53 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
                 });
     }
 
-    private static MethodHandle createIteratorCallbackInvoker(final Object key, final Class<?> rtype) {
+    private static SMethodHandle createIteratorCallbackInvoker(final Object key, final Class<?> rtype) {
         return Global.instance().getDynamicInvoker(key,
-            new Callable<MethodHandle>() {
+            new Callable<SMethodHandle>() {
                 @Override
-                public MethodHandle call() {
+                public SMethodHandle call() {
                     return Bootstrap.createDynamicInvoker("dyn:call", rtype, Object.class, Object.class, Object.class,
                         double.class, Object.class);
                 }
             });
     }
 
-    private static MethodHandle getEVERY_CALLBACK_INVOKER() {
+    private static SMethodHandle getEVERY_CALLBACK_INVOKER() {
         return createIteratorCallbackInvoker(EVERY_CALLBACK_INVOKER, boolean.class);
     }
 
-    private static MethodHandle getSOME_CALLBACK_INVOKER() {
+    private static SMethodHandle getSOME_CALLBACK_INVOKER() {
         return createIteratorCallbackInvoker(SOME_CALLBACK_INVOKER, boolean.class);
     }
 
-    private static MethodHandle getFOREACH_CALLBACK_INVOKER() {
+    private static SMethodHandle getFOREACH_CALLBACK_INVOKER() {
         return createIteratorCallbackInvoker(FOREACH_CALLBACK_INVOKER, void.class);
     }
 
-    private static MethodHandle getMAP_CALLBACK_INVOKER() {
+    private static SMethodHandle getMAP_CALLBACK_INVOKER() {
         return createIteratorCallbackInvoker(MAP_CALLBACK_INVOKER, Object.class);
     }
 
-    private static MethodHandle getFILTER_CALLBACK_INVOKER() {
+    private static SMethodHandle getFILTER_CALLBACK_INVOKER() {
         return createIteratorCallbackInvoker(FILTER_CALLBACK_INVOKER, boolean.class);
     }
 
-    private static MethodHandle getREDUCE_CALLBACK_INVOKER() {
+    private static SMethodHandle getREDUCE_CALLBACK_INVOKER() {
         return Global.instance().getDynamicInvoker(REDUCE_CALLBACK_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", Object.class, Object.class,
                              Undefined.class, Object.class, Object.class, double.class, Object.class);
                     }
                 });
     }
 
-    private static MethodHandle getCALL_CMP() {
+    private static SMethodHandle getCALL_CMP() {
         return Global.instance().getDynamicInvoker(CALL_CMP,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", double.class,
                             Object.class, Object.class, Object.class, Object.class);
                     }
@@ -1239,7 +1239,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
         try {
             Collections.sort(list, new Comparator<Object>() {
-                private final MethodHandle call_cmp = getCALL_CMP();
+                private final SMethodHandle call_cmp = getCALL_CMP();
                 @Override
                 public int compare(final Object x, final Object y) {
                     if (x == ScriptRuntime.UNDEFINED && y == ScriptRuntime.UNDEFINED) {
@@ -1568,7 +1568,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
     private static boolean applyEvery(final Object self, final Object callbackfn, final Object thisArg) {
         return new IteratorAction<Boolean>(Global.toObject(self), callbackfn, thisArg, true) {
-            private final MethodHandle everyInvoker = getEVERY_CALLBACK_INVOKER();
+            private final SMethodHandle everyInvoker = getEVERY_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
@@ -1588,7 +1588,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
     @Function(attributes = Attribute.NOT_ENUMERABLE, arity = 1)
     public static boolean some(final Object self, final Object callbackfn, final Object thisArg) {
         return new IteratorAction<Boolean>(Global.toObject(self), callbackfn, thisArg, false) {
-            private final MethodHandle someInvoker = getSOME_CALLBACK_INVOKER();
+            private final SMethodHandle someInvoker = getSOME_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
@@ -1608,7 +1608,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
     @Function(attributes = Attribute.NOT_ENUMERABLE, arity = 1)
     public static Object forEach(final Object self, final Object callbackfn, final Object thisArg) {
         return new IteratorAction<Object>(Global.toObject(self), callbackfn, thisArg, ScriptRuntime.UNDEFINED) {
-            private final MethodHandle forEachInvoker = getFOREACH_CALLBACK_INVOKER();
+            private final SMethodHandle forEachInvoker = getFOREACH_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
@@ -1629,7 +1629,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
     @Function(attributes = Attribute.NOT_ENUMERABLE, arity = 1)
     public static NativeArray map(final Object self, final Object callbackfn, final Object thisArg) {
         return new IteratorAction<NativeArray>(Global.toObject(self), callbackfn, thisArg, null) {
-            private final MethodHandle mapInvoker = getMAP_CALLBACK_INVOKER();
+            private final SMethodHandle mapInvoker = getMAP_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
@@ -1659,7 +1659,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
     public static NativeArray filter(final Object self, final Object callbackfn, final Object thisArg) {
         return new IteratorAction<NativeArray>(Global.toObject(self), callbackfn, thisArg, new NativeArray()) {
             private long to = 0;
-            private final MethodHandle filterInvoker = getFILTER_CALLBACK_INVOKER();
+            private final SMethodHandle filterInvoker = getFILTER_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
@@ -1691,7 +1691,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
         //if initial value is ScriptRuntime.UNDEFINED - step forward once.
         return new IteratorAction<Object>(Global.toObject(self), callbackfn, ScriptRuntime.UNDEFINED, initialValue, iter) {
-            private final MethodHandle reduceInvoker = getREDUCE_CALLBACK_INVOKER();
+            private final SMethodHandle reduceInvoker = getREDUCE_CALLBACK_INVOKER();
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {

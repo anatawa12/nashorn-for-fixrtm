@@ -83,7 +83,7 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @return element getter or null if not supported (used to implement slow linkage instead
      *   as fast isn't possible)
      */
-    public abstract MethodHandle getElementGetter(final Class<?> returnType, final int programPoint);
+    public abstract SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint);
 
     /**
      * Return element getter for a certain type at a certain program point
@@ -91,7 +91,7 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @return element setter or null if not supported (used to implement slow linkage instead
      *   as fast isn't possible)
      */
-    public abstract MethodHandle getElementSetter(final Class<?> elementType);
+    public abstract SMethodHandle getElementSetter(final Class<?> elementType);
 
     /**
      * Version of has that throws a class cast exception if element does not exist
@@ -147,7 +147,7 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @param programPoint program point
      * @return array getter
      */
-    protected final MethodHandle getContinuousElementGetter(final MethodHandle get, final Class<?> returnType, final int programPoint) {
+    protected final SMethodHandle getContinuousElementGetter(final SMethodHandle get, final Class<?> returnType, final int programPoint) {
         return getContinuousElementGetter(getClass(), get, returnType, programPoint);
     }
 
@@ -157,7 +157,7 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @param returnType   return type
      * @return array setter
      */
-    protected final MethodHandle getContinuousElementSetter(final MethodHandle set, final Class<?> returnType) {
+    protected final SMethodHandle getContinuousElementSetter(final SMethodHandle set, final Class<?> returnType) {
         return getContinuousElementSetter(getClass(), set, returnType);
     }
 
@@ -169,11 +169,11 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @param programPoint program point
      * @return method handle for element setter
      */
-    protected MethodHandle getContinuousElementGetter(final Class<? extends ContinuousArrayData> clazz, final MethodHandle getHas, final Class<?> returnType, final int programPoint) {
+    protected SMethodHandle getContinuousElementGetter(final Class<? extends ContinuousArrayData> clazz, final SMethodHandle getHas, final Class<?> returnType, final int programPoint) {
         final boolean isOptimistic = isValid(programPoint);
         final int     fti          = getAccessorTypeIndex(getHas.type().returnType());
         final int     ti           = getAccessorTypeIndex(returnType);
-        MethodHandle  mh           = getHas;
+        SMethodHandle  mh           = getHas;
 
         if (isOptimistic) {
             if (ti < fti) {
@@ -196,13 +196,13 @@ public abstract class ContinuousArrayData extends ArrayData {
      * @param elementType  element type
      * @return method handle for element setter
      */
-    protected MethodHandle getContinuousElementSetter(final Class<? extends ContinuousArrayData> clazz, final MethodHandle setHas, final Class<?> elementType) {
+    protected SMethodHandle getContinuousElementSetter(final Class<? extends ContinuousArrayData> clazz, final SMethodHandle setHas, final Class<?> elementType) {
         return MH.asType(setHas, setHas.type().changeParameterType(2, elementType).changeParameterType(0, clazz));
     }
 
     /** Fast access guard - it is impractical for JIT performance reasons to use only CCE asType as guard :-(, also we need
       the null case explicitly, which is the one that CCE doesn't handle */
-    protected static final MethodHandle FAST_ACCESS_GUARD =
+    protected static final SMethodHandle FAST_ACCESS_GUARD =
             MH.dropArguments(
                     staticCall(
                             MethodHandles.lookup(),
@@ -239,13 +239,13 @@ public abstract class ContinuousArrayData extends ArrayData {
             final int      index = (int)args[args.length - 1];
 
             if (has(index)) {
-                final MethodHandle getArray     = ScriptObject.GET_ARRAY.methodHandle();
+                final SMethodHandle getArray     = ScriptObject.GET_ARRAY.methodHandle();
                 final int          programPoint = NashornCallSiteDescriptor.isOptimistic(desc) ? NashornCallSiteDescriptor.getProgramPoint(desc) : INVALID_PROGRAM_POINT;
-                MethodHandle       getElement   = getElementGetter(returnType, programPoint);
+                SMethodHandle       getElement   = getElementGetter(returnType, programPoint);
                 if (getElement != null) {
                     getElement = MH.filterArguments(getElement, 0, MH.asType(getArray, getArray.type().changeReturnType(clazz)));
-                    final MethodHandle guard = MH.insertArguments(FAST_ACCESS_GUARD, 0, clazz);
-                    return new GuardedInvocation(getElement, guard, (SwitchPoint)null, ClassCastException.class);
+                    final SMethodHandle guard = MH.insertArguments(FAST_ACCESS_GUARD, 0, clazz);
+                    return new GuardedInvocation(getElement, guard, (SSwitchPoint)null, ClassCastException.class);
                 }
             }
         }
@@ -270,14 +270,14 @@ public abstract class ContinuousArrayData extends ArrayData {
             final int             index = (int)args[args.length - 2];
 
             if (hasRoomFor(index)) {
-                MethodHandle setElement = getElementSetter(elementType); //Z(continuousarraydata, int, int), return true if successful
+                SMethodHandle setElement = getElementSetter(elementType); //Z(continuousarraydata, int, int), return true if successful
                 if (setElement != null) {
                     //else we are dealing with a wider type than supported by this callsite
-                    MethodHandle getArray = ScriptObject.GET_ARRAY.methodHandle();
+                    SMethodHandle getArray = ScriptObject.GET_ARRAY.methodHandle();
                     getArray   = MH.asType(getArray, getArray.type().changeReturnType(getClass()));
                     setElement = MH.filterArguments(setElement, 0, getArray);
-                    final MethodHandle guard = MH.insertArguments(FAST_ACCESS_GUARD, 0, clazz);
-                    return new GuardedInvocation(setElement, guard, (SwitchPoint)null, ClassCastException.class); //CCE if not a scriptObject anymore
+                    final SMethodHandle guard = MH.insertArguments(FAST_ACCESS_GUARD, 0, clazz);
+                    return new GuardedInvocation(setElement, guard, (SSwitchPoint)null, ClassCastException.class); //CCE if not a scriptObject anymore
                 }
             }
         }

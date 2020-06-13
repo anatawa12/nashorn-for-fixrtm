@@ -70,7 +70,7 @@ public final class RewriteException extends Exception {
     /** Call for getting the return value for the exception */
     public static final Call GET_RETURN_VALUE         = virtualCallNoLookup(RewriteException.class, "getReturnValueDestructive", Object.class);
     /** Call for the populate array bootstrap */
-    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", CallSite.class, Lookup.class, String.class, MethodType.class, int.class);
+    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", SCallSite.class, Lookup.class, String.class, MethodType.class, int.class);
 
     /** Call for populating an array with local variable state */
     private static final Call POPULATE_ARRAY           = staticCall(MethodHandles.lookup(), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
@@ -142,12 +142,12 @@ public final class RewriteException extends Exception {
      * @param startIndex start index to start writing to
      * @return callsite to array populator (constant)
      */
-    public static CallSite populateArrayBootstrap(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
-        MethodHandle mh = POPULATE_ARRAY.methodHandle();
+    public static SCallSite populateArrayBootstrap(final SMethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
+        SMethodHandle mh = POPULATE_ARRAY.methodHandle();
         mh = MH.insertArguments(mh, 1, startIndex);
         mh = MH.asCollector(mh, Object[].class, type.parameterCount() - 1);
         mh = MH.asType(mh, type);
-        return new ConstantCallSite(mh);
+        return new SConstantCallSite(mh);
     }
 
     private static ScriptObject mergeSlotsWithScope(final Object[] byteCodeSlots, final String[] byteCodeSymbolNames) {

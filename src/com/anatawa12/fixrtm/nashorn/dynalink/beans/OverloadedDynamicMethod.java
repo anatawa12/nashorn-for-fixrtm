@@ -151,7 +151,7 @@ class OverloadedDynamicMethod extends DynamicMethod {
     }
 
     @Override
-    public MethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
+    public SMethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
         final MethodType callSiteType = callSiteDescriptor.getMethodType();
         // First, find all methods applicable to the call site by subtyping (JLS 15.12.2.2)
         final ApplicableOverloadedMethods subtypingApplicables = getApplicables(callSiteType,
@@ -217,8 +217,8 @@ class OverloadedDynamicMethod extends DynamicMethod {
                 // go back all the way to candidate selection. Note that we're resolving any potential caller sensitive
                 // methods here to their handles, as the OverloadedMethod instance is specific to a call site, so it
                 // has an already determined Lookup.
-                final List<MethodHandle> methodHandles = new ArrayList<>(invokables.size());
-                final MethodHandles.Lookup lookup = callSiteDescriptor.getLookup();
+                final List<SMethodHandle> methodHandles = new ArrayList<>(invokables.size());
+                final SMethodHandles.Lookup lookup = callSiteDescriptor.getLookup();
                 for(final SingleDynamicMethod method: invokables) {
                     methodHandles.add(method.getTarget(lookup));
                 }

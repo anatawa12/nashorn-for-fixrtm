@@ -50,14 +50,14 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 @ScriptClass("Error")
 public final class NativeError extends ScriptObject {
 
-    static final MethodHandle GET_COLUMNNUMBER = findOwnMH("getColumnNumber", Object.class, Object.class);
-    static final MethodHandle SET_COLUMNNUMBER = findOwnMH("setColumnNumber", Object.class, Object.class, Object.class);
-    static final MethodHandle GET_LINENUMBER   = findOwnMH("getLineNumber", Object.class, Object.class);
-    static final MethodHandle SET_LINENUMBER   = findOwnMH("setLineNumber", Object.class, Object.class, Object.class);
-    static final MethodHandle GET_FILENAME     = findOwnMH("getFileName", Object.class, Object.class);
-    static final MethodHandle SET_FILENAME     = findOwnMH("setFileName", Object.class, Object.class, Object.class);
-    static final MethodHandle GET_STACK        = findOwnMH("getStack", Object.class, Object.class);
-    static final MethodHandle SET_STACK        = findOwnMH("setStack", Object.class, Object.class, Object.class);
+    static final SMethodHandle GET_COLUMNNUMBER = findOwnMH("getColumnNumber", Object.class, Object.class);
+    static final SMethodHandle SET_COLUMNNUMBER = findOwnMH("setColumnNumber", Object.class, Object.class, Object.class);
+    static final SMethodHandle GET_LINENUMBER   = findOwnMH("getLineNumber", Object.class, Object.class);
+    static final SMethodHandle SET_LINENUMBER   = findOwnMH("setLineNumber", Object.class, Object.class, Object.class);
+    static final SMethodHandle GET_FILENAME     = findOwnMH("getFileName", Object.class, Object.class);
+    static final SMethodHandle SET_FILENAME     = findOwnMH("setFileName", Object.class, Object.class, Object.class);
+    static final SMethodHandle GET_STACK        = findOwnMH("getStack", Object.class, Object.class);
+    static final SMethodHandle SET_STACK        = findOwnMH("setStack", Object.class, Object.class, Object.class);
 
     // message property name
     static final String MESSAGE = "message";
@@ -390,7 +390,7 @@ public final class NativeError extends ScriptObject {
         return name + ": " + msg;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(MethodHandles.lookup(), NativeError.class, name, MH.type(rtype, types));
     }
 

@@ -94,5 +94,5 @@ public interface MethodHandleTransformer {
      * @param target the method handle being transformed.
      * @return transformed method handle.
      */
-    public MethodHandle transform(final MethodHandle target);
+    public SMethodHandle transform(final SMethodHandle target);
 }

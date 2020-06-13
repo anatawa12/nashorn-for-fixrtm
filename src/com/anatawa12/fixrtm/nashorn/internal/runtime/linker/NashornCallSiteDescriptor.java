@@ -105,7 +105,7 @@ public final class NashornCallSiteDescriptor extends AbstractCallSiteDescriptor 
         }
     };
 
-    private final MethodHandles.Lookup lookup;
+    private final SMethodHandles.Lookup lookup;
     private final String operator;
     private final String operand;
     private final MethodType methodType;
@@ -148,7 +148,7 @@ public final class NashornCallSiteDescriptor extends AbstractCallSiteDescriptor 
      * @param flags Nashorn-specific call site flags
      * @return a call site descriptor with the specified values.
      */
-    public static NashornCallSiteDescriptor get(final MethodHandles.Lookup lookup, final String name,
+    public static NashornCallSiteDescriptor get(final SMethodHandles.Lookup lookup, final String name,
             final MethodType methodType, final int flags) {
         final String[] tokenizedName = CallSiteDescriptorFactory.tokenizeName(name);
         assert tokenizedName.length >= 2;
@@ -159,7 +159,7 @@ public final class NashornCallSiteDescriptor extends AbstractCallSiteDescriptor 
                 methodType, flags);
     }
 
-    private static NashornCallSiteDescriptor get(final MethodHandles.Lookup lookup, final String operator, final String operand, final MethodType methodType, final int flags) {
+    private static NashornCallSiteDescriptor get(final SMethodHandles.Lookup lookup, final String operator, final String operand, final MethodType methodType, final int flags) {
         final NashornCallSiteDescriptor csd = new NashornCallSiteDescriptor(lookup, operator, operand, methodType, flags);
         // Many of these call site descriptors are identical (e.g. every getter for a property color will be
         // "dyn:getProp:color(Object)Object", so it makes sense canonicalizing them.
@@ -168,7 +168,7 @@ public final class NashornCallSiteDescriptor extends AbstractCallSiteDescriptor 
         return canonical != null ? canonical : csd;
     }
 
-    private NashornCallSiteDescriptor(final MethodHandles.Lookup lookup, final String operator, final String operand,
+    private NashornCallSiteDescriptor(final SMethodHandles.Lookup lookup, final String operator, final String operand,
             final MethodType methodType, final int flags) {
         this.lookup = lookup;
         this.operator = operator;

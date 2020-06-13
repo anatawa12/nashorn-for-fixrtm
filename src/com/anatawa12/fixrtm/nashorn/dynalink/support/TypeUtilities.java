@@ -313,7 +313,7 @@ public class TypeUtilities {
             // Allow any conversion among primitives, as well as from any
             // primitive to any type that can receive a boxed primitive.
             // TODO: narrow this a bit, i.e. allow, say, boolean to Character?
-            // MethodHandles.convertArguments() allows it, so we might need to
+            // SMethodHandles.convertArguments() allows it, so we might need to
             // too.
             return methodType.isPrimitive() || isAssignableFromBoxedPrimitive(methodType);
         }
