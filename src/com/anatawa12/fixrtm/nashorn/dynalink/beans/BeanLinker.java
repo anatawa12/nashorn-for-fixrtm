@@ -275,7 +275,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         try {
             if(linkerServices.canConvert(String.class, Number.class)) {
                 try {
-                    final Object val = linkerServices.getTypeConverter(String.class, Number.class).invoke(fixedKey);
+                    final Object val = linkerServices.getTypeConverter(String.class, Number.class).getReal().invoke(fixedKey);
                     if(!(val instanceof Number)) {
                         return null; // not a number
                     }

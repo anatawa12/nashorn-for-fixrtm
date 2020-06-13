@@ -806,7 +806,7 @@ public final class NativeObject {
             // name and object linked with BeansLinker. (Actually, an even stronger assumption is true: return value is
             // constant for any given method name and object's class.)
             return SMethodHandles.dropArguments(SMethodHandles.constant(Object.class,
-                    Bootstrap.bindCallable(methodGetter.invoke(source), source, null)), 0, Object.class);
+                    Bootstrap.bindCallable(methodGetter.getReal().invoke(source), source, null)), 0, Object.class);
         } catch(RuntimeException|Error e) {
             throw e;
         } catch(final Throwable t) {
@@ -831,7 +831,7 @@ public final class NativeObject {
     }
 
     private static boolean passesGuard(final Object obj, final SMethodHandle guard) throws Throwable {
-        return guard == null || (boolean)guard.invoke(obj);
+        return guard == null || (boolean)guard.getReal().invoke(obj);
     }
 
     private static LinkRequest createLinkRequest(final String operation, final MethodType methodType, final Object source) {

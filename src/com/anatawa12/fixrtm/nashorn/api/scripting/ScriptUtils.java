@@ -181,7 +181,7 @@ public final class ScriptUtils {
         }
 
         try {
-            return converter.invoke(objToConvert);
+            return converter.getReal().invoke(objToConvert);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {

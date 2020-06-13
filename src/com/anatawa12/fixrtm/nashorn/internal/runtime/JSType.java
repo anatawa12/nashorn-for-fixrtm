@@ -1695,7 +1695,7 @@ public enum JSType {
 
     private static Object invoke(final SMethodHandle mh, final Object arg) {
         try {
-            return mh.invoke(arg);
+            return mh.getReal().invoke(arg);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {
