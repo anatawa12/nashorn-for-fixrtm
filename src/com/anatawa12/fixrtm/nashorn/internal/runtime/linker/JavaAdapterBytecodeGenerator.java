@@ -44,6 +44,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.AdaptationResult.Outcome.ERROR_NO_ACCESSIBLE_CONSTRUCTOR;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -159,6 +161,8 @@ final class JavaAdapterBytecodeGenerator {
     private static final Type STRING_TYPE = Type.getType(String.class);
     private static final Type METHOD_TYPE_TYPE = Type.getType(MethodType.class);
     private static final Type METHOD_HANDLE_TYPE = Type.getType(SMethodHandle.class);
+    private static final Type JAVA_METHOD_HANDLE_TYPE = Type.getType(MethodHandle.class);
+    private static final String GET_REAL_DESCRIPTOR = Type.getMethodDescriptor(JAVA_METHOD_HANDLE_TYPE);
     private static final String GET_HANDLE_OBJECT_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
             OBJECT_TYPE, STRING_TYPE, METHOD_TYPE_TYPE);
     private static final String GET_HANDLE_FUNCTION_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
@@ -818,6 +822,7 @@ final class JavaAdapterBytecodeGenerator {
 
         mv.visitLabel(invokeHandle);
         mv.visitVarInsn(ISTORE, globalsDifferVar);
+        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal", GET_REAL_DESCRIPTOR, false);
         // stack: [handle]
 
         // Load all parameters back on stack for dynamic invocation. NOTE: since we're using a generic
@@ -930,6 +935,7 @@ final class JavaAdapterBytecodeGenerator {
                     mv.visitVarInsn(ALOAD, 0);
                     mv.getfield(generatedClassName, converterFields.get(returnType), METHOD_HANDLE_TYPE_DESCRIPTOR);
                 }
+                mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal", GET_REAL_DESCRIPTOR, false);
                 mv.swap();
                 emitInvokeExact(mv, MethodType.methodType(returnType, Object.class));
             }
@@ -937,7 +943,7 @@ final class JavaAdapterBytecodeGenerator {
     }
 
     private static void emitInvokeExact(final InstructionAdapter mv, final MethodType type) {
-        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal().invokeExact", type.toMethodDescriptorString(), false);
+        mv.invokevirtual(JAVA_METHOD_HANDLE_TYPE.getInternalName(), "invokeExact", type.toMethodDescriptorString(), false);
     }
 
     private static void boxStackTop(final InstructionAdapter mv, final Type t) {

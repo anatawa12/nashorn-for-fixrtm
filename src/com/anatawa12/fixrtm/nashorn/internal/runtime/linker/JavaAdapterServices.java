@@ -35,6 +35,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.security.AccessController;
@@ -165,13 +167,16 @@ public final class JavaAdapterServices {
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_7, ACC_PUBLIC | ACC_SUPER | ACC_FINAL, className, null, "java/lang/Object", null);
         final Type objectType = Type.getType(Object.class);
+        final Type javaMethodHandleType = Type.getType(MethodHandle.class);
         final Type methodHandleType = Type.getType(SMethodHandle.class);
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "invoke",
                 Type.getMethodDescriptor(Type.VOID_TYPE, methodHandleType, objectType), null, null));
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
+        mv.invokevirtual(methodHandleType.getInternalName(), "getReal", Type.getMethodDescriptor(
+                javaMethodHandleType), false);
         mv.visitVarInsn(ALOAD, 1);
-        mv.invokevirtual(methodHandleType.getInternalName(), "getReal().invokeExact", Type.getMethodDescriptor(
+        mv.invokevirtual(javaMethodHandleType.getInternalName(), "invokeExact", Type.getMethodDescriptor(
                 Type.VOID_TYPE, objectType), false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
@@ -182,7 +187,7 @@ public final class JavaAdapterServices {
         final ClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
             @Override
             public ClassLoader run() {
-                return new SecureClassLoader(null) {
+                return new SecureClassLoader(SMethodHandle.class.getClassLoader()) {
                     @Override
                     protected Class<?> findClass(final String name) throws ClassNotFoundException {
                         if(name.equals(className)) {
