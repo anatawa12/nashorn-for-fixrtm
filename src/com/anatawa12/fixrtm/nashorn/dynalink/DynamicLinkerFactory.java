@@ -84,6 +84,8 @@
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMutableCallSite;
+
+import java.lang.invoke.MutableCallSite;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -229,7 +231,7 @@ public class DynamicLinkerFactory {
     }
 
     /**
-     * Sets whether the linker created by this factory will invoke {@link SMutableCallSite#syncAll(SMutableCallSite[])}
+     * Sets whether the linker created by this factory will invoke {@link java.lang.invoke.MutableCallSite#syncAll(MutableCallSite[])}
      * after a call site is relinked. Defaults to false. You probably want to set it to true if your runtime supports
      * multithreaded execution of dynamically linked code.
      * @param syncOnRelink true for invoking sync on relink, false otherwise.
