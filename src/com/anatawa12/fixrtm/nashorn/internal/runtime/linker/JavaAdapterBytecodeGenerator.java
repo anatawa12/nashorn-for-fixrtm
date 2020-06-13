@@ -227,7 +227,7 @@ final class JavaAdapterBytecodeGenerator {
      * Names of static fields holding type converter method handles for return value conversion. We are emitting code
      * for invoking these explicitly after the delegate handle is invoked, instead of doing an asType or
      * filterReturnValue on the delegate handle, as that would create a new converter handle wrapping the function's
-     * handle for every instance of the adapter, causing the handle.invokeExact() call sites to become megamorphic.
+     * handle for every instance of the adapter, causing the handle.getReal().invokeExact() call sites to become megamorphic.
      */
     private final Map<Class<?>, String> converterFields = new LinkedHashMap<>();
 
@@ -443,7 +443,7 @@ final class JavaAdapterBytecodeGenerator {
 
     private static void loadMethodTypeAndGetHandle(final InstructionAdapter mv, final MethodInfo mi, final String getHandleDescriptor) {
         // NOTE: we're using generic() here because we'll be linking to the "generic" invoker version of
-        // the functions anyway, so we cut down on megamorphism in the invokeExact() calls in adapter
+        // the functions anyway, so we cut down on megamorphism in the getReal().invokeExact() calls in adapter
         // bodies. Once we start linking to type-specializing invokers, this should be changed.
         mv.aconst(Type.getMethodType(mi.type.generic().toMethodDescriptorString()));
         mv.invokestatic(SERVICES_CLASS_TYPE_NAME, "getHandle", getHandleDescriptor, false);
@@ -525,7 +525,7 @@ final class JavaAdapterBytecodeGenerator {
      * suffix that makes it unique in case of overloaded methods. The generated constructor will invoke
      * {@link #getHandle(ScriptFunction, MethodType, boolean)} or {@link #getHandle(Object, String, MethodType,
      * boolean)} to obtain the method handles; these methods make sure to add the necessary conversions and arity
-     * adjustments so that the resulting method handles can be invoked from generated methods using {@code invokeExact}.
+     * adjustments so that the resulting method handles can be invoked from generated methods using {@code getReal().invokeExact}.
      * The constructor that takes a script function will only initialize the methods with the same name as the single
      * abstract method. The constructor will also store the Nashorn global that was current at the constructor
      * invocation time in a field named "global". The generated constructor will be public, regardless of whether the
@@ -709,10 +709,10 @@ final class JavaAdapterBytecodeGenerator {
      * inspect the method handle field assigned to them. If it is null (the JS object doesn't provide an implementation
      * for the method) then it will either invoke its version in the supertype, or if it is abstract, throw an
      * {@link UnsupportedOperationException}. Otherwise, if the method handle field's value is not null, the handle is
-     * invoked using invokeExact (signature polymorphic invocation as per JLS 15.12.3). Before the invocation, the
+     * invoked using getReal().invokeExact (signature polymorphic invocation as per JLS 15.12.3). Before the invocation, the
      * current Nashorn {@link Context} is checked, and if it is different than the global used to create the adapter
      * instance, the creating global is set to be the current global. In this case, the previously current global is
-     * restored after the invocation. If invokeExact results in a Throwable that is not one of the method's declared
+     * restored after the invocation. If getReal().invokeExact results in a Throwable that is not one of the method's declared
      * exceptions, and is not an unchecked throwable, then it is wrapped into a {@link RuntimeException} and the runtime
      * exception is thrown. The method handle retrieved from the field is guaranteed to exactly match the signature of
      * the method; this is guaranteed by the way constructors of the adapter class obtain them using
@@ -923,7 +923,7 @@ final class JavaAdapterBytecodeGenerator {
             } else {
                 // Invoke converter method handle for everything else. Note that we could have just added an asType or
                 // filterReturnValue to the invoked handle instead, but then every instance would have the function
-                // method handle wrapped in a separate converter method handle, making handle.invokeExact() megamorphic.
+                // method handle wrapped in a separate converter method handle, making handle.getReal().invokeExact() megamorphic.
                 if(classOverride) {
                     mv.getstatic(generatedClassName, converterFields.get(returnType), METHOD_HANDLE_TYPE_DESCRIPTOR);
                 } else {
@@ -937,7 +937,7 @@ final class JavaAdapterBytecodeGenerator {
     }
 
     private static void emitInvokeExact(final InstructionAdapter mv, final MethodType type) {
-        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "invokeExact", type.toMethodDescriptorString(), false);
+        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal().invokeExact", type.toMethodDescriptorString(), false);
     }
 
     private static void boxStackTop(final InstructionAdapter mv, final Type t) {

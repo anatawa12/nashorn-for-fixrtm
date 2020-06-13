@@ -538,9 +538,9 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
             final InvokeByName joinInvoker = getJOIN();
             final ScriptObject sobj = (ScriptObject)obj;
             try {
-                final Object join = joinInvoker.getGetter().invokeExact(sobj);
+                final Object join = joinInvoker.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(join)) {
-                    return joinInvoker.getInvoker().invokeExact(join, sobj);
+                    return joinInvoker.getInvoker().getReal().invokeExact(join, sobj);
                 }
             } catch (final RuntimeException | Error e) {
                 throw e;
@@ -587,10 +587,10 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
                     if (val instanceof ScriptObject) {
                         final InvokeByName localeInvoker = getTO_LOCALE_STRING();
                         final ScriptObject sobj           = (ScriptObject)val;
-                        final Object       toLocaleString = localeInvoker.getGetter().invokeExact(sobj);
+                        final Object       toLocaleString = localeInvoker.getGetter().getReal().invokeExact(sobj);
 
                         if (Bootstrap.isCallable(toLocaleString)) {
-                            sb.append((String)localeInvoker.getInvoker().invokeExact(toLocaleString, sobj));
+                            sb.append((String)localeInvoker.getInvoker().getReal().invokeExact(toLocaleString, sobj));
                         } else {
                             throw typeError("not.a.function", "toLocaleString");
                         }
@@ -1252,7 +1252,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
                     if (cmp != null) {
                         try {
-                            return (int)Math.signum((double)call_cmp.invokeExact(cmp, cmpThis, x, y));
+                            return (int)Math.signum((double)call_cmp.getReal().invokeExact(cmp, cmpThis, x, y));
                         } catch (final RuntimeException | Error e) {
                             throw e;
                         } catch (final Throwable t) {
@@ -1572,7 +1572,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
-                return result = (boolean)everyInvoker.invokeExact(callbackfn, thisArg, val, i, self);
+                return result = (boolean)everyInvoker.getReal().invokeExact(callbackfn, thisArg, val, i, self);
             }
         }.apply();
     }
@@ -1592,7 +1592,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
-                return !(result = (boolean)someInvoker.invokeExact(callbackfn, thisArg, val, i, self));
+                return !(result = (boolean)someInvoker.getReal().invokeExact(callbackfn, thisArg, val, i, self));
             }
         }.apply();
     }
@@ -1612,7 +1612,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
-                forEachInvoker.invokeExact(callbackfn, thisArg, val, i, self);
+                forEachInvoker.getReal().invokeExact(callbackfn, thisArg, val, i, self);
                 return true;
             }
         }.apply();
@@ -1633,7 +1633,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
-                final Object r = mapInvoker.invokeExact(callbackfn, thisArg, val, i, self);
+                final Object r = mapInvoker.getReal().invokeExact(callbackfn, thisArg, val, i, self);
                 result.defineOwnProperty(ArrayIndex.getArrayIndex(index), r);
                 return true;
             }
@@ -1663,7 +1663,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
 
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
-                if ((boolean)filterInvoker.invokeExact(callbackfn, thisArg, val, i, self)) {
+                if ((boolean)filterInvoker.getReal().invokeExact(callbackfn, thisArg, val, i, self)) {
                     result.defineOwnProperty(ArrayIndex.getArrayIndex(to++), val);
                 }
                 return true;
@@ -1696,7 +1696,7 @@ public final class NativeArray extends ScriptObject implements OptimisticBuiltin
             @Override
             protected boolean forEach(final Object val, final double i) throws Throwable {
                 // TODO: why can't I declare the second arg as Undefined.class?
-                result = reduceInvoker.invokeExact(callbackfn, ScriptRuntime.UNDEFINED, result, val, i, self);
+                result = reduceInvoker.getReal().invokeExact(callbackfn, ScriptRuntime.UNDEFINED, result, val, i, self);
                 return true;
             }
         }.apply();

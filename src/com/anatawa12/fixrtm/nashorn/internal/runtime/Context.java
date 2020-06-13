@@ -1307,7 +1307,7 @@ public final class Context {
 
     private static ScriptFunction invokeCreateProgramFunctionHandle(final SMethodHandle createProgramFunctionHandle, final ScriptObject scope) {
         try {
-            return (ScriptFunction)createProgramFunctionHandle.invokeExact(scope);
+            return (ScriptFunction)createProgramFunctionHandle.getReal().invokeExact(scope);
         } catch (final RuntimeException|Error e) {
             throw e;
         } catch (final Throwable t) {

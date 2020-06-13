@@ -390,7 +390,7 @@ public class AccessorProperty extends Property {
     @Override
     public int getIntValue(final ScriptObject self, final ScriptObject owner) {
         try {
-            return (int)getGetter(int.class).invokeExact((Object)self);
+            return (int)getGetter(int.class).getReal().invokeExact((Object)self);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {
@@ -401,7 +401,7 @@ public class AccessorProperty extends Property {
      @Override
      public double getDoubleValue(final ScriptObject self, final ScriptObject owner) {
         try {
-            return (double)getGetter(double.class).invokeExact((Object)self);
+            return (double)getGetter(double.class).getReal().invokeExact((Object)self);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {
@@ -412,7 +412,7 @@ public class AccessorProperty extends Property {
      @Override
      public Object getObjectValue(final ScriptObject self, final ScriptObject owner) {
         try {
-            return getGetter(Object.class).invokeExact((Object)self);
+            return getGetter(Object.class).getReal().invokeExact((Object)self);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {
@@ -427,7 +427,7 @@ public class AccessorProperty extends Property {
       */
     protected final void invokeSetter(final ScriptObject self, final int value) {
         try {
-            getSetter(int.class, self.getMap()).invokeExact((Object)self, value);
+            getSetter(int.class, self.getMap()).getReal().invokeExact((Object)self, value);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {
@@ -442,7 +442,7 @@ public class AccessorProperty extends Property {
      */
     protected final void invokeSetter(final ScriptObject self, final double value) {
         try {
-            getSetter(double.class, self.getMap()).invokeExact((Object)self, value);
+            getSetter(double.class, self.getMap()).getReal().invokeExact((Object)self, value);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {
@@ -457,7 +457,7 @@ public class AccessorProperty extends Property {
      */
     protected final void invokeSetter(final ScriptObject self, final Object value) {
         try {
-            getSetter(Object.class, self.getMap()).invokeExact((Object)self, value);
+            getSetter(Object.class, self.getMap()).getReal().invokeExact((Object)self, value);
         } catch (final Error | RuntimeException e) {
             throw e;
         } catch (final Throwable e) {

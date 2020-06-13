@@ -255,42 +255,42 @@ public final class Bootstrap {
      *     <pre>
      * SMethodHandle getColor = Boostrap.createDynamicInvoker("dyn:getProp:color", Object.class, Object.class);
      * Object obj = ...; // somehow obtain the object
-     * Object color = getColor.invokeExact(obj);
+     * Object color = getColor.getReal().invokeExact(obj);
      *     </pre>
      *   </li>
      *   <li>Get a named property with variable name:
      *     <pre>
      * SMethodHandle getProperty = Boostrap.createDynamicInvoker("dyn:getElem", Object.class, Object.class, String.class);
      * Object obj = ...; // somehow obtain the object
-     * Object color = getProperty.invokeExact(obj, "color");
-     * Object shape = getProperty.invokeExact(obj, "shape");
+     * Object color = getProperty.getReal().invokeExact(obj, "color");
+     * Object shape = getProperty.getReal().invokeExact(obj, "shape");
      * SMethodHandle getNumProperty = Boostrap.createDynamicInvoker("dyn:getElem", Object.class, Object.class, int.class);
-     * Object elem42 = getNumProperty.invokeExact(obj, 42);
+     * Object elem42 = getNumProperty.getReal().invokeExact(obj, 42);
      *     </pre>
      *   </li>
      *   <li>Set a named property with fixed name:
      *     <pre>
      * SMethodHandle setColor = Boostrap.createDynamicInvoker("dyn:setProp:color", void.class, Object.class, Object.class);
      * Object obj = ...; // somehow obtain the object
-     * setColor.invokeExact(obj, Color.BLUE);
+     * setColor.getReal().invokeExact(obj, Color.BLUE);
      *     </pre>
      *   </li>
      *   <li>Set a property with variable name:
      *     <pre>
      * SMethodHandle setProperty = Boostrap.createDynamicInvoker("dyn:setElem", void.class, Object.class, String.class, Object.class);
      * Object obj = ...; // somehow obtain the object
-     * setProperty.invokeExact(obj, "color", Color.BLUE);
-     * setProperty.invokeExact(obj, "shape", Shape.CIRCLE);
+     * setProperty.getReal().invokeExact(obj, "color", Color.BLUE);
+     * setProperty.getReal().invokeExact(obj, "shape", Shape.CIRCLE);
      *     </pre>
      *   </li>
      *   <li>Call a function on an object; two-step variant. This is the actual variant used by Nashorn-generated code:
      *     <pre>
      * SMethodHandle findFooFunction = Boostrap.createDynamicInvoker("dyn:getMethod:foo", Object.class, Object.class);
      * Object obj = ...; // somehow obtain the object
-     * Object foo_fn = findFooFunction.invokeExact(obj);
+     * Object foo_fn = findFooFunction.getReal().invokeExact(obj);
      * SMethodHandle callFunctionWithTwoArgs = Boostrap.createDynamicInvoker("dyn:call", Object.class, Object.class, Object.class, Object.class, Object.class);
      * // Note: "call" operation takes a function, then a "this" value, then the arguments:
-     * Object foo_retval = callFunctionWithTwoArgs.invokeExact(foo_fn, obj, arg1, arg2);
+     * Object foo_retval = callFunctionWithTwoArgs.getReal().invokeExact(foo_fn, obj, arg1, arg2);
      *     </pre>
      *   </li>
      *   <li>Call a function on an object; single-step variant. Although Nashorn doesn't use this variant and never
@@ -299,7 +299,7 @@ public final class Bootstrap {
      *     <pre>
      * SMethodHandle callFunctionFooWithTwoArgs = Boostrap.createDynamicInvoker("dyn:callMethod:foo", Object.class, Object.class, Object.class, Object.class);
      * Object obj = ...; // somehow obtain the object
-     * Object foo_retval = callFunctionFooWithTwoArgs.invokeExact(obj, arg1, arg2);
+     * Object foo_retval = callFunctionFooWithTwoArgs.getReal().invokeExact(obj, arg1, arg2);
      *     </pre>
      *   </li>
      * </ul>

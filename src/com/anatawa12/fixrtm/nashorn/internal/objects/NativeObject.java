@@ -501,10 +501,10 @@ public final class NativeObject {
             final InvokeByName toStringInvoker = getTO_STRING();
             final ScriptObject sobj = (ScriptObject)obj;
             try {
-                final Object toString = toStringInvoker.getGetter().invokeExact(sobj);
+                final Object toString = toStringInvoker.getGetter().getReal().invokeExact(sobj);
 
                 if (Bootstrap.isCallable(toString)) {
-                    return toStringInvoker.getInvoker().invokeExact(toString, sobj);
+                    return toStringInvoker.getInvoker().getReal().invokeExact(toString, sobj);
                 }
             } catch (final RuntimeException | Error e) {
                 throw e;

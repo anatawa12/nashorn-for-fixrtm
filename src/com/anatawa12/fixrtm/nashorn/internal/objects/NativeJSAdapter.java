@@ -603,7 +603,7 @@ public final class NativeJSAdapter extends ScriptObject {
         final boolean res = self instanceof NativeJSAdapter && ((NativeJSAdapter)self).getAdaptee() == adaptee;
         if (res && getter != null) {
             try {
-                return getter.invokeExact(where) == func;
+                return getter.getReal().invokeExact(where) == func;
             } catch (final RuntimeException | Error e) {
                 throw e;
             } catch (final Throwable t) {

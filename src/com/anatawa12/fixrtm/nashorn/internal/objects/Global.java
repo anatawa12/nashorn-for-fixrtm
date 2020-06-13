@@ -1187,18 +1187,18 @@ public final class Global extends Scope {
         try {
             if (hint == String.class) {
 
-                final Object toString = TO_STRING.getGetter().invokeExact(sobj);
+                final Object toString = TO_STRING.getGetter().getReal().invokeExact(sobj);
 
                 if (Bootstrap.isCallable(toString)) {
-                    final Object value = TO_STRING.getInvoker().invokeExact(toString, sobj);
+                    final Object value = TO_STRING.getInvoker().getReal().invokeExact(toString, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
                 }
 
-                final Object valueOf = VALUE_OF.getGetter().invokeExact(sobj);
+                final Object valueOf = VALUE_OF.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(valueOf)) {
-                    final Object value = VALUE_OF.getInvoker().invokeExact(valueOf, sobj);
+                    final Object value = VALUE_OF.getInvoker().getReal().invokeExact(valueOf, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
@@ -1207,17 +1207,17 @@ public final class Global extends Scope {
             }
 
             if (hint == Number.class) {
-                final Object valueOf = VALUE_OF.getGetter().invokeExact(sobj);
+                final Object valueOf = VALUE_OF.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(valueOf)) {
-                    final Object value = VALUE_OF.getInvoker().invokeExact(valueOf, sobj);
+                    final Object value = VALUE_OF.getInvoker().getReal().invokeExact(valueOf, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
                 }
 
-                final Object toString = TO_STRING.getGetter().invokeExact(sobj);
+                final Object toString = TO_STRING.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(toString)) {
-                    final Object value = TO_STRING.getInvoker().invokeExact(toString, sobj);
+                    final Object value = TO_STRING.getInvoker().getReal().invokeExact(toString, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }

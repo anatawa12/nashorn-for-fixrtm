@@ -516,7 +516,7 @@ public final class ObjectClassGenerator implements Loggable {
         final SMethodHandle sameTypeGetter = getterForType(forType, primitiveGetter, objectGetter);
         final SMethodHandle mh = MH.asType(sameTypeGetter, sameTypeGetter.type().changeReturnType(Object.class));
         try {
-            final Object value = mh.invokeExact(receiver);
+            final Object value = mh.getReal().invokeExact(receiver);
             throw new UnwarrantedOptimismException(value, programPoint);
         } catch (final Error | RuntimeException e) {
             throw e;

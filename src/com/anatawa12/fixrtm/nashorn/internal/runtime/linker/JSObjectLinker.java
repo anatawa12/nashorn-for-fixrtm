@@ -182,7 +182,7 @@ final class JSObjectLinker implements TypeBasedGuardingDynamicLinker {
             final String name = key.toString();
             // get with method name and signature. delegate it to beans linker!
             if (name.indexOf('(') != -1) {
-                return fallback.invokeExact(jsobj, (Object) name);
+                return fallback.getReal().invokeExact(jsobj, (Object) name);
             }
             return ((JSObject)jsobj).getMember(name);
         }
@@ -217,7 +217,7 @@ final class JSObjectLinker implements TypeBasedGuardingDynamicLinker {
         final Object[] arguments = new Object[args.length - 1];
         System.arraycopy(args, 1, arguments, 0, arguments.length);
         try {
-            return mh.invokeExact(obj, thiz, new Object[] { receiver, arguments });
+            return mh.getReal().invokeExact(obj, thiz, new Object[] { receiver, arguments });
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable e) {

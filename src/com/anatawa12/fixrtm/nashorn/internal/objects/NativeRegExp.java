@@ -820,7 +820,7 @@ public final class NativeRegExp extends ScriptObject {
         args[groups.length]     = matcher.start();
         args[groups.length + 1] = string;
 
-        return (String)invoker.invokeExact(function, self, args);
+        return (String)invoker.getReal().invokeExact(function, self, args);
     }
 
     /**

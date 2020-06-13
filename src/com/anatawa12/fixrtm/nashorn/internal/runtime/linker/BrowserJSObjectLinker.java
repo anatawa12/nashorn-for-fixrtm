@@ -174,18 +174,18 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     @SuppressWarnings("unused")
     private static Object get(final SMethodHandle fallback, final Object jsobj, final Object key) throws Throwable {
         if (key instanceof Integer) {
-            return JSOBJECT_GETSLOT.invokeExact(jsobj, (int)key);
+            return JSOBJECT_GETSLOT.getReal().invokeExact(jsobj, (int)key);
         } else if (key instanceof Number) {
             final int index = getIndex((Number)key);
             if (index > -1) {
-                return JSOBJECT_GETSLOT.invokeExact(jsobj, index);
+                return JSOBJECT_GETSLOT.getReal().invokeExact(jsobj, index);
             }
         } else if (isString(key)) {
             final String name = key.toString();
             if (name.indexOf('(') != -1) {
-                return fallback.invokeExact(jsobj, (Object) name);
+                return fallback.getReal().invokeExact(jsobj, (Object) name);
             }
-            return JSOBJECT_GETMEMBER.invokeExact(jsobj, name);
+            return JSOBJECT_GETMEMBER.getReal().invokeExact(jsobj, name);
         }
         return null;
     }
@@ -193,11 +193,11 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     @SuppressWarnings("unused")
     private static void put(final Object jsobj, final Object key, final Object value) throws Throwable {
         if (key instanceof Integer) {
-            JSOBJECT_SETSLOT.invokeExact(jsobj, (int)key, value);
+            JSOBJECT_SETSLOT.getReal().invokeExact(jsobj, (int)key, value);
         } else if (key instanceof Number) {
-            JSOBJECT_SETSLOT.invokeExact(jsobj, getIndex((Number)key), value);
+            JSOBJECT_SETSLOT.getReal().invokeExact(jsobj, getIndex((Number)key), value);
         } else if (isString(key)) {
-            JSOBJECT_SETMEMBER.invokeExact(jsobj, key.toString(), value);
+            JSOBJECT_SETMEMBER.getReal().invokeExact(jsobj, key.toString(), value);
         }
     }
 

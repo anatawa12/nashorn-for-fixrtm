@@ -154,7 +154,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
     @Override
     public final void addFirst(final Object e) {
         try {
-            getDynamicInvoker(UNSHIFT, ADD_INVOKER_CREATOR).invokeExact(getFunction("unshift"), obj, e);
+            getDynamicInvoker(UNSHIFT, ADD_INVOKER_CREATOR).getReal().invokeExact(getFunction("unshift"), obj, e);
         } catch(RuntimeException | Error ex) {
             throw ex;
         } catch(final Throwable t) {
@@ -165,7 +165,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
     @Override
     public final void addLast(final Object e) {
         try {
-            getDynamicInvoker(PUSH, ADD_INVOKER_CREATOR).invokeExact(getFunction("push"), obj, e);
+            getDynamicInvoker(PUSH, ADD_INVOKER_CREATOR).getReal().invokeExact(getFunction("push"), obj, e);
         } catch(RuntimeException | Error ex) {
             throw ex;
         } catch(final Throwable t) {
@@ -183,7 +183,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
             } else {
                 final int size = size();
                 if(index < size) {
-                    getDynamicInvoker(SPLICE_ADD, SPLICE_ADD_INVOKER_CREATOR).invokeExact(obj.getMember("splice"), obj, index, 0, e);
+                    getDynamicInvoker(SPLICE_ADD, SPLICE_ADD_INVOKER_CREATOR).getReal().invokeExact(obj.getMember("splice"), obj, index, 0, e);
                 } else if(index == size) {
                     addLast(e);
                 } else {
@@ -275,7 +275,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
 
     private Object invokeShift() {
         try {
-            return getDynamicInvoker(SHIFT, REMOVE_INVOKER_CREATOR).invokeExact(getFunction("shift"), obj);
+            return getDynamicInvoker(SHIFT, REMOVE_INVOKER_CREATOR).getReal().invokeExact(getFunction("shift"), obj);
         } catch(RuntimeException | Error ex) {
             throw ex;
         } catch(final Throwable t) {
@@ -285,7 +285,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
 
     private Object invokePop() {
         try {
-            return getDynamicInvoker(POP, REMOVE_INVOKER_CREATOR).invokeExact(getFunction("pop"), obj);
+            return getDynamicInvoker(POP, REMOVE_INVOKER_CREATOR).getReal().invokeExact(getFunction("pop"), obj);
         } catch(RuntimeException | Error ex) {
             throw ex;
         } catch(final Throwable t) {
@@ -300,7 +300,7 @@ public class ListAdapter extends AbstractList<Object> implements RandomAccess, D
 
     private void invokeSpliceRemove(final int fromIndex, final int count) {
         try {
-            getDynamicInvoker(SPLICE_REMOVE, SPLICE_REMOVE_INVOKER_CREATOR).invokeExact(getFunction("splice"), obj, fromIndex, count);
+            getDynamicInvoker(SPLICE_REMOVE, SPLICE_REMOVE_INVOKER_CREATOR).getReal().invokeExact(getFunction("splice"), obj, fromIndex, count);
         } catch(RuntimeException | Error ex) {
             throw ex;
         } catch(final Throwable t) {

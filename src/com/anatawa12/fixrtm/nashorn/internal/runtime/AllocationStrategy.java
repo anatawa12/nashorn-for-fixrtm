@@ -124,7 +124,7 @@ final public class AllocationStrategy implements Serializable {
                 allocator = MH.findStatic(LOOKUP, Context.forStructureClass(getAllocatorClassName()),
                         CompilerConstants.ALLOCATE.symbolName(), MH.type(ScriptObject.class, PropertyMap.class));
             }
-            return (ScriptObject)allocator.invokeExact(map);
+            return (ScriptObject)allocator.getReal().invokeExact(map);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {

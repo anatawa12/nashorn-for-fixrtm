@@ -625,28 +625,28 @@ public abstract class ScriptFunctionData implements Serializable {
 
         if (isVarArg(mh)) {
             if (needsCallee(mh)) {
-                return mh.invokeExact(fn, selfObj, args);
+                return mh.getReal().invokeExact(fn, selfObj, args);
             }
-            return mh.invokeExact(selfObj, args);
+            return mh.getReal().invokeExact(selfObj, args);
         }
 
         final int paramCount = mh.type().parameterCount();
         if (needsCallee(mh)) {
             switch (paramCount) {
             case 2:
-                return mh.invokeExact(fn, selfObj);
+                return mh.getReal().invokeExact(fn, selfObj);
             case 3:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0));
             case 4:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1));
             case 5:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2));
             case 6:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
             case 7:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
             case 8:
-                return mh.invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
+                return mh.getReal().invokeExact(fn, selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
             default:
                 return mh.invokeWithArguments(withArguments(fn, selfObj, paramCount, args));
             }
@@ -654,19 +654,19 @@ public abstract class ScriptFunctionData implements Serializable {
 
         switch (paramCount) {
         case 1:
-            return mh.invokeExact(selfObj);
+            return mh.getReal().invokeExact(selfObj);
         case 2:
-            return mh.invokeExact(selfObj, getArg(args, 0));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0));
         case 3:
-            return mh.invokeExact(selfObj, getArg(args, 0), getArg(args, 1));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0), getArg(args, 1));
         case 4:
-            return mh.invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2));
         case 5:
-            return mh.invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
         case 6:
-            return mh.invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
         case 7:
-            return mh.invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
+            return mh.getReal().invokeExact(selfObj, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
         default:
             return mh.invokeWithArguments(withArguments(null, selfObj, paramCount, args));
         }
@@ -680,28 +680,28 @@ public abstract class ScriptFunctionData implements Serializable {
 
         if (isVarArg(mh)) {
             if (needsCallee(mh)) {
-                return mh.invokeExact(fn, args);
+                return mh.getReal().invokeExact(fn, args);
             }
-            return mh.invokeExact(args);
+            return mh.getReal().invokeExact(args);
         }
 
         final int paramCount = mh.type().parameterCount();
         if (needsCallee(mh)) {
             switch (paramCount) {
             case 1:
-                return mh.invokeExact(fn);
+                return mh.getReal().invokeExact(fn);
             case 2:
-                return mh.invokeExact(fn, getArg(args, 0));
+                return mh.getReal().invokeExact(fn, getArg(args, 0));
             case 3:
-                return mh.invokeExact(fn, getArg(args, 0), getArg(args, 1));
+                return mh.getReal().invokeExact(fn, getArg(args, 0), getArg(args, 1));
             case 4:
-                return mh.invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2));
+                return mh.getReal().invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2));
             case 5:
-                return mh.invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
+                return mh.getReal().invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
             case 6:
-                return mh.invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
+                return mh.getReal().invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
             case 7:
-                return mh.invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
+                return mh.getReal().invokeExact(fn, getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
             default:
                 return mh.invokeWithArguments(withArguments(fn, paramCount, args));
             }
@@ -709,19 +709,19 @@ public abstract class ScriptFunctionData implements Serializable {
 
         switch (paramCount) {
         case 0:
-            return mh.invokeExact();
+            return mh.getReal().invokeExact();
         case 1:
-            return mh.invokeExact(getArg(args, 0));
+            return mh.getReal().invokeExact(getArg(args, 0));
         case 2:
-            return mh.invokeExact(getArg(args, 0), getArg(args, 1));
+            return mh.getReal().invokeExact(getArg(args, 0), getArg(args, 1));
         case 3:
-            return mh.invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2));
+            return mh.getReal().invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2));
         case 4:
-            return mh.invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
+            return mh.getReal().invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3));
         case 5:
-            return mh.invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
+            return mh.getReal().invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4));
         case 6:
-            return mh.invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
+            return mh.getReal().invokeExact(getArg(args, 0), getArg(args, 1), getArg(args, 2), getArg(args, 3), getArg(args, 4), getArg(args, 5));
         default:
             return mh.invokeWithArguments(withArguments(null, paramCount, args));
         }

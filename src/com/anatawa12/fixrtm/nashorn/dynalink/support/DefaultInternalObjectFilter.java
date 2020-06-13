@@ -164,7 +164,7 @@ public class DefaultInternalObjectFilter implements MethodHandleTransformer {
         Object[] newArgs = null;
         for(int i = 0; i < args.length; ++i) {
             final Object arg = args[i];
-            final Object newArg = parameterFilter.invokeExact(arg);
+            final Object newArg = parameterFilter.getReal().invokeExact(arg);
             if (arg != newArg) {
                 if (newArgs == null) {
                     newArgs = args.clone();

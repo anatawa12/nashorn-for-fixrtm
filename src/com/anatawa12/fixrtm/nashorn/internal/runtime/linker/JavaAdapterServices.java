@@ -124,14 +124,14 @@ public final class JavaAdapterServices {
 
     /**
      * Takes a method handle and an argument to it, and invokes the method handle passing it the argument. Basically
-     * equivalent to {@code method.invokeExact(arg)}, except that the method handle will be invoked in a protection
+     * equivalent to {@code method.getReal().invokeExact(arg)}, except that the method handle will be invoked in a protection
      * domain with absolutely no permissions.
      * @param method the method handle to invoke. The handle must have the exact type of {@code void(Object)}.
      * @param arg the argument to pass to the handle.
      * @throws Throwable if anything goes wrong.
      */
     public static void invokeNoPermissions(final SMethodHandle method, final Object arg) throws Throwable {
-        NO_PERMISSIONS_INVOKER.invokeExact(method, arg);
+        NO_PERMISSIONS_INVOKER.getReal().invokeExact(method, arg);
     }
 
     /**
@@ -170,7 +170,7 @@ public final class JavaAdapterServices {
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitVarInsn(ALOAD, 1);
-        mv.invokevirtual(methodHandleType.getInternalName(), "invokeExact", Type.getMethodDescriptor(
+        mv.invokevirtual(methodHandleType.getInternalName(), "getReal().invokeExact", Type.getMethodDescriptor(
                 Type.VOID_TYPE, objectType), false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);

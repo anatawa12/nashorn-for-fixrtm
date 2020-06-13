@@ -233,20 +233,20 @@ public final class NativeJSON extends ScriptObject {
             if (value instanceof ScriptObject) {
                 final InvokeByName toJSONInvoker = getTO_JSON();
                 final ScriptObject svalue = (ScriptObject)value;
-                final Object toJSON = toJSONInvoker.getGetter().invokeExact(svalue);
+                final Object toJSON = toJSONInvoker.getGetter().getReal().invokeExact(svalue);
                 if (Bootstrap.isCallable(toJSON)) {
-                    value = toJSONInvoker.getInvoker().invokeExact(toJSON, svalue, key);
+                    value = toJSONInvoker.getInvoker().getReal().invokeExact(toJSON, svalue, key);
                 }
             } else if (value instanceof JSObject) {
                 final JSObject jsObj = (JSObject)value;
                 final Object toJSON = jsObj.getMember("toJSON");
                 if (Bootstrap.isCallable(toJSON)) {
-                    value = getJSOBJECT_INVOKER().invokeExact(toJSON, value);
+                    value = getJSOBJECT_INVOKER().getReal().invokeExact(toJSON, value);
                 }
             }
 
             if (state.replacerFunction != null) {
-                value = getREPLACER_INVOKER().invokeExact(state.replacerFunction, holder, key, value);
+                value = getREPLACER_INVOKER().getReal().invokeExact(state.replacerFunction, holder, key, value);
             }
         } catch(Error|RuntimeException t) {
             throw t;

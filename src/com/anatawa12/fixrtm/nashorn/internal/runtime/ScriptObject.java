@@ -1073,7 +1073,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
         final SMethodHandle getter = find.getGetter(int.class, programPoint, null);
         if (getter != null) {
             try {
-                return (int)getter.invokeExact((Object)find.getGetterReceiver());
+                return (int)getter.getReal().invokeExact((Object)find.getGetterReceiver());
             } catch (final Error|RuntimeException e) {
                 throw e;
             } catch (final Throwable e) {
@@ -1088,7 +1088,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
         final SMethodHandle getter = find.getGetter(double.class, programPoint, null);
         if (getter != null) {
             try {
-                return (double)getter.invokeExact((Object)find.getGetterReceiver());
+                return (double)getter.getReal().invokeExact((Object)find.getGetterReceiver());
             } catch (final Error|RuntimeException e) {
                 throw e;
             } catch (final Throwable e) {
@@ -3446,7 +3446,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
     private static boolean knownFunctionPropertyGuardSelf(final Object self, final PropertyMap map, final SMethodHandle getter, final ScriptFunction func) {
         if (self instanceof ScriptObject && ((ScriptObject)self).getMap() == map) {
             try {
-                return getter.invokeExact(self) == func;
+                return getter.getReal().invokeExact(self) == func;
             } catch (final RuntimeException | Error e) {
                 throw e;
             } catch (final Throwable t) {
@@ -3481,7 +3481,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
                 return false;
             }
             try {
-                return getter.invokeExact((Object)proto) == func;
+                return getter.getReal().invokeExact((Object)proto) == func;
             } catch (final RuntimeException | Error e) {
                 throw e;
             } catch (final Throwable t) {

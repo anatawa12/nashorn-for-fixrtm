@@ -143,7 +143,7 @@ public final class UserAccessorProperty extends SpillProperty {
     void setAccessors(final ScriptObject sobj, final PropertyMap map, final Accessors gs) {
         try {
             //invoke the getter and find out
-            super.getSetter(Object.class, map).invokeExact((Object)sobj, (Object)gs);
+            super.getSetter(Object.class, map).getReal().invokeExact((Object)sobj, (Object)gs);
         } catch (final Error | RuntimeException t) {
             throw t;
         } catch (final Throwable t) {
@@ -156,7 +156,7 @@ public final class UserAccessorProperty extends SpillProperty {
         try {
             //invoke the super getter with this spill slot
             //get the getter setter from the correct spill slot
-            final Object gs = super.getGetter(Object.class).invokeExact((Object)sobj);
+            final Object gs = super.getGetter(Object.class).getReal().invokeExact((Object)sobj);
             return (Accessors)gs;
         } catch (final Error | RuntimeException t) {
             throw t;
@@ -287,7 +287,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static Object invokeObjectGetter(final Accessors gs, final SMethodHandle invoker, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return invoker.invokeExact(func, self);
+            return invoker.getReal().invokeExact(func, self);
         }
 
         return UNDEFINED;
@@ -297,7 +297,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static int invokeIntGetter(final Accessors gs, final SMethodHandle invoker, final int programPoint, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return (int) invoker.invokeExact(func, self);
+            return (int) invoker.getReal().invokeExact(func, self);
         }
 
         throw new UnwarrantedOptimismException(UNDEFINED, programPoint);
@@ -307,7 +307,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static double invokeNumberGetter(final Accessors gs, final SMethodHandle invoker, final int programPoint, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return (double) invoker.invokeExact(func, self);
+            return (double) invoker.getReal().invokeExact(func, self);
         }
 
         throw new UnwarrantedOptimismException(UNDEFINED, programPoint);
@@ -317,7 +317,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static void invokeObjectSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final Object value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }
@@ -327,7 +327,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static void invokeIntSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final int value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }
@@ -337,7 +337,7 @@ public final class UserAccessorProperty extends SpillProperty {
     private static void invokeNumberSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final double value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }

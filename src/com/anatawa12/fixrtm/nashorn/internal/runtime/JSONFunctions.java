@@ -131,7 +131,7 @@ public final class JSONFunctions {
 
         try {
              // Object.class, ScriptFunction.class, ScriptObject.class, String.class, Object.class);
-             return getREVIVER_INVOKER().invokeExact(reviver, (Object)holder, JSType.toString(name), val);
+             return getREVIVER_INVOKER().getReal().invokeExact(reviver, (Object)holder, JSType.toString(name), val);
         } catch(Error|RuntimeException t) {
             throw t;
         } catch(final Throwable t) {
