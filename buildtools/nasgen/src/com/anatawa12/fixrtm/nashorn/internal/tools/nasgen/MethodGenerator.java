@@ -25,6 +25,8 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE_DESC;
 import static jdk.internal.org.objectweb.asm.Opcodes.AALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.AASTORE;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_STATIC;
@@ -406,6 +408,7 @@ public class MethodGenerator extends MethodVisitor {
             visitTypeInsn(NEW, SPECIALIZATION_TYPE);
             dup();
             visitLdcInsn(new Handle(H_INVOKESTATIC, className, mi.getJavaName(), mi.getJavaDesc()));
+            visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKESTATIC);
             final Type    linkLogicClass = mi.getLinkLogicClass();
             final boolean linkLogic      = !linkLogicIsEmpty(linkLogicClass);
             final String  ctor           = linkLogic ? SPECIALIZATION_INIT3 : SPECIALIZATION_INIT2;

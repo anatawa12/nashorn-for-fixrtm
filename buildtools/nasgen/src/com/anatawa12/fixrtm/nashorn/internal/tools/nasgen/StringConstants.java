@@ -26,10 +26,18 @@
 package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Handler;
+
+import jdk.internal.org.objectweb.asm.Handle;
 import jdk.internal.org.objectweb.asm.Type;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.AccessorProperty;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyMap;
@@ -37,6 +45,8 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.PrototypeObject;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Specialization;
+
+import static jdk.internal.org.objectweb.asm.Opcodes.H_INVOKESTATIC;
 
 /**
  * String constants used for code generation/instrumentation.
@@ -55,6 +65,11 @@ public interface StringConstants {
     static final Type TYPE_COLLECTIONS          = Type.getType(Collections.class);
     static final Type TYPE_ARRAYLIST            = Type.getType(ArrayList.class);
     static final Type TYPE_LIST                 = Type.getType(List.class);
+    static final Type TYPE_CALL_SITE            = Type.getType(CallSite.class);
+    static final Type TYPE_METHOD_TYPE          = Type.getType(MethodType.class);
+    static final Type TYPE_METHOD_HANDLE        = Type.getType(MethodHandle.class);
+    static final Type TYPE_LOOKUP               = Type.getType(MethodHandles.Lookup.class);
+    static final Type TYPE_S_METHOD_HANDLE      = Type.getType(SMethodHandle.class);
 
     static final String CLINIT = "<clinit>";
     static final String INIT = "<init>";
@@ -141,4 +156,9 @@ public interface StringConstants {
     // ScriptObject.getClassName() method.
     static final String GET_CLASS_NAME = "getClassName";
     static final String GET_CLASS_NAME_DESC = Type.getMethodDescriptor(TYPE_STRING);
+
+    static final Handle MAKE_DIRECT_CALL_SITE = new Handle(H_INVOKESTATIC, TYPE_S_METHOD_HANDLE.getInternalName(), 
+            "wrapDirect", Type.getMethodDescriptor(TYPE_CALL_SITE, 
+            TYPE_LOOKUP, TYPE_STRING, TYPE_METHOD_TYPE, Type.INT_TYPE));
+    static final String MAKE_DIRECT_CALL_SITE_DESC = Type.getMethodDescriptor(TYPE_S_METHOD_HANDLE, TYPE_METHOD_HANDLE);
 }
