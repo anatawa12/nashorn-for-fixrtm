@@ -29,6 +29,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.st
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

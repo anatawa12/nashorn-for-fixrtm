@@ -84,6 +84,7 @@
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;

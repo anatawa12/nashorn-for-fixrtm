@@ -29,6 +29,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import java.io.Serializable;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.ref.WeakReference;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;

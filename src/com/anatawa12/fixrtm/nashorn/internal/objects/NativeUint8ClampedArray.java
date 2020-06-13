@@ -31,6 +31,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.nio.ByteBuffer;
 import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Attribute;
 import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Constructor;

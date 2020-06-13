@@ -34,6 +34,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.Arrays;
 import java.util.HashMap;

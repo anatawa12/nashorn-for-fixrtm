@@ -31,6 +31,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFI
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.ArrayList;

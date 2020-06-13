@@ -32,6 +32,7 @@ import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
 import com.anatawa12.fixrtm.nashorn.invoke.SConstantCallSite;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;

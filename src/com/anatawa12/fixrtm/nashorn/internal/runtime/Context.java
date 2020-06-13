@@ -42,6 +42,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.ref.ReferenceQueue;

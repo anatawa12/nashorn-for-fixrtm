@@ -30,6 +30,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFI
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.AccessorProperty;

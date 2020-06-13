@@ -26,6 +26,7 @@
 package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.concurrent.ConcurrentHashMap;

@@ -32,6 +32,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFI
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.math.RoundingMode;
 import java.text.NumberFormat;

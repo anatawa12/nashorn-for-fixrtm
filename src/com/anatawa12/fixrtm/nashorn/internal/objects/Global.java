@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Field;

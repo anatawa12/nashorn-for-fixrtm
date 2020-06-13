@@ -85,6 +85,7 @@ package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.text.Collator;
 import java.util.ArrayList;
