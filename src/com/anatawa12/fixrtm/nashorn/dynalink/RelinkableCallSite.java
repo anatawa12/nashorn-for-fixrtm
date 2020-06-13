@@ -83,10 +83,10 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.CallSite;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MutableCallSite;
-import java.lang.invoke.VolatileCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMutableCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SVolatileCallSite;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 
 /**

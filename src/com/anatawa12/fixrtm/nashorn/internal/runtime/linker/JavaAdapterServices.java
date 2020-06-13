@@ -33,8 +33,8 @@ import static jdk.internal.org.objectweb.asm.Opcodes.ALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.RETURN;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import java.security.AccessController;
 import java.security.CodeSigner;

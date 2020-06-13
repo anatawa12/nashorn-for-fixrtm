@@ -109,7 +109,7 @@ public interface GuardingDynamicLinker {
      * should invoke {@link LinkRequest#withoutRuntimeContext()} and link for that. While the linker must produce an
      * invocation with parameter types matching those in the call site descriptor of the link request, it should not try
      * to match the return type expected at the call site except when it can do it with only the conversions that lose
-     * neither precision nor magnitude, see {@link LinkerServices#asTypeLosslessReturn(java.lang.invoke.MethodHandle,
+     * neither precision nor magnitude, see {@link LinkerServices#asTypeLosslessReturn(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle,
      * java.lang.invoke.MethodType)}.
      * @throws Exception if the operation fails for whatever reason
      */

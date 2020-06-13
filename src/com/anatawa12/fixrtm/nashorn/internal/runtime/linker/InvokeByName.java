@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 
 /**
  * A tuple of method handles, one for dynamically getting function as a property of an object, and another for invoking

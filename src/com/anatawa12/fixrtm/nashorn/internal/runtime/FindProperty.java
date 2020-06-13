@@ -28,7 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;

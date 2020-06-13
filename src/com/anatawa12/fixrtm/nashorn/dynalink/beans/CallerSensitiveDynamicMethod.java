@@ -83,8 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -96,7 +96,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 /**
  * A dynamic method bound to exactly one Java method or constructor that is caller sensitive. Since the target method is
  * caller sensitive, it doesn't cache a method handle but rather uses the passed lookup object in
- * {@link #getTarget(java.lang.invoke.MethodHandles.Lookup)} to unreflect a method handle from the reflective member on
+ * {@link #getTarget(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup)} to unreflect a method handle from the reflective member on
  * every request.
  *
  * @author Attila Szegedi

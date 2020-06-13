@@ -48,10 +48,10 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSi
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.isStrictFlag;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornGuards.explicitInstanceOfCheck;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;

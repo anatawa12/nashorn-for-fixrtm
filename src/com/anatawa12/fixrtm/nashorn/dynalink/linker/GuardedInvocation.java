@@ -85,10 +85,10 @@ package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.invoke.WrongMethodTypeException;
 import java.util.List;
 import java.util.Objects;

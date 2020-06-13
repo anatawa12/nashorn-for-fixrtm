@@ -25,10 +25,10 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.lookup;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -124,7 +124,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle explicitCastArguments(MethodHandle target, MethodType type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#arrayElementGetter(Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#arrayElementGetter(Class)}
      *
      * @param arrayClass class for array
      *
@@ -133,7 +133,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle arrayElementGetter(Class<?> arrayClass);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#arrayElementSetter(Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#arrayElementSetter(Class)}
      *
      * @param arrayClass class for array
      *
@@ -142,7 +142,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle arrayElementSetter(Class<?> arrayClass);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#throwException(Class, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#throwException(Class, Class)}
      *
      * @param returnType ignored, but method signature will use it
      * @param exType     exception type that will be thrown
@@ -152,7 +152,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle throwException(Class<?> returnType, Class<? extends Throwable> exType);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#catchException(MethodHandle, Class, MethodHandle)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#catchException(MethodHandle, Class, MethodHandle)}
      *
      * @param target  target method
      * @param exType  exception type
@@ -163,7 +163,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle catchException(final MethodHandle target, final Class<? extends Throwable> exType, final MethodHandle handler);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#constant(Class, Object)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#constant(Class, Object)}
      *
      * @param type  type of constant
      * @param value constant value
@@ -173,7 +173,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle constant(Class<?> type, Object value);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles#identity(Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles#identity(Class)}
      *
      * @param type  type of value
      *
@@ -182,7 +182,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle identity(Class<?> type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandle#asType(MethodType)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asType(MethodType)}
      *
      * @param handle  method handle for type conversion
      * @param type    type to convert to
@@ -192,7 +192,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle asType(MethodHandle handle, MethodType type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandle#asCollector(Class, int)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asCollector(Class, int)}
      *
      * @param handle      handle to convert
      * @param arrayType   array type for collector array
@@ -203,7 +203,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle asCollector(MethodHandle handle, Class<?> arrayType, int arrayLength);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandle#asSpreader(Class, int)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asSpreader(Class, int)}
      *
      * @param handle      handle to convert
      * @param arrayType   array type for spread
@@ -214,7 +214,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle asSpreader(MethodHandle handle, Class<?> arrayType, int arrayLength);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandle#bindTo(Object)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#bindTo(Object)}
      *
      * @param handle a handle to which to bind a receiver
      * @param x      the receiver
@@ -224,7 +224,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle bindTo(MethodHandle handle, Object x);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findGetter(Class, String, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findGetter(Class, String, Class)}
       *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -236,7 +236,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle getter(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, Class<?> type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findStaticGetter(Class, String, Class)}
       *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -248,7 +248,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle staticGetter(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, Class<?> type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findSetter(Class, String, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findSetter(Class, String, Class)}
       *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -260,7 +260,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle setter(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, Class<?> type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findStaticSetter(Class, String, Class)}
       *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -272,7 +272,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle staticSetter(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, Class<?> type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#unreflect(Method)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflect(Method)}
      *
      * Unreflect a method as a method handle
      *
@@ -282,7 +282,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle find(Method method);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findStatic(Class, String, MethodType)}
      *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -294,7 +294,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle findStatic(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, MethodType type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findVirtual(Class, String, MethodType)}
      *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in
@@ -306,7 +306,7 @@ public interface MethodHandleFunctionality {
     public MethodHandle findVirtual(MethodHandles.Lookup explicitLookup, Class<?> clazz, String name, MethodType type);
 
     /**
-     * Wrapper for {@link java.lang.invoke.MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+     * Wrapper for {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
      *
      * @param explicitLookup explicit lookup to be used
      * @param clazz          class to look in

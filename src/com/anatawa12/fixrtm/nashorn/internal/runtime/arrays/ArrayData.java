@@ -27,8 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCall;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

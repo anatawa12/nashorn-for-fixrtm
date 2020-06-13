@@ -29,8 +29,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.C
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.ENUMERABLE;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.Objects;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 

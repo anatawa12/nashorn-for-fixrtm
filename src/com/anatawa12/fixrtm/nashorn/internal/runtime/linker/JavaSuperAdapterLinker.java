@@ -28,8 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.EMPTY_GETTER;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.JavaAdapterBytecodeGenerator.SUPER_PREFIX;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.beans.BeansLinker;

@@ -29,8 +29,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.st
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;

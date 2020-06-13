@@ -26,7 +26,7 @@
 package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.nio.Buffer;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;

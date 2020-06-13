@@ -27,8 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.ref.WeakReference;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;

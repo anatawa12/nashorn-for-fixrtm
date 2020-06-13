@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.ConversionComparator.Comparison;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
@@ -112,7 +112,7 @@ public class LinkerServicesImpl implements LinkerServices {
      * @param typeConverterFactory the type converter factory exposed by the services.
      * @param topLevelLinker the top level linker used by the services.
      * @param internalObjectsFilter a method handle transformer that is supposed to act as the implementation of this
-     * services' {@link #filterInternalObjects(java.lang.invoke.MethodHandle)} method.
+     * services' {@link #filterInternalObjects(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle)} method.
      */
     public LinkerServicesImpl(final TypeConverterFactory typeConverterFactory,
             final GuardingDynamicLinker topLevelLinker, final MethodHandleTransformer internalObjectsFilter) {

@@ -30,8 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.util.List;
 import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 import com.anatawa12.fixrtm.nashorn.api.scripting.JSObject;

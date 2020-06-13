@@ -27,8 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Modifier;
 import java.security.AccessController;
@@ -171,7 +171,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
         return null;
     }
 
-    private static java.lang.invoke.MethodHandles.Lookup getCurrentLookup() {
+    private static com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup getCurrentLookup() {
         final LinkRequest currentRequest = AccessController.doPrivileged(new PrivilegedAction<LinkRequest>() {
             @Override
             public LinkRequest run() {

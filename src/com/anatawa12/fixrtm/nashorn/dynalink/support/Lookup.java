@@ -83,8 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -100,9 +100,9 @@ public class Lookup {
     private final MethodHandles.Lookup lookup;
 
     /**
-     * Creates a new instance, bound to an instance of {@link java.lang.invoke.MethodHandles.Lookup}.
+     * Creates a new instance, bound to an instance of {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup}.
      *
-     * @param lookup the {@link java.lang.invoke.MethodHandles.Lookup} it delegates to.
+     * @param lookup the {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup} it delegates to.
      */
     public Lookup(final MethodHandles.Lookup lookup) {
         this.lookup = lookup;
@@ -114,7 +114,7 @@ public class Lookup {
     public static final Lookup PUBLIC = new Lookup(MethodHandles.publicLookup());
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflect(Method)}, converting any encountered
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflect(Method)}, converting any encountered
      * {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param m the method to unreflect
@@ -125,7 +125,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflect(Method)}, converting any encountered
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflect(Method)}, converting any encountered
      * {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param lookup the lookup used to unreflect
@@ -143,7 +143,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflectGetter(Field)}, converting any encountered
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflectGetter(Field)}, converting any encountered
      * {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param f the field for which a getter is unreflected
@@ -160,7 +160,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#findGetter(Class, String, Class)}, converting any
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#findGetter(Class, String, Class)}, converting any
      * encountered {@link IllegalAccessException} into an {@link IllegalAccessError} and {@link NoSuchFieldException}
      * into a {@link NoSuchFieldError}.
      *
@@ -188,7 +188,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflectSetter(Field)}, converting any encountered
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflectSetter(Field)}, converting any encountered
      * {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param f the field for which a setter is unreflected
@@ -205,7 +205,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflectConstructor(Constructor)}, converting any
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflectConstructor(Constructor)}, converting any
      * encountered {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param c the constructor to unreflect
@@ -216,7 +216,7 @@ public class Lookup {
     }
 
     /**
-     * Performs a {@link java.lang.invoke.MethodHandles.Lookup#unreflectConstructor(Constructor)}, converting any
+     * Performs a {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup#unreflectConstructor(Constructor)}, converting any
      * encountered {@link IllegalAccessException} into an {@link IllegalAccessError}.
      *
      * @param lookup the lookup used to unreflect

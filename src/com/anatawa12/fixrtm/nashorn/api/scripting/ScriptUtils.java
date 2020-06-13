@@ -27,7 +27,7 @@ package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;

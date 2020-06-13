@@ -28,7 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.objects;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Deque;

@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.concurrent.Callable;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 import com.anatawa12.fixrtm.nashorn.internal.parser.JSONParser;

@@ -32,9 +32,9 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismE
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.getProgramPoint;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.logging.DebugLogger.quote;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

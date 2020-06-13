@@ -28,8 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.lookup;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
@@ -42,7 +42,7 @@ public final class Lookup {
     /**
      * A global singleton that points to the {@link MethodHandleFunctionality}. This is basically
      * a collection of wrappers to the standard methods in {@link MethodHandle}, {@link MethodHandles} and
-     * {@link java.lang.invoke.MethodHandles.Lookup}, but instrumentation and debugging purposes we need
+     * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup}, but instrumentation and debugging purposes we need
      * intercept points.
      * <p>
      * All method handle operations in Nashorn should go through this field, not directly to the classes

@@ -31,7 +31,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.GET_UNDEFINED
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.TYPE_OBJECT_INDEX;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.HashMap;
 import java.util.Map;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;

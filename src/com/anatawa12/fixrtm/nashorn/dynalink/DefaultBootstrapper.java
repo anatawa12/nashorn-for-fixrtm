@@ -83,8 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.CallSite;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
 
@@ -110,7 +110,7 @@ public class DefaultBootstrapper {
      * Use this method as your bootstrap method (see the documentation of the java.lang.invoke package for how to do
      * this). In case your language runtime doesn't have a concept of interaction with Java access scopes, you might
      * want to consider using
-     * {@link #publicBootstrap(java.lang.invoke.MethodHandles.Lookup, String, MethodType)} instead.
+     * {@link #publicBootstrap(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup, String, MethodType)} instead.
      *
      * @param caller the caller's lookup
      * @param name the name of the method at the call site
@@ -125,7 +125,7 @@ public class DefaultBootstrapper {
      * Use this method as your bootstrap method (see the documentation of the java.lang.invoke package for how to do
      * this) when your language runtime doesn't have a concept of interaction with Java access scopes. If you need to
      * preserve the different caller Lookup objects in the call sites, use
-     * {@link #bootstrap(java.lang.invoke.MethodHandles.Lookup, String, MethodType)} instead
+     * {@link #bootstrap(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup, String, MethodType)} instead
      *
      * @param caller the caller's lookup. It is ignored as the call sites will be created with
      * {@link MethodHandles#publicLookup()} instead.

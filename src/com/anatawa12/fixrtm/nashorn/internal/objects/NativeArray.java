@@ -34,7 +34,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIter
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayLikeIterator.reverseArrayLikeIterator;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_STRICT;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

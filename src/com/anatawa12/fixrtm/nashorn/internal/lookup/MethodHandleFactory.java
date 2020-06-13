@@ -29,10 +29,10 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -83,8 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.WrongMethodTypeException;
 import java.security.AccessController;
@@ -180,16 +180,16 @@ public class TypeConverterFactory {
      *
      * @param factories the {@link GuardingTypeConverterFactory} instances to compose.
      * @param autoConversionStrategy conversion strategy for automatic type conversions. After
-     * {@link #asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)} has applied all custom
+     * {@link #asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)} has applied all custom
      * conversions to a method handle, it still needs to effect
      * {@link TypeUtilities#isMethodInvocationConvertible(Class, Class) method invocation conversions} that
      * can usually be automatically applied as per
-     * {@link java.lang.invoke.MethodHandle#asType(java.lang.invoke.MethodType)}.
+     * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asType(java.lang.invoke.MethodType)}.
      * However, sometimes language runtimes will want to customize even those conversions for their own call
      * sites. A typical example is allowing unboxing of null return values, which is by default prohibited by
      * ordinary {@code MethodHandles.asType}. In this case, a language runtime can install its own custom
      * automatic conversion strategy, that can deal with null values. Note that when the strategy's
-     * {@link MethodTypeConversionStrategy#asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)}
+     * {@link MethodTypeConversionStrategy#asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)}
      * is invoked, the custom language conversions will already have been applied to the method handle, so by
      * design the difference between the handle's current method type and the desired final type will always
      * only be ones that can be subjected to method invocation conversions. Can be null, in which case no

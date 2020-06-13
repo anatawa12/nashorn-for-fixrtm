@@ -37,9 +37,9 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.getNumberOfAc
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;

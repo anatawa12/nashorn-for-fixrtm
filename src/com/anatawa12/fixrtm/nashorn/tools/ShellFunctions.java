@@ -33,8 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 

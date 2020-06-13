@@ -27,8 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
