@@ -71,7 +71,7 @@ public final class RewriteException extends Exception {
     /** Call for getting the return value for the exception */
     public static final Call GET_RETURN_VALUE         = virtualCallNoLookup(RewriteException.class, "getReturnValueDestructive", Object.class);
     /** Call for the populate array bootstrap */
-    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", SCallSite.class, Lookup.class, String.class, MethodType.class, int.class);
+    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", SCallSite.class, MethodHandles.Lookup.class, String.class, MethodType.class, int.class);
 
     /** Call for populating an array with local variable state */
     private static final Call POPULATE_ARRAY           = staticCall(SMethodHandles.l(MethodHandles.lookup()), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
@@ -135,6 +135,9 @@ public final class RewriteException extends Exception {
         return new RewriteException(e, byteCodeSlots, byteCodeSymbolNames, previousContinuationEntryPoints);
     }
 
+    public static SCallSite populateArrayBootstrap(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
+        return populateArrayBootstrap(SMethodHandles.l(lookup), name, type, startIndex);
+    }
     /**
      * Bootstrap method for populate array
      * @param lookup     lookup
@@ -143,7 +146,7 @@ public final class RewriteException extends Exception {
      * @param startIndex start index to start writing to
      * @return callsite to array populator (constant)
      */
-    public static SCallSite populateArrayBootstrap(final SMethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
+    public static SCallSite populateArrayBootstrap(final Lookup lookup, final String name, final MethodType type, final int startIndex) {
         SMethodHandle mh = POPULATE_ARRAY.methodHandle();
         mh = MH.insertArguments(mh, 1, startIndex);
         mh = MH.asCollector(mh, Object[].class, type.parameterCount() - 1);

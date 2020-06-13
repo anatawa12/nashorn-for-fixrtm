@@ -33,7 +33,7 @@ import com.anatawa12.fixrtm.nashorn.invoke.SConstantCallSite;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
-import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.DynamicLinker;
@@ -206,7 +206,7 @@ public final class Bootstrap {
      * @return SCallSite with SMethodHandle to appropriate method or null if not found.
      */
     public static SCallSite bootstrap(final Lookup lookup, final String opDesc, final MethodType type, final int flags) {
-        return dynamicLinker.link(LinkerCallSite.newLinkerCallSite(lookup, opDesc, type, flags));
+        return dynamicLinker.link(LinkerCallSite.newLinkerCallSite(SMethodHandles.l(lookup), opDesc, type, flags));
     }
 
     /**
@@ -357,7 +357,7 @@ public final class Bootstrap {
      * @return SMethodHandle for invoking the operation.
      */
     public static SMethodHandle createDynamicInvoker(final String opDesc, final int flags, final Class<?> rtype, final Class<?>... ptypes) {
-        return bootstrap(SMethodHandles.publicLookup(), opDesc, MethodType.methodType(rtype, ptypes), flags).sdynamicInvoker();
+        return bootstrap(MethodHandles.publicLookup(), opDesc, MethodType.methodType(rtype, ptypes), flags).sdynamicInvoker();
     }
 
     /**
@@ -369,7 +369,7 @@ public final class Bootstrap {
      * @return SMethodHandle for invoking the operation.
      */
     public static SMethodHandle createDynamicInvoker(final String opDesc, final MethodType type) {
-        return bootstrap(SMethodHandles.publicLookup(), opDesc, type, 0).sdynamicInvoker();
+        return bootstrap(MethodHandles.publicLookup(), opDesc, type, 0).sdynamicInvoker();
     }
 
     /**

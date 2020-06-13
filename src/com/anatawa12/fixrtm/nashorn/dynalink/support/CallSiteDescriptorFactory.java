@@ -83,6 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
@@ -96,6 +97,7 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
+import com.sun.xml.internal.ws.util.QNameMap;
 
 /**
  * Usable as a default factory for call site descriptor implementations. It is weakly canonicalizing, meaning it will
@@ -113,6 +115,9 @@ public class CallSiteDescriptorFactory {
     private CallSiteDescriptorFactory() {
     }
 
+    public static CallSiteDescriptor create(final MethodHandles.Lookup lookup, final String name, final MethodType methodType) {
+        return create(SMethodHandles.l(lookup), name, methodType);
+    }
     /**
      * Creates a new call site descriptor instance. The actual underlying class of the instance is dependent on the
      * passed arguments to be space efficient; i.e. if you  only use the public lookup, you'll get back an

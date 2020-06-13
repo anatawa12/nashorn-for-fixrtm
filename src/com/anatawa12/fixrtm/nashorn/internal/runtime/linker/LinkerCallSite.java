@@ -104,6 +104,11 @@ public class LinkerCallSite extends ChainedCallSite {
         }
         return 0;
     }
+
+    static LinkerCallSite newLinkerCallSite(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int flags) {
+        return newLinkerCallSite(SMethodHandles.l(lookup), name, type, flags);
+    }
+
     /**
      * Construct a new linker call site.
      * @param name     Name of method.

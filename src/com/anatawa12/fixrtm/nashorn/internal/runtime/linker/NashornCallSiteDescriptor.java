@@ -140,6 +140,10 @@ public final class NashornCallSiteDescriptor extends AbstractCallSiteDescriptor 
         return sb.length() == 0 ? "" : " " + sb.toString().trim();
     }
 
+    public static NashornCallSiteDescriptor get(final MethodHandles.Lookup lookup, final String name,
+                                                final MethodType methodType, final int flags) {
+        return get(SMethodHandles.l(lookup), name, methodType, flags);
+    }
     /**
      * Retrieves a Nashorn call site descriptor with the specified values. Since call site descriptors are immutable
      * this method is at liberty to retrieve canonicalized instances (although it is not guaranteed it will do so).
