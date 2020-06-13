@@ -297,7 +297,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
     private static final SMethodHandle TO_LIST;
     private static final SMethodHandle TO_QUEUE;
     static {
-        final SMethodHandle listAdapterCreate = new Lookup(MethodHandles.lookup()).findStatic(
+        final SMethodHandle listAdapterCreate = new Lookup(SMethodHandles.l(MethodHandles.lookup())).findStatic(
                 ListAdapter.class, "create", MethodType.methodType(ListAdapter.class, Object.class));
         TO_COLLECTION = asReturning(listAdapterCreate, Collection.class);
         TO_DEQUE = asReturning(listAdapterCreate, Deque.class);
@@ -320,7 +320,7 @@ final class NashornLinker implements TypeBasedGuardingDynamicLinker, GuardingTyp
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NashornLinker.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NashornLinker.class, name, MH.type(rtype, types));
     }
 }
 

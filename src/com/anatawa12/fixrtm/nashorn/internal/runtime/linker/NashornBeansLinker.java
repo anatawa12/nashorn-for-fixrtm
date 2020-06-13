@@ -69,7 +69,7 @@ public class NashornBeansLinker implements GuardingDynamicLinker {
     private static final SMethodHandle FILTER_CONSSTRING;
 
     static {
-        final Lookup lookup  = new Lookup(MethodHandles.lookup());
+        final Lookup lookup  = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
         EXPORT_ARGUMENT      = lookup.findOwnStatic("exportArgument", Object.class, Object.class);
         IMPORT_RESULT        = lookup.findOwnStatic("importResult", Object.class, Object.class);
         FILTER_CONSSTRING    = lookup.findOwnStatic("consStringFilter", Object.class, Object.class);

@@ -205,7 +205,7 @@ public abstract class ContinuousArrayData extends ArrayData {
     protected static final SMethodHandle FAST_ACCESS_GUARD =
             MH.dropArguments(
                     staticCall(
-                            MethodHandles.lookup(),
+                            SMethodHandles.l(MethodHandles.lookup()),
                             ContinuousArrayData.class,
                             "guard",
                             boolean.class,

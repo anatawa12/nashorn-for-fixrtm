@@ -623,6 +623,6 @@ public final class NativeJSAdapter extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeJSAdapter.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeJSAdapter.class, name, MH.type(rtype, types));
     }
 }

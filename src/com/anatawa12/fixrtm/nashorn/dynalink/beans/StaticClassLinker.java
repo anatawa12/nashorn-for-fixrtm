@@ -204,7 +204,7 @@ class StaticClassLinker implements TypeBasedGuardingDynamicLinker {
             MethodType.methodType(Object.class, Class.class, int.class));
 
     static {
-        final Lookup lookup = new Lookup(MethodHandles.lookup());
+        final Lookup lookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
         GET_CLASS = lookup.findVirtual(StaticClass.class, "getRepresentedClass", MethodType.methodType(Class.class));
         IS_CLASS = lookup.findOwnStatic("isClass", Boolean.TYPE, Class.class, Object.class);
     }

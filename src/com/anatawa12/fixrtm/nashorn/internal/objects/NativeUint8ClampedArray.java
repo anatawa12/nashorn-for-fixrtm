@@ -78,11 +78,11 @@ public final class NativeUint8ClampedArray extends ArrayBufferView {
 
     private static final class Uint8ClampedArrayData extends TypedArrayData<ByteBuffer> {
 
-        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint8ClampedArrayData.class, "getElem", int.class, int.class).methodHandle();
-        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint8ClampedArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
-        private static final SMethodHandle RINT_D   = staticCall(MethodHandles.lookup(), Uint8ClampedArrayData.class, "rint", double.class, double.class).methodHandle();
-        private static final SMethodHandle RINT_O   = staticCall(MethodHandles.lookup(), Uint8ClampedArrayData.class, "rint", Object.class, Object.class).methodHandle();
-        private static final SMethodHandle CLAMP_LONG = staticCall(MethodHandles.lookup(), Uint8ClampedArrayData.class, "clampLong", long.class, long.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint8ClampedArrayData.class, "getElem", int.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint8ClampedArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle RINT_D   = staticCall(SMethodHandles.l(MethodHandles.lookup()), Uint8ClampedArrayData.class, "rint", double.class, double.class).methodHandle();
+        private static final SMethodHandle RINT_O   = staticCall(SMethodHandles.l(MethodHandles.lookup()), Uint8ClampedArrayData.class, "rint", Object.class, Object.class).methodHandle();
+        private static final SMethodHandle CLAMP_LONG = staticCall(SMethodHandles.l(MethodHandles.lookup()), Uint8ClampedArrayData.class, "clampLong", long.class, long.class).methodHandle();
 
         private Uint8ClampedArrayData(final ByteBuffer nb, final int start, final int end) {
             super(((ByteBuffer)nb.position(start).limit(end)).slice(), end - start);

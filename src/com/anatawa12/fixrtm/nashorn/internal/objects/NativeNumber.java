@@ -385,6 +385,6 @@ public final class NativeNumber extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeNumber.class, name, type);
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeNumber.class, name, type);
     }
 }

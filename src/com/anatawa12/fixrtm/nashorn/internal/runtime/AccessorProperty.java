@@ -52,7 +52,7 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
  * represented as fields in a ScriptObject class.
  */
 public class AccessorProperty extends Property {
-    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     private static final SMethodHandle REPLACE_MAP   = findOwnMH_S("replaceMap", Object.class, Object.class, PropertyMap.class);
     private static final SMethodHandle INVALIDATE_SP = findOwnMH_S("invalidateSwitchPoint", Object.class, AccessorProperty.class, Object.class);

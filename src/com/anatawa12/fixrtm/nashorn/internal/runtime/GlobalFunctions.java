@@ -61,7 +61,7 @@ public final class GlobalFunctions {
     public static final SMethodHandle IS_NAN_J = MH.dropArguments(MH.constant(boolean.class, false), 0, Object.class);
 
     /** IsNan for doubles - use Double.isNaN */
-    public static final SMethodHandle IS_NAN_D = MH.dropArguments(MH.findStatic(MethodHandles.lookup(), Double.class, "isNaN", MH.type(boolean.class, double.class)), 0, Object.class);
+    public static final SMethodHandle IS_NAN_D = MH.dropArguments(MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Double.class, "isNaN", MH.type(boolean.class, double.class)), 0, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.2.4, isNaN */
     public static final SMethodHandle IS_NAN = findOwnMH("isNaN",      boolean.class, Object.class, Object.class);
@@ -516,6 +516,6 @@ loop:
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), GlobalFunctions.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), GlobalFunctions.class, name, MH.type(rtype, types));
     }
 }

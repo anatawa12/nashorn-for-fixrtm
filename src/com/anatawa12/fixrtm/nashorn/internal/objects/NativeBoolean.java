@@ -184,6 +184,6 @@ public final class NativeBoolean extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeBoolean.class, name, type);
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeBoolean.class, name, type);
     }
 }

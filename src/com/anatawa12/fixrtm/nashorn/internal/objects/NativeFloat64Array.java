@@ -77,8 +77,8 @@ public final class NativeFloat64Array extends ArrayBufferView {
 
     private static final class Float64ArrayData extends TypedArrayData<DoubleBuffer> {
 
-        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "getElem", double.class, int.class).methodHandle();
-        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Float64ArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Float64ArrayData.class, "getElem", double.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Float64ArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
 
         private Float64ArrayData(final DoubleBuffer nb, final int start, final int end) {
             super(((DoubleBuffer)nb.position(start).limit(end)).slice(), end - start);

@@ -202,6 +202,6 @@ public final class PrimitiveLookup {
     }
 
     private static SMethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), PrimitiveLookup.class, name, type);
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), PrimitiveLookup.class, name, type);
     }
 }

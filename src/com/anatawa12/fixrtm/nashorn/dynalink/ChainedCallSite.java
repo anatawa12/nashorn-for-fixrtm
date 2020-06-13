@@ -106,7 +106,7 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
     private static final SMethodHandle PRUNE_CATCHES =
             SMethodHandles.insertArguments(
                     Lookup.findOwnSpecial(
-                            MethodHandles.lookup(),
+                            SMethodHandles.l(MethodHandles.lookup()),
                             "prune",
                             SMethodHandle.class,
                             SMethodHandle.class,
@@ -117,7 +117,7 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
     private static final SMethodHandle PRUNE_SWITCHPOINTS =
             SMethodHandles.insertArguments(
                     Lookup.findOwnSpecial(
-                            MethodHandles.lookup(),
+                            SMethodHandles.l(MethodHandles.lookup()),
                             "prune",
                             SMethodHandle.class,
                             SMethodHandle.class,

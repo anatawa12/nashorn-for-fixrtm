@@ -563,7 +563,7 @@ abstract class AbstractJavaLinker implements GuardingDynamicLinker {
         }
     }
 
-    private static final Lookup privateLookup = new Lookup(MethodHandles.lookup());
+    private static final Lookup privateLookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
 
     private static final SMethodHandle IS_ANNOTATED_METHOD_NOT_NULL = Guards.isNotNull().asType(MethodType.methodType(
             boolean.class, AnnotatedDynamicMethod.class));

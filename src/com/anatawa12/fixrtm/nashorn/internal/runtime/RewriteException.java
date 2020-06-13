@@ -73,7 +73,7 @@ public final class RewriteException extends Exception {
     public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", SCallSite.class, Lookup.class, String.class, MethodType.class, int.class);
 
     /** Call for populating an array with local variable state */
-    private static final Call POPULATE_ARRAY           = staticCall(MethodHandles.lookup(), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
+    private static final Call POPULATE_ARRAY           = staticCall(SMethodHandles.l(MethodHandles.lookup()), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
 
     /** Call for converting an array to a long array. */
     public static final Call TO_LONG_ARRAY   = staticCallNoLookup(RewriteException.class, "toLongArray",   long[].class, Object.class, RewriteException.class);

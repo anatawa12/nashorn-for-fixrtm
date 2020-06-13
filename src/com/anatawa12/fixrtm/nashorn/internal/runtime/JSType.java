@@ -76,7 +76,7 @@ public enum JSType {
     /** Max value for an uint32 in JavaScript */
     public static final long MAX_UINT = 0xFFFF_FFFFL;
 
-    private static final SMethodHandles.Lookup JSTYPE_LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup JSTYPE_LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     /** JavaScript compliant conversion function from Object to boolean */
     public static final Call TO_BOOLEAN = staticCall(JSTYPE_LOOKUP, JSType.class, "toBoolean", boolean.class, Object.class);

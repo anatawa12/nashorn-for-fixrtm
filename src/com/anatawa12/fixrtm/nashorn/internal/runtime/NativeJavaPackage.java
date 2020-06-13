@@ -220,7 +220,7 @@ public final class NativeJavaPackage extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeJavaPackage.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeJavaPackage.class, name, MH.type(rtype, types));
     }
 
     private Object createProperty(final String propertyName) {

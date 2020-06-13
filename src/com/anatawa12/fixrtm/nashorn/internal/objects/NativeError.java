@@ -391,7 +391,7 @@ public final class NativeError extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeError.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeError.class, name, MH.type(rtype, types));
     }
 
     private static String getScriptStackString(final ScriptObject sobj, final Throwable exp) {

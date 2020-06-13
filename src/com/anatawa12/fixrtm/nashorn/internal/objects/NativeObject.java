@@ -839,6 +839,6 @@ public final class NativeObject {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeObject.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeObject.class, name, MH.type(rtype, types));
     }
 }

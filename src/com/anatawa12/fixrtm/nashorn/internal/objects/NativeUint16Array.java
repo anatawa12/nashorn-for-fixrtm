@@ -77,8 +77,8 @@ public final class NativeUint16Array extends ArrayBufferView {
 
     private static final class Uint16ArrayData extends TypedArrayData<CharBuffer> {
 
-        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint16ArrayData.class, "getElem", int.class, int.class).methodHandle();
-        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint16ArrayData.class, "getElem", int.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
         private Uint16ArrayData(final CharBuffer nb, final int start, final int end) {
             super(((CharBuffer)nb.position(start).limit(end)).slice(), end - start);

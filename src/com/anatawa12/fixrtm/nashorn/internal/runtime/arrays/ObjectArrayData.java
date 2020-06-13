@@ -175,8 +175,8 @@ final class ObjectArrayData extends ContinuousArrayData implements AnyElements {
         return this;
     }
 
-    private static final SMethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "getElem", Object.class, int.class).methodHandle();
-    private static final SMethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), ObjectArrayData.class, "setElem", void.class, int.class, Object.class).methodHandle();
+    private static final SMethodHandle HAS_GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), ObjectArrayData.class, "getElem", Object.class, int.class).methodHandle();
+    private static final SMethodHandle SET_ELEM     = specialCall(SMethodHandles.l(MethodHandles.lookup()), ObjectArrayData.class, "setElem", void.class, int.class, Object.class).methodHandle();
 
     @SuppressWarnings("unused")
     private Object getElem(final int index) {

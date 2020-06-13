@@ -222,7 +222,7 @@ public final class Lookup {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), Lookup.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Lookup.class, name, MH.type(rtype, types));
     }
 
 }

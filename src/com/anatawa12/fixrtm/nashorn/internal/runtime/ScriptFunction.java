@@ -108,7 +108,7 @@ public class ScriptFunction extends ScriptObject {
 
     private static final SMethodHandle ADD_ZEROTH_ELEMENT = findOwnMH_S("addZerothElement", Object[].class, Object[].class, Object.class);
 
-    private static final SMethodHandle WRAP_THIS = MH.findStatic(MethodHandles.lookup(), ScriptFunctionData.class, "wrapThis", MH.type(Object.class, Object.class));
+    private static final SMethodHandle WRAP_THIS = MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ScriptFunctionData.class, "wrapThis", MH.type(Object.class, Object.class));
 
     // various property maps used for different kinds of functions
     // property map for anonymous function that serves as Function.prototype
@@ -1296,10 +1296,10 @@ public class ScriptFunction extends ScriptObject {
     }
 
     private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), ScriptFunction.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ScriptFunction.class, name, MH.type(rtype, types));
     }
 
     private static SMethodHandle findOwnMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findVirtual(MethodHandles.lookup(), ScriptFunction.class, name, MH.type(rtype, types));
+        return MH.findVirtual(SMethodHandles.l(MethodHandles.lookup()), ScriptFunction.class, name, MH.type(rtype, types));
     }
 }

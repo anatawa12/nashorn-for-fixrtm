@@ -216,7 +216,7 @@ public class DynamicLinker {
         return linkerServices;
     }
 
-    private static final SMethodHandle RELINK = Lookup.findOwnSpecial(MethodHandles.lookup(), RELINK_METHOD_NAME,
+    private static final SMethodHandle RELINK = Lookup.findOwnSpecial(SMethodHandles.l(MethodHandles.lookup()), RELINK_METHOD_NAME,
             SMethodHandle.class, RelinkableCallSite.class, int.class, Object[].class);
 
     private SMethodHandle createRelinkAndInvokeMethod(final RelinkableCallSite callSite, final int relinkCount) {

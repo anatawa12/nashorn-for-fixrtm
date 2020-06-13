@@ -269,7 +269,7 @@ public final class ScriptingFunctions {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), ScriptingFunctions.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ScriptingFunctions.class, name, MH.type(rtype, types));
     }
 
     /**

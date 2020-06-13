@@ -83,8 +83,8 @@ final class IntArrayData extends ContinuousArrayData implements IntElements {
         return otherData;
     }
 
-    private static final SMethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), IntArrayData.class, "getElem", int.class, int.class).methodHandle();
-    private static final SMethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), IntArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+    private static final SMethodHandle HAS_GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), IntArrayData.class, "getElem", int.class, int.class).methodHandle();
+    private static final SMethodHandle SET_ELEM     = specialCall(SMethodHandles.l(MethodHandles.lookup()), IntArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
     @Override
     public Object[] asObjectArray() {

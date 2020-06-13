@@ -59,7 +59,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
 public final class MethodHandleFactory {
 
     private static final SMethodHandles.Lookup PUBLIC_LOOKUP = SMethodHandles.publicLookup();
-    private static final SMethodHandles.Lookup LOOKUP        = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP        = SMethodHandles.l(MethodHandles.lookup());
 
     private static final Level TRACE_LEVEL = Level.INFO;
 

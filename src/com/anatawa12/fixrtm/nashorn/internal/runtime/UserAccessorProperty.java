@@ -66,7 +66,7 @@ public final class UserAccessorProperty extends SpillProperty {
         }
     }
 
-    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     /** Getter method handle */
     private final static SMethodHandle INVOKE_OBJECT_GETTER = findOwnMH_S("invokeObjectGetter", Object.class, Accessors.class, SMethodHandle.class, Object.class);

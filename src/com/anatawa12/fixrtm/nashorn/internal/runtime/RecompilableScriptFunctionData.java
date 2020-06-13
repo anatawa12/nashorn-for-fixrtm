@@ -133,7 +133,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
     /** Copy of the {@link FunctionNode} flags. */
     private final int functionFlags;
 
-    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     private transient volatile DebugLogger log;
 

@@ -178,6 +178,6 @@ public final class Undefined extends DefaultPropertyAccess {
     }
 
     private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findVirtual(MethodHandles.lookup(), Undefined.class, name, MH.type(rtype, types));
+        return MH.findVirtual(SMethodHandles.l(MethodHandles.lookup()), Undefined.class, name, MH.type(rtype, types));
     }
 }

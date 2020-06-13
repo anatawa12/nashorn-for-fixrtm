@@ -132,7 +132,7 @@ public final class Context {
     private static final String LOAD_FX = "fx:";
     private static final String LOAD_NASHORN = "nashorn:";
 
-    private static SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
     private static MethodType CREATE_PROGRAM_FUNCTION_TYPE = MethodType.methodType(ScriptFunction.class, ScriptObject.class);
 
     /**

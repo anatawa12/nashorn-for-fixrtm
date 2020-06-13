@@ -63,8 +63,8 @@ public class LinkerCallSite extends ChainedCallSite {
 
     private static final String PROFILEFILE = Options.getStringProperty("nashorn.profilefile", "NashornProfile.txt");
 
-    private static final SMethodHandle INCREASE_MISS_COUNTER = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "increaseMissCount", MH.type(Object.class, String.class, Object.class));
-    private static final SMethodHandle ON_CATCH_INVALIDATION = MH.findStatic(MethodHandles.lookup(), LinkerCallSite.class, "onCatchInvalidation", MH.type(ChainedCallSite.class, LinkerCallSite.class));
+    private static final SMethodHandle INCREASE_MISS_COUNTER = MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), LinkerCallSite.class, "increaseMissCount", MH.type(Object.class, String.class, Object.class));
+    private static final SMethodHandle ON_CATCH_INVALIDATION = MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), LinkerCallSite.class, "onCatchInvalidation", MH.type(ChainedCallSite.class, LinkerCallSite.class));
 
     private int catchInvalidations;
 
@@ -206,7 +206,7 @@ public class LinkerCallSite extends ChainedCallSite {
         /** Total number of times call site entered. */
         private long hitCount;
 
-        private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+        private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
         private static final SMethodHandle PROFILEENTRY    = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileEntry",    MH.type(Object.class, Object.class));
         private static final SMethodHandle PROFILEEXIT     = MH.findVirtual(LOOKUP, ProfilingLinkerCallSite.class, "profileExit",     MH.type(Object.class, Object.class));
@@ -344,7 +344,7 @@ public class LinkerCallSite extends ChainedCallSite {
      * Debug subclass for LinkerCallSite that allows tracing
      */
     private static class TracingLinkerCallSite extends LinkerCallSite {
-        private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+        private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
         private static final SMethodHandle TRACEOBJECT = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceObject", MH.type(Object.class, SMethodHandle.class, Object[].class));
         private static final SMethodHandle TRACEVOID   = MH.findVirtual(LOOKUP, TracingLinkerCallSite.class, "traceVoid", MH.type(void.class, SMethodHandle.class, Object[].class));

@@ -269,7 +269,7 @@ public class Guards {
     private static final SMethodHandle IS_NOT_NULL;
 
     static {
-        final Lookup lookup = new Lookup(MethodHandles.lookup());
+        final Lookup lookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
 
         IS_OF_CLASS  = lookup.findOwnStatic("isOfClass",   Boolean.TYPE, Class.class, Object.class);
         IS_ARRAY     = lookup.findOwnStatic("isArray",     Boolean.TYPE, Object.class);

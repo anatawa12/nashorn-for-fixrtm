@@ -2720,7 +2720,7 @@ public final class Global extends Scope {
     }
 
     private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), Global.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Global.class, name, MH.type(rtype, types));
     }
 
     RegExpResult getLastRegExpResult() {

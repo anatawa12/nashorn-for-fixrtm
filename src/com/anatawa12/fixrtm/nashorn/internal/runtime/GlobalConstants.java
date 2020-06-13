@@ -93,7 +93,7 @@ public final class GlobalConstants implements Loggable {
      */
     public static final boolean GLOBAL_ONLY = true;
 
-    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     private static final SMethodHandle INVALIDATE_SP  = virtualCall(LOOKUP, GlobalConstants.class, "invalidateSwitchPoint", Object.class, Object.class, Access.class).methodHandle();
     private static final SMethodHandle RECEIVER_GUARD = staticCall(LOOKUP, GlobalConstants.class, "receiverGuard", boolean.class, Access.class, Object.class, Object.class).methodHandle();

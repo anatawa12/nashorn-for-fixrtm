@@ -349,7 +349,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
             MethodType.methodType(boolean.class, Object.class));
 
     private static SMethodHandle findRangeCheck(final Class<?> collectionType) {
-        return Lookup.findOwnStatic(MethodHandles.lookup(), "rangeCheck", boolean.class, collectionType, Object.class);
+        return Lookup.findOwnStatic(SMethodHandles.l(MethodHandles.lookup()), "rangeCheck", boolean.class, collectionType, Object.class);
     }
 
     @SuppressWarnings("unused")

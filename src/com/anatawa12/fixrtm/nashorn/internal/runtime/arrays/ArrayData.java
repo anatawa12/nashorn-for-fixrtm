@@ -69,7 +69,7 @@ public abstract class ArrayData {
      * Method handle to throw an {@link UnwarrantedOptimismException} when getting an element
      * of the wrong type
      */
-    protected static final CompilerConstants.Call THROW_UNWARRANTED = staticCall(MethodHandles.lookup(), ArrayData.class, "throwUnwarranted", void.class, ArrayData.class, int.class, int.class);
+    protected static final CompilerConstants.Call THROW_UNWARRANTED = staticCall(SMethodHandles.l(MethodHandles.lookup()), ArrayData.class, "throwUnwarranted", void.class, ArrayData.class, int.class, int.class);
 
     /**
      * Immutable empty array to get ScriptObjects started.

@@ -101,7 +101,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
  */
 abstract class SingleDynamicMethod extends DynamicMethod {
 
-    private static final SMethodHandle CAN_CONVERT_TO = Lookup.findOwnStatic(MethodHandles.lookup(), "canConvertTo", boolean.class, LinkerServices.class, Class.class, Object.class);
+    private static final SMethodHandle CAN_CONVERT_TO = Lookup.findOwnStatic(SMethodHandles.l(MethodHandles.lookup()), "canConvertTo", boolean.class, LinkerServices.class, Class.class, Object.class);
 
     SingleDynamicMethod(final String name) {
         super(name);

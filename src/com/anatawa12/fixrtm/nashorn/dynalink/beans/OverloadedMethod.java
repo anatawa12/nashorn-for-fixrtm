@@ -147,7 +147,7 @@ class OverloadedMethod {
         return invoker;
     }
 
-    private static final SMethodHandle SELECT_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(), "selectMethod",
+    private static final SMethodHandle SELECT_METHOD = Lookup.findOwnSpecial(SMethodHandles.l(MethodHandles.lookup()), "selectMethod",
             SMethodHandle.class, Object[].class);
 
     @SuppressWarnings("unused")
@@ -192,7 +192,7 @@ class OverloadedMethod {
         return adaptThrower(SMethodHandles.insertArguments(THROW_NO_SUCH_METHOD, 0, this, argTypes));
     }
 
-    private static final SMethodHandle THROW_NO_SUCH_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
+    private static final SMethodHandle THROW_NO_SUCH_METHOD = Lookup.findOwnSpecial(SMethodHandles.l(MethodHandles.lookup()),
             "throwNoSuchMethod", void.class, Class[].class);
 
     @SuppressWarnings("unused")
@@ -214,7 +214,7 @@ class OverloadedMethod {
         return SMethodHandles.dropArguments(rawThrower, 0, callSiteType.parameterList()).asType(callSiteType);
     }
 
-    private static final SMethodHandle THROW_AMBIGUOUS_METHOD = Lookup.findOwnSpecial(MethodHandles.lookup(),
+    private static final SMethodHandle THROW_AMBIGUOUS_METHOD = Lookup.findOwnSpecial(SMethodHandles.l(MethodHandles.lookup()),
             "throwAmbiguousMethod", void.class, Class[].class, List.class);
 
     @SuppressWarnings("unused")

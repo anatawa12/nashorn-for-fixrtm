@@ -57,7 +57,7 @@ final class JavaSuperAdapterLinker implements TypeBasedGuardingDynamicLinker {
     private static final SMethodHandle IS_ADAPTER_OF_CLASS;
 
     static {
-        final Lookup lookup = new Lookup(MethodHandles.lookup());
+        final Lookup lookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
         ADD_PREFIX_TO_METHOD_NAME = lookup.findOwnStatic("addPrefixToMethodName", Object.class, Object.class);
         BIND_DYNAMIC_METHOD = lookup.findOwnStatic("bindDynamicMethod", Object.class, Object.class, Object.class);
         GET_ADAPTER = lookup.findVirtual(JavaSuperAdapter.class, "getAdapter", MethodType.methodType(Object.class));

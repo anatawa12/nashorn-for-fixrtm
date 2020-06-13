@@ -156,7 +156,7 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
 
         if (returnType == Object.class && JSType.isString(self)) {
             try {
-                return new GuardedInvocation(MH.findStatic(MethodHandles.lookup(), NativeString.class, "get", desc.getMethodType()), NashornGuards.getStringGuard());
+                return new GuardedInvocation(MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeString.class, "get", desc.getMethodType()), NashornGuards.getStringGuard());
             } catch (final LookupException e) {
                 //empty. Shouldn't happen. Fall back to super
             }
@@ -1302,7 +1302,7 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
     }
 
     private static SMethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeString.class, name, type);
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeString.class, name, type);
     }
 
     @Override

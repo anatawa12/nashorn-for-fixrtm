@@ -191,8 +191,8 @@ final class NumberArrayData extends ContinuousArrayData implements NumericElemen
         return this;
     }
 
-    private static final SMethodHandle HAS_GET_ELEM = specialCall(MethodHandles.lookup(), NumberArrayData.class, "getElem", double.class, int.class).methodHandle();
-    private static final SMethodHandle SET_ELEM     = specialCall(MethodHandles.lookup(), NumberArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
+    private static final SMethodHandle HAS_GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), NumberArrayData.class, "getElem", double.class, int.class).methodHandle();
+    private static final SMethodHandle SET_ELEM     = specialCall(SMethodHandles.l(MethodHandles.lookup()), NumberArrayData.class, "setElem", void.class, int.class, double.class).methodHandle();
 
     @SuppressWarnings("unused")
     private double getElem(final int index) {

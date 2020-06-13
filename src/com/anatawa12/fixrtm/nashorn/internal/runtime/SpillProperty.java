@@ -36,7 +36,7 @@ import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 public class SpillProperty extends AccessorProperty {
     private static final long serialVersionUID = 3028496245198669460L;
 
-    private static final SMethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     private static final SMethodHandle PARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "primitiveSpill",  long[].class), MH.type(long[].class, Object.class));
     private static final SMethodHandle OARRAY_GETTER = MH.asType(MH.getter(LOOKUP, ScriptObject.class, "objectSpill",  Object[].class), MH.type(Object[].class, Object.class));

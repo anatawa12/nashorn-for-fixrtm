@@ -159,13 +159,13 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
     private static final ArrayList<SMethodHandle> PROTO_FILTERS = new ArrayList<>();
 
     /** Method handle for getting the array data */
-    public static final Call GET_ARRAY          = virtualCall(MethodHandles.lookup(), ScriptObject.class, "getArray", ArrayData.class);
+    public static final Call GET_ARRAY          = virtualCall(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, "getArray", ArrayData.class);
 
     /** Method handle for getting a function argument at a given index. Used from MapCreator */
-    public static final Call GET_ARGUMENT       = virtualCall(MethodHandles.lookup(), ScriptObject.class, "getArgument", Object.class, int.class);
+    public static final Call GET_ARGUMENT       = virtualCall(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, "getArgument", Object.class, int.class);
 
     /** Method handle for setting a function argument at a given index. Used from MapCreator */
-    public static final Call SET_ARGUMENT       = virtualCall(MethodHandles.lookup(), ScriptObject.class, "setArgument", void.class, int.class, Object.class);
+    public static final Call SET_ARGUMENT       = virtualCall(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, "setArgument", void.class, int.class, Object.class);
 
     /** Method handle for getting the proto of a ScriptObject */
     public static final Call GET_PROTO          = virtualCallNoLookup(ScriptObject.class, "getProto", ScriptObject.class);
@@ -181,7 +181,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
 
     /** Method handle for setting the user accessors of a ScriptObject */
     //TODO fastpath this
-    public static final Call SET_USER_ACCESSORS = virtualCall(MethodHandles.lookup(), ScriptObject.class, "setUserAccessors", void.class, String.class, ScriptFunction.class, ScriptFunction.class);
+    public static final Call SET_USER_ACCESSORS = virtualCall(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, "setUserAccessors", void.class, String.class, ScriptFunction.class, ScriptFunction.class);
 
     static final SMethodHandle[] SET_SLOW = new SMethodHandle[] {
         findOwnMH_V("set", void.class, Object.class, int.class, int.class),
@@ -3427,7 +3427,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
 
     private static SMethodHandle findOwnMH_V(final Class<? extends ScriptObject> clazz, final String name, final Class<?> rtype, final Class<?>... types) {
         // TODO: figure out how can it work for NativeArray$Prototype etc.
-        return MH.findVirtual(MethodHandles.lookup(), ScriptObject.class, name, MH.type(rtype, types));
+        return MH.findVirtual(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, name, MH.type(rtype, types));
     }
 
     private static SMethodHandle findOwnMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
@@ -3435,7 +3435,7 @@ public abstract class ScriptObject implements PropertyAccess, Cloneable {
     }
 
     private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), ScriptObject.class, name, MH.type(rtype, types));
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ScriptObject.class, name, MH.type(rtype, types));
     }
 
     private static SMethodHandle getKnownFunctionPropertyGuardSelf(final PropertyMap map, final SMethodHandle getter, final ScriptFunction func) {

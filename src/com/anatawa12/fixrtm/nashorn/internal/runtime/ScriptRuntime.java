@@ -107,17 +107,17 @@ public final class ScriptRuntime {
       * call sites that are known to be megamorphic. Using an invoke dynamic here would
       * lead to the JVM deoptimizing itself to death
       */
-    public static final Call APPLY = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "apply", Object.class, ScriptFunction.class, Object.class, Object[].class);
+    public static final Call APPLY = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "apply", Object.class, ScriptFunction.class, Object.class, Object[].class);
 
     /**
      * Throws a reference error for an undefined variable.
      */
-    public static final Call THROW_REFERENCE_ERROR = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "throwReferenceError", void.class, String.class);
+    public static final Call THROW_REFERENCE_ERROR = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "throwReferenceError", void.class, String.class);
 
     /**
      * Throws a reference error for an undefined variable.
      */
-    public static final Call THROW_CONST_TYPE_ERROR = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "throwConstTypeError", void.class, String.class);
+    public static final Call THROW_CONST_TYPE_ERROR = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "throwConstTypeError", void.class, String.class);
 
     /**
      * Used to invalidate builtin names, e.g "Function" mapping to all properties in Function.prototype and Function.prototype itself.

@@ -96,7 +96,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodHandleTransformer;
  * are declared to be {@link Object}.
  */
 public class DefaultInternalObjectFilter implements MethodHandleTransformer {
-    private static final SMethodHandle FILTER_VARARGS = new Lookup(MethodHandles.lookup()).findStatic(
+    private static final SMethodHandle FILTER_VARARGS = new Lookup(SMethodHandles.l(MethodHandles.lookup())).findStatic(
             DefaultInternalObjectFilter.class, "filterVarArgs", MethodType.methodType(Object[].class, SMethodHandle.class, Object[].class));
 
     private final SMethodHandle parameterFilter;

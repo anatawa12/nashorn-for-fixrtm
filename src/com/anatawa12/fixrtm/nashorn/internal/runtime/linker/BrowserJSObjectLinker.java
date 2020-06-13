@@ -213,7 +213,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     private static final SMethodHandle JSOBJECTLINKER_PUT = findOwnMH_S("put", Void.TYPE, Object.class, Object.class, Object.class);
 
     private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-            return MH.findStatic(MethodHandles.lookup(), BrowserJSObjectLinker.class, name, MH.type(rtype, types));
+            return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), BrowserJSObjectLinker.class, name, MH.type(rtype, types));
     }
 
     // method handles of netscape.javascript.JSObject class

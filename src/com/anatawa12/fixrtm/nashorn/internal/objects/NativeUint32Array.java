@@ -80,8 +80,8 @@ public final class NativeUint32Array extends ArrayBufferView {
 
     private static final class Uint32ArrayData extends TypedArrayData<IntBuffer> {
 
-        private static final SMethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint32ArrayData.class, "getElem", double.class, int.class).methodHandle();
-        private static final SMethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint32ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint32ArrayData.class, "getElem", double.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint32ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
         private Uint32ArrayData(final IntBuffer nb, final int start, final int end) {
             super(((IntBuffer)nb.position(start).limit(end)).slice(), end - start);
