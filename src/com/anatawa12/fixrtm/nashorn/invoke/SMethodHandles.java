@@ -229,7 +229,7 @@ public class SMethodHandles {
          * @see MethodHandles.Lookup#unreflectConstructor(Constructor)
          */
         public SMethodHandle unreflectConstructor(Constructor<?> c) throws IllegalAccessException {
-            return SMethodHandle.directMethod(real.unreflectConstructor(c));
+            return SMethodHandle.directConstructor(real.unreflectConstructor(c));
         }
 
         /**
