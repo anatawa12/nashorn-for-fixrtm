@@ -356,7 +356,7 @@ public final class Bootstrap {
      * @return SMethodHandle for invoking the operation.
      */
     public static SMethodHandle createDynamicInvoker(final String opDesc, final int flags, final Class<?> rtype, final Class<?>... ptypes) {
-        return bootstrap(SMethodHandles.publicLookup(), opDesc, MethodType.methodType(rtype, ptypes), flags).dynamicInvoker();
+        return bootstrap(SMethodHandles.publicLookup(), opDesc, MethodType.methodType(rtype, ptypes), flags).sdynamicInvoker();
     }
 
     /**
@@ -368,7 +368,7 @@ public final class Bootstrap {
      * @return SMethodHandle for invoking the operation.
      */
     public static SMethodHandle createDynamicInvoker(final String opDesc, final MethodType type) {
-        return bootstrap(SMethodHandles.publicLookup(), opDesc, type, 0).dynamicInvoker();
+        return bootstrap(SMethodHandles.publicLookup(), opDesc, type, 0).sdynamicInvoker();
     }
 
     /**

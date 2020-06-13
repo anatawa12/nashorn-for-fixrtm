@@ -574,7 +574,7 @@ final class CompiledFunction {
         // to the compiled function's changed target whenever the optimistic assumptions are invalidated.
         final SCallSite cs = new SMutableCallSite(handle.type());
         relinkComposableInvoker(cs, this, isConstructor);
-        return cs.dynamicInvoker();
+        return cs.sdynamicInvoker();
     }
 
     private static class HandleAndAssumptions {
@@ -644,7 +644,7 @@ final class CompiledFunction {
             target = handle;
         } else {
             final SMethodHandle relink = SMethodHandles.insertArguments(RELINK_COMPOSABLE_INVOKER, 0, cs, inv, constructor);
-            target = assumptions.guardWithTest(handle, SMethodHandles.foldArguments(cs.dynamicInvoker(), relink));
+            target = assumptions.guardWithTest(handle, SMethodHandles.foldArguments(cs.sdynamicInvoker(), relink));
         }
         cs.setTarget(target.asType(cs.type()));
     }
