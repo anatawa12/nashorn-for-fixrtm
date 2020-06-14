@@ -31,10 +31,14 @@
 
 package com.anatawa12.fixrtm.nashorn.invoke;
 
+import jdk.internal.org.objectweb.asm.Opcodes;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -99,6 +103,40 @@ public abstract class SMethodHandle implements Serializable {
 
     public boolean isVarargsCollector() {
         return getReal().isVarargsCollector();
+    }
+
+    private static final MethodType DIRECT_MAKE_TYPE = MethodType.methodType(SMethodHandle.class, MethodHandle.class);
+    private static final CallSite DIRECT_FIELD = makeDirectMaker("directField");
+    private static final CallSite DIRECT_METHOD = makeDirectMaker("directMethod");
+    private static final CallSite DIRECT_SPECIAL_METHOD = makeDirectMaker("directSpecialMethod");
+    private static final CallSite DIRECT_CONSTRUCTOR = makeDirectMaker("directConstructor");
+
+    private static CallSite makeDirectMaker(String name) {
+        try {
+            return new ConstantCallSite(MethodHandles.lookup().findStatic(SMethodHandle.class, name, DIRECT_MAKE_TYPE));
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public static CallSite wrapDirect(MethodHandles.Lookup caller, String name, MethodType type, int ref) {
+        switch (ref) {
+            case Opcodes.H_GETFIELD:
+            case Opcodes.H_GETSTATIC:
+            case Opcodes.H_PUTFIELD:
+            case Opcodes.H_PUTSTATIC:
+                return DIRECT_FIELD;
+            case Opcodes.H_INVOKEVIRTUAL:
+            case Opcodes.H_INVOKESTATIC:
+            case Opcodes.H_INVOKEINTERFACE:
+                return DIRECT_METHOD;
+            case Opcodes.H_INVOKESPECIAL:
+                return DIRECT_SPECIAL_METHOD;
+            case Opcodes.H_NEWINVOKESPECIAL:
+                return DIRECT_CONSTRUCTOR;
+            default:
+                throw new IllegalArgumentException("ref type is not valid");
+        }
     }
 
     static SMethodHandle directMethod(MethodHandle real) {
