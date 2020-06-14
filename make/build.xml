@@ -462,6 +462,7 @@ grant codeBase "file:/${basedir}/test/script/basic/JDK-8158467.js" {
           <include name="**/runtime/regexp/test/*Test.class"/>
           <include name="**/runtime/regexp/joni/test/*Test.class"/>
           <include name="**/framework/*Test.class"/>
+          <include name="**/invoke/*Test.class"/>
      </fileset>
   </target>
 
