@@ -63,6 +63,8 @@ public class SMethodHandles {
      * @return wrapped Lookup
      */
     public static SMethodHandles.Lookup l(MethodHandles.Lookup real) {
+        if (Lookup.PUBLIC_LOOKUP != null && Lookup.PUBLIC_LOOKUP.real == real)
+            return Lookup.PUBLIC_LOOKUP;
         return new SMethodHandles.Lookup(real);
     }
 
