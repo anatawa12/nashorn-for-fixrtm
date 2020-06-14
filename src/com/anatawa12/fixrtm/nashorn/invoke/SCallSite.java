@@ -50,7 +50,7 @@ public interface SCallSite {
                 GET_TARGET = SMethodHandles.l(MethodHandles.lookup()).
                         findVirtual(SCallSite.class, "getSTarget", MethodType.methodType(SMethodHandle.class));
                 THROW_UCS = SMethodHandles.l(MethodHandles.lookup()).
-                        findStatic(SCallSite.class, "uninitializedCallSite", MethodType.methodType(Object.class));
+                        findStatic(Utils.class, "uninitializedCallSite", MethodType.methodType(Object.class));
             } catch (ReflectiveOperationException e) {
                 throw new AssertionError(e);
             }
