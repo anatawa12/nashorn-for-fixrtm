@@ -54,6 +54,7 @@ public class SSwitchPoint {
 
     /**
      * @see SwitchPoint#hasBeenInvalidated() 
+     * @return same as {@link SwitchPoint#guardWithTest(MethodHandle, MethodHandle)}
      */
     public boolean hasBeenInvalidated() {
         return (callSite.getSTarget() != trueHandle);
@@ -61,6 +62,9 @@ public class SSwitchPoint {
 
     /**
      * @see SwitchPoint#guardWithTest(MethodHandle, MethodHandle) 
+     * @param target same as {@link SwitchPoint#guardWithTest(MethodHandle, MethodHandle)}
+     * @param fallback same as {@link SwitchPoint#guardWithTest(MethodHandle, MethodHandle)}
+     * @return same as {@link SwitchPoint#guardWithTest(MethodHandle, MethodHandle)}
      */
     public SMethodHandle guardWithTest(SMethodHandle target, SMethodHandle fallback) {
         if (callSite.getSTarget() == falseHandle)
@@ -70,6 +74,7 @@ public class SSwitchPoint {
 
     /**
      * @see SwitchPoint#invalidateAll(SwitchPoint[])
+     * @param switchPoints same as {@link SwitchPoint#invalidateAll(SwitchPoint[])}
      */
     public static void invalidateAll(SSwitchPoint[] switchPoints) {
         // if not Points, nop.

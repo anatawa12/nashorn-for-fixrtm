@@ -216,6 +216,10 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param reader the body of script
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final Reader reader) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(reader, getScriptName(context)));
@@ -223,6 +227,11 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param reader the body of script
+     * @param scriptName the name of the script.
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final Reader reader, final String scriptName) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(reader, scriptName));
@@ -230,6 +239,10 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param str the body of script
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final String str) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(str, getScriptName(context)));
@@ -237,6 +250,11 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param str the body of script
+     * @param scriptName the name of the script.
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final String str, final String scriptName) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(str, scriptName));

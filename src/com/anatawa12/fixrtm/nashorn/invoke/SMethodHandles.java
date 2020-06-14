@@ -70,6 +70,7 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#publicLookup()
+     * @return wrapped public Lookup
      */
     public static SMethodHandles.Lookup publicLookup() {
         return Lookup.PUBLIC_LOOKUP;
@@ -77,6 +78,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#reflectAs(Class, MethodHandle)
+     * @param expected same as {@link MethodHandles#reflectAs(Class, MethodHandle)}
+     * @param target same as {@link MethodHandles#reflectAs(Class, MethodHandle)}
+     * @param <T> same as {@link MethodHandles#reflectAs(Class, MethodHandle)}
+     * @return same as {@link MethodHandles#reflectAs(Class, MethodHandle)}
      */
     public static <T extends Member> T
     reflectAs(Class<T> expected, SMethodHandle target) {
@@ -114,6 +119,7 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#lookupClass()
+         * @return same as {@link MethodHandles.Lookup#lookupClass()}
          */
         public Class<?> lookupClass() {
             return real.lookupClass();
@@ -121,6 +127,7 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#lookupModes()
+         * @return same as {@link MethodHandles.Lookup#lookupModes()}
          */
         public int lookupModes() {
             return real.lookupModes();
@@ -135,6 +142,8 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#in(Class)
+         * @param requestedLookupClass same as {@link MethodHandles.Lookup#in(Class)}
+         * @return same as {@link MethodHandles.Lookup#in(Class)}
          */
         public SMethodHandles.Lookup in(Class<?> requestedLookupClass) {
             return new SMethodHandles.Lookup(real.in(requestedLookupClass));
@@ -142,6 +151,7 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#toString()
+         * {@inheritDoc}
          */
         @Override
         public String toString() {
@@ -150,6 +160,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findStatic(Class, String, MethodType)
+         * @param refc same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+         * @param name same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+         * @param type same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+         * @return same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+         * @throws NoSuchMethodException same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
          */
         public SMethodHandle findStatic(Class<?> refc, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
             return SMethodHandle.directMethod(real.findStatic(refc, name, type));
@@ -157,6 +173,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findVirtual(Class, String, MethodType)
+         * @param refc same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+         * @param name same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+         * @param type same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+         * @return same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+         * @throws NoSuchMethodException same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
          */
         public SMethodHandle findVirtual(Class<?> refc, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
             return SMethodHandle.directMethod(real.findVirtual(refc, name, type));
@@ -164,6 +186,11 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findConstructor(Class, MethodType)
+         * @param refc same as {@link MethodHandles.Lookup#findConstructor(Class, MethodType)}
+         * @param type same as {@link MethodHandles.Lookup#findConstructor(Class, MethodType)}
+         * @return same as {@link MethodHandles.Lookup#findConstructor(Class, MethodType)}
+         * @throws NoSuchMethodException same as {@link MethodHandles.Lookup#findConstructor(Class, MethodType)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findConstructor(Class, MethodType)}
          */
         public SMethodHandle findConstructor(Class<?> refc, MethodType type) throws NoSuchMethodException, IllegalAccessException {
             return SMethodHandle.directConstructor(real.findConstructor(refc, type));
@@ -171,6 +198,13 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)
+         * @param refc same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @param name same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @param type same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @param specialCaller same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @return same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @throws NoSuchMethodException MethodTyp same as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
+         * @throws IllegalAccessException me as {@link MethodHandles.Lookup#findSpecial(Class, String, MethodType, Class)}
          */
         public SMethodHandle findSpecial(Class<?> refc, String name, MethodType type,
                                          Class<?> specialCaller) throws NoSuchMethodException, IllegalAccessException {
@@ -179,6 +213,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findGetter(Class, String, Class)
+         * @param refc same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
+         * @param name same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
+         * @param type same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
+         * @return same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
+         * @throws NoSuchFieldException same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findGetter(Class, String, Class)}
          */
         public SMethodHandle findGetter(Class<?> refc, String name, Class<?> type) throws NoSuchFieldException, IllegalAccessException {
             return SMethodHandle.directField(real.findGetter(refc, name, type));
@@ -186,6 +226,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findSetter(Class, String, Class)
+         * @param refc same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
+         * @param name same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
+         * @param type same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
+         * @return same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
+         * @throws NoSuchFieldException same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findSetter(Class, String, Class)}
          */
         public SMethodHandle findSetter(Class<?> refc, String name, Class<?> type) throws NoSuchFieldException, IllegalAccessException {
             return SMethodHandle.directField(real.findSetter(refc, name, type));
@@ -193,6 +239,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findStaticGetter(Class, String, Class)
+         * @param refc same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+         * @param name same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+         * @param type same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+         * @return same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+         * @throws NoSuchFieldException same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findStaticGetter(Class, String, Class)}
          */
         public SMethodHandle findStaticGetter(Class<?> refc, String name, Class<?> type) throws NoSuchFieldException, IllegalAccessException {
             return SMethodHandle.directField(real.findStaticGetter(refc, name, type));
@@ -200,6 +252,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#findStaticSetter(Class, String, Class)
+         * @param refc same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+         * @param name same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+         * @param type same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+         * @return same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+         * @throws NoSuchFieldException same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#findStaticSetter(Class, String, Class)}
          */
         public SMethodHandle findStaticSetter(Class<?> refc, String name, Class<?> type) throws NoSuchFieldException, IllegalAccessException {
             return SMethodHandle.directField(real.findStaticSetter(refc, name, type));
@@ -207,6 +265,12 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#bind(Object, String, MethodType)
+         * @param receiver same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
+         * @param name same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
+         * @param type same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
+         * @return same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
+         * @throws NoSuchMethodException same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#bind(Object, String, MethodType)}
          */
         public SMethodHandle bind(Object receiver, String name, MethodType type) throws NoSuchMethodException, IllegalAccessException {
             return null;//TODO: return real.bind(receiver, name, type);
@@ -214,6 +278,9 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#unreflect(Method)
+         * @param m same as {@link MethodHandles.Lookup#unreflect(Method)}
+         * @return same as {@link MethodHandles.Lookup#unreflect(Method)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#unreflect(Method)}
          */
         public SMethodHandle unreflect(Method m) throws IllegalAccessException {
             return SMethodHandle.directMethod(real.unreflect(m));
@@ -229,6 +296,9 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#unreflectConstructor(Constructor)
+         * @param c same as {@link MethodHandles.Lookup#unreflectConstructor(Constructor)}
+         * @return same as {@link MethodHandles.Lookup#unreflectConstructor(Constructor)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#unreflectConstructor(Constructor)}
          */
         public SMethodHandle unreflectConstructor(Constructor<?> c) throws IllegalAccessException {
             return SMethodHandle.directConstructor(real.unreflectConstructor(c));
@@ -236,6 +306,9 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#unreflectGetter(Field)
+         * @param f same as {@link MethodHandles.Lookup#unreflectGetter(Field)}
+         * @return same as {@link MethodHandles.Lookup#unreflectGetter(Field)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#unreflectGetter(Field)}
          */
         public SMethodHandle unreflectGetter(Field f) throws IllegalAccessException {
             return SMethodHandle.directField(real.unreflectGetter(f));
@@ -243,6 +316,9 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#unreflectSetter(Field)
+         * @param f same as {@link MethodHandles.Lookup#unreflectSetter(Field)}
+         * @return same as {@link MethodHandles.Lookup#unreflectSetter(Field)}
+         * @throws IllegalAccessException same as {@link MethodHandles.Lookup#unreflectSetter(Field)}
          */
         public SMethodHandle unreflectSetter(Field f) throws IllegalAccessException {
             return SMethodHandle.directField(real.unreflectSetter(f));
@@ -250,6 +326,8 @@ public class SMethodHandles {
 
         /**
          * @see MethodHandles.Lookup#revealDirect(MethodHandle)
+         * @param target same as {@link MethodHandles.Lookup#revealDirect(MethodHandle)}
+         * @return same as {@link MethodHandles.Lookup#revealDirect(MethodHandle)}
          */
         public MethodHandleInfo revealDirect(SMethodHandle target) {
             //TODO: wrap?
@@ -259,6 +337,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#arrayElementGetter(Class)
+     * @param arrayClass same as {@link MethodHandles#arrayElementGetter(Class)}
+     * @return same as {@link MethodHandles#arrayElementGetter(Class)}
+     * @throws IllegalArgumentException if arrayClass is not a array.
      */
     public static SMethodHandle arrayElementGetter(Class<?> arrayClass) throws IllegalArgumentException {
         Class<?> elementClass = arrayClass.getComponentType();
@@ -270,6 +351,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#arrayElementSetter(Class)
+     * @param arrayClass same as {@link MethodHandles#arrayElementSetter(Class)}
+     * @return same as {@link MethodHandles#arrayElementSetter(Class)}
+     * @throws IllegalArgumentException if arrayClass is not a array.
      */
     public static SMethodHandle arrayElementSetter(Class<?> arrayClass) throws IllegalArgumentException {
         Class<?> elementClass = arrayClass.getComponentType();
@@ -283,6 +367,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#spreadInvoker(MethodType, int)
+     * @param type same as {@link MethodHandles#spreadInvoker(MethodType, int)}
+     * @param leadingArgCount same as {@link MethodHandles#spreadInvoker(MethodType, int)}
+     * @return same as {@link MethodHandles#spreadInvoker(MethodType, int)}
      */
     static public SMethodHandle spreadInvoker(MethodType type, int leadingArgCount) {
         return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, leadingArgCount, SMethodHandle.TYPE_SPREAD_INVOKER);
@@ -290,6 +377,8 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#exactInvoker(MethodType)
+     * @param type same as {@link MethodHandles#exactInvoker(MethodType)}
+     * @return same as {@link MethodHandles#exactInvoker(MethodType)}
      */
     static public SMethodHandle exactInvoker(MethodType type) {
         return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, SMethodHandle.TYPE_EXACT_INVOKER);
@@ -297,6 +386,8 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#invoker(MethodType)
+     * @param type same as {@link MethodHandles#invoker(MethodType)}
+     * @return same as {@link MethodHandles#invoker(MethodType)}
      */
     static public SMethodHandle invoker(MethodType type) {
         return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, SMethodHandle.TYPE_INVOKER);
@@ -306,6 +397,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#explicitCastArguments(MethodHandle, MethodType)
+     * @param target same as {@link MethodHandles#explicitCastArguments(MethodHandle, MethodType)}
+     * @param newType same as {@link MethodHandles#explicitCastArguments(MethodHandle, MethodType)}
+     * @return same as {@link MethodHandles#explicitCastArguments(MethodHandle, MethodType)}
      */
     public static SMethodHandle explicitCastArguments(SMethodHandle target, MethodType newType) {
         return new SMethodHandle.HandleAndTypeSMethodHandle(target, newType, SMethodHandle.TYPE_EXPLICIT_CAST);
@@ -313,6 +407,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#permuteArguments(MethodHandle, MethodType, int...)
+     * @param target same as {@link MethodHandles#permuteArguments(MethodHandle, MethodType, int...)}
+     * @param newType same as {@link MethodHandles#permuteArguments(MethodHandle, MethodType, int...)}
+     * @param reorder same as {@link MethodHandles#permuteArguments(MethodHandle, MethodType, int...)}
+     * @return same as {@link MethodHandles#permuteArguments(MethodHandle, MethodType, int...)}
      */
     public static SMethodHandle permuteArguments(SMethodHandle target, MethodType newType, int... reorder) {
         return target.permuteArgumentsInternal(newType, reorder);
@@ -320,6 +418,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#constant(Class, Object)
+     * @param type same as {@link MethodHandles#constant(Class, Object)}
+     * @param value same as {@link MethodHandles#constant(Class, Object)}
+     * @return same as {@link MethodHandles#constant(Class, Object)}
      */
     public static SMethodHandle constant(Class<?> type, Object value) {
         return new SMethodHandle.ConstantSMethodHandle(type, value);
@@ -327,6 +428,8 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#identity(Class)
+     * @param type same as {@link MethodHandles#identity(Class)}
+     * @return same as {@link MethodHandles#identity(Class)}
      */
     public static SMethodHandle identity(Class<?> type) {
         return new SMethodHandle.HandleAndClassAndIntSMethodHandle(null, type, 0, SMethodHandle.HandleAndClassAndIntSMethodHandle.TYPE_IDENTITY);
@@ -334,6 +437,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#insertArguments(MethodHandle, int, Object...)
+     * @param target same as {@link MethodHandles#insertArguments(MethodHandle, int, Object...)}
+     * @param pos same as {@link MethodHandles#insertArguments(MethodHandle, int, Object...)}
+     * @param values same as {@link MethodHandles#insertArguments(MethodHandle, int, Object...)}
+     * @return same as {@link MethodHandles#insertArguments(MethodHandle, int, Object...)}
      */
     public static SMethodHandle insertArguments(SMethodHandle target, int pos, Object... values) {
         return new SMethodHandle.InsertArgumentsSMethodHandle(target, pos, values);
@@ -341,6 +448,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#dropArguments(MethodHandle, int, List)
+     * @param target same as {@link MethodHandles#dropArguments(MethodHandle, int, List)}
+     * @param pos same as {@link MethodHandles#dropArguments(MethodHandle, int, List)}
+     * @param valueTypes same as {@link MethodHandles#dropArguments(MethodHandle, int, List)}
+     * @return same as {@link MethodHandles#dropArguments(MethodHandle, int, List)}
      */
     public static SMethodHandle dropArguments(SMethodHandle target, int pos, List<Class<?>> valueTypes) {
         MethodType type = target.type().insertParameterTypes(pos, valueTypes);
@@ -364,6 +475,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#dropArguments(MethodHandle, int, Class[])
+     * @param target same as {@link MethodHandles#dropArguments(MethodHandle, int, Class[])}
+     * @param pos same as {@link MethodHandles#dropArguments(MethodHandle, int, Class[])}
+     * @param valueTypes same as {@link MethodHandles#dropArguments(MethodHandle, int, Class[])}
+     * @return same as {@link MethodHandles#dropArguments(MethodHandle, int, Class[])}
      */
     public static SMethodHandle dropArguments(SMethodHandle target, int pos, Class<?>... valueTypes) {
         return dropArguments(target, pos, Arrays.asList(valueTypes));
@@ -371,6 +486,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)
+     * @param target same as {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}
+     * @param pos same as {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}
+     * @param filters same as {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}
+     * @return same as {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}
      */
     public static SMethodHandle filterArguments(SMethodHandle target, int pos, SMethodHandle... filters) {
         return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.TYPE_FILTER_ARGUMENTS, target, filters);
@@ -378,6 +497,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#collectArguments(MethodHandle, int, MethodHandle)
+     * @param target same as {@link MethodHandles#collectArguments(MethodHandle, int, MethodHandle)}
+     * @param pos same as {@link MethodHandles#collectArguments(MethodHandle, int, MethodHandle)}
+     * @param filter same as {@link MethodHandles#collectArguments(MethodHandle, int, MethodHandle)}
+     * @return same as {@link MethodHandles#collectArguments(MethodHandle, int, MethodHandle)}
      */
     public static SMethodHandle collectArguments(SMethodHandle target, int pos, SMethodHandle filter) {
         return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.TYPE_COLLECT_ARGUMENTS, target, filter);
@@ -385,6 +508,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#filterReturnValue(MethodHandle, MethodHandle)
+     * @param target same as {@link MethodHandles#filterReturnValue(MethodHandle, MethodHandle)}
+     * @param filter same as {@link MethodHandles#filterReturnValue(MethodHandle, MethodHandle)}
+     * @return same as {@link MethodHandles#filterReturnValue(MethodHandle, MethodHandle)}
      */
     public static SMethodHandle filterReturnValue(SMethodHandle target, SMethodHandle filter) {
         return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.TYPE_FILTER_RETURN, target, filter);
@@ -392,6 +518,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#foldArguments(MethodHandle, MethodHandle)
+     * @param target same as {@link MethodHandles#foldArguments(MethodHandle, MethodHandle)}
+     * @param combiner same as {@link MethodHandles#foldArguments(MethodHandle, MethodHandle)}
+     * @return same as {@link MethodHandles#foldArguments(MethodHandle, MethodHandle)}
      */
     public static SMethodHandle foldArguments(SMethodHandle target, SMethodHandle combiner) {
         return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.TYPE_FOLD_ARGUMENTS, target, combiner);
@@ -399,6 +528,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)
+     * @param test same as {@link MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)}
+     * @param target same as {@link MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)}
+     * @param fallback same as {@link MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)}
+     * @return same as {@link MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)}
      */
     public static SMethodHandle guardWithTest(SMethodHandle test,
                                               SMethodHandle target,
@@ -408,6 +541,10 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#catchException(MethodHandle, Class, MethodHandle)
+     * @param target same as {@link MethodHandles#catchException(MethodHandle, Class, MethodHandle)}
+     * @param exceptionType same as {@link MethodHandles#catchException(MethodHandle, Class, MethodHandle)}
+     * @param handler same as {@link MethodHandles#catchException(MethodHandle, Class, MethodHandle)}
+     * @return same as {@link MethodHandles#catchException(MethodHandle, Class, MethodHandle)}
      */
     public static SMethodHandle catchException(SMethodHandle target,
                                                Class<? extends Throwable> exceptionType,
@@ -417,6 +554,9 @@ public class SMethodHandles {
 
     /**
      * @see MethodHandles#throwException(Class, Class)
+     * @param returnType same as {@link MethodHandles#throwException(Class, Class)}
+     * @param exceptionType same as {@link MethodHandles#throwException(Class, Class)}
+     * @return same as {@link MethodHandles#throwException(Class, Class)}
      */
     public static SMethodHandle throwException(Class<?> returnType, Class<? extends Throwable> exceptionType) {
         return new SMethodHandle.ThrowSMethodHandle(returnType, exceptionType);
