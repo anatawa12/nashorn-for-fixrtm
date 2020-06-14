@@ -48,7 +48,7 @@ public class SMutableCallSite extends MutableCallSite implements SCallSite {
     }
 
     public void setTarget(SMethodHandle newTarget) {
-        setTarget(newTarget.getReal());
+        super.setTarget(newTarget.getReal());
         real = newTarget;
     }
 

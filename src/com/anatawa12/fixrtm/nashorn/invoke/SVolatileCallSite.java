@@ -48,7 +48,7 @@ public class SVolatileCallSite extends VolatileCallSite implements SCallSite {
     }
 
     public void setTarget(SMethodHandle newTarget) {
-        setTarget(newTarget.getReal());
+        super.setTarget(newTarget.getReal());
         real = newTarget;
     }
 
