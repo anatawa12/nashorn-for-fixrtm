@@ -513,7 +513,8 @@ public abstract class SMethodHandle implements Serializable {
                     MethodHandle[] reals;
                     reals = new MethodHandle[handles.length];
                     for (int i = 0; i < reals.length; i++) {
-                        reals[i] = handles[i].getReal();
+                        if (handles[i] != null) 
+                            reals[i] = handles[i].getReal();
                     }
                     real = MethodHandles.filterArguments(first.getReal(), value, reals);
                     break;
