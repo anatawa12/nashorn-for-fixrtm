@@ -105,11 +105,20 @@ public abstract class SMethodHandle implements Serializable {
         return getReal().isVarargsCollector();
     }
 
+    private static final MethodHandle GET_RIAL;
     private static final MethodType DIRECT_MAKE_TYPE = MethodType.methodType(SMethodHandle.class, MethodHandle.class);
     private static final CallSite DIRECT_FIELD = makeDirectMaker("directField");
     private static final CallSite DIRECT_METHOD = makeDirectMaker("directMethod");
     private static final CallSite DIRECT_SPECIAL_METHOD = makeDirectMaker("directSpecialMethod");
     private static final CallSite DIRECT_CONSTRUCTOR = makeDirectMaker("directConstructor");
+
+    static {
+        try {
+            GET_RIAL = MethodHandles.lookup().findGetter(SMethodHandle.class, "real", MethodHandle.class);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new AssertionError(e);
+        }
+    }
 
     private static CallSite makeDirectMaker(String name) {
         try {
@@ -464,9 +473,11 @@ public abstract class SMethodHandle implements Serializable {
                     break;
                 case TYPE_INVOKER:
                     real = MethodHandles.invoker(methodType);
+                    real = MethodHandles.filterArguments(real, 0, GET_RIAL);
                     break;
                 case TYPE_EXACT_INVOKER:
                     real = MethodHandles.exactInvoker(methodType);
+                    real = MethodHandles.filterArguments(real, 0, GET_RIAL);
                     break;
                 case TYPE_SPREAD_INVOKER:
                     real = MethodHandles.spreadInvoker(methodType, value);
