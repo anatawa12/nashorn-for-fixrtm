@@ -2,7 +2,7 @@ class com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport
 
 static java.lang.Object com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.eval(com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject,java.lang.Object,java.lang.String,boolean)
 static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$SourceInfo com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.getSourceInfo(java.lang.Class)
-static void com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.notifyInvoke(java.lang.invoke.MethodHandle)
+static void com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.notifyInvoke(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle)
 static java.lang.String com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueAsString(java.lang.Object)
 static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueInfo(java.lang.String,java.lang.Object,boolean)
 static com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport$DebuggerValueDesc[] com.anatawa12.fixrtm.nashorn.internal.runtime.DebuggerSupport.valueInfos(java.lang.Object,boolean)
