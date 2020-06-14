@@ -166,7 +166,7 @@ public class SMethodHandles {
          * @see MethodHandles.Lookup#findConstructor(Class, MethodType)
          */
         public SMethodHandle findConstructor(Class<?> refc, MethodType type) throws NoSuchMethodException, IllegalAccessException {
-            return SMethodHandle.directMethod(real.findConstructor(refc, type));
+            return SMethodHandle.directConstructor(real.findConstructor(refc, type));
         }
 
         /**
