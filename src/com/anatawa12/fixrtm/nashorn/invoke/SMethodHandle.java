@@ -171,10 +171,10 @@ public abstract class SMethodHandle implements Serializable {
     private final static class DirectMethodSMethodHandle extends SMethodHandle {
         boolean isSpecial;
 
-        DirectMethodSMethodHandle(MethodHandle real, boolean isSpecial) {
+        DirectMethodSMethodHandle(final MethodHandle real, boolean isSpecial) {
             super(real);
             // check is direct method method handle.
-            MethodHandles.reflectAs(Method.class, real);
+            Utils.doPrivileged(() -> { MethodHandles.reflectAs(Method.class, real); });
             this.isSpecial = isSpecial;
         }
 
@@ -197,7 +197,7 @@ public abstract class SMethodHandle implements Serializable {
             private final Class<?> result;
 
             SerializationProxy(DirectMethodSMethodHandle handle) throws NotSerializableException {
-                Method method = MethodHandles.reflectAs(Method.class, handle.getReal());
+                Method method = Utils.doPrivileged(() -> MethodHandles.reflectAs(Method.class, handle.getReal()));
                 if (handle.isSpecial && !Modifier.isPrivate(method.getModifiers())) {
                     throw new NotSerializableException("special invocation to non-private method is not serializable.");
                 }
@@ -207,18 +207,19 @@ public abstract class SMethodHandle implements Serializable {
                 result = method.getReturnType();
             }
 
-            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
-                Method method = null;
+            private Method getMethod() throws NoSuchMethodException {
                 for (Method declaredMethod : owner.getDeclaredMethods()) {
                     if (declaredMethod.getName().equals(name)
                             && Arrays.equals(declaredMethod.getGenericParameterTypes(), parameters)
                             && declaredMethod.getReturnType() == result) {
-                        method = declaredMethod;
-                        break;
+                        return declaredMethod;
                     }
                 }
-                if (method == null)
-                    throw new NoSuchMethodException(toString());
+                throw new NoSuchMethodException(toString());
+            }
+
+            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
+                Method method = Utils.doPrivileged(this::getMethod);
                 method.setAccessible(true);
                 return new DirectMethodSMethodHandle(MethodHandles.publicLookup().unreflect(method), true);
             }
@@ -242,10 +243,10 @@ public abstract class SMethodHandle implements Serializable {
     }
 
     private final static class DirectConstructorSMethodHandle extends SMethodHandle {
-        DirectConstructorSMethodHandle(MethodHandle real) {
+        DirectConstructorSMethodHandle(final MethodHandle real) {
             super(real);
             // check is direct method method handle.
-            MethodHandles.reflectAs(Constructor.class, real);
+            Utils.doPrivileged(() -> { MethodHandles.reflectAs(Constructor.class, real); });
         }
 
         private void readObject(java.io.ObjectInputStream stream) throws InvalidObjectException {
@@ -265,21 +266,22 @@ public abstract class SMethodHandle implements Serializable {
             private final Class<?>[] parameters;
 
             SerializationProxy(DirectConstructorSMethodHandle handle) {
-                Constructor<?> Constructor = MethodHandles.reflectAs(Constructor.class, handle.getReal());
+                Constructor<?> Constructor = Utils.doPrivileged(() -> MethodHandles.reflectAs(Constructor.class, handle.getReal()));
                 owner = Constructor.getDeclaringClass();
                 parameters = Constructor.getParameterTypes();
             }
 
-            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
-                Constructor<?> constructor = null;
+            protected Constructor<?> getConstructor() throws NoSuchMethodException {
                 for (Constructor<?> declaredConstructor : owner.getDeclaredConstructors()) {
                     if (Arrays.equals(declaredConstructor.getGenericParameterTypes(), parameters)) {
-                        constructor = declaredConstructor;
-                        break;
+                        return declaredConstructor;
                     }
                 }
-                if (constructor == null)
-                    throw new NoSuchMethodException(toString());
+                throw new NoSuchMethodException(toString());
+            }
+
+            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
+                Constructor<?> constructor = Utils.doPrivileged(this::getConstructor);
                 constructor.setAccessible(true);
                 return new DirectConstructorSMethodHandle(MethodHandles.publicLookup().unreflectConstructor(constructor));
             }
@@ -301,10 +303,10 @@ public abstract class SMethodHandle implements Serializable {
     }
 
     private final static class DirectFieldSMethodHandle extends SMethodHandle {
-        DirectFieldSMethodHandle(MethodHandle real) {
+        DirectFieldSMethodHandle(final MethodHandle real) {
             super(real);
             // check is direct field method handle.
-            MethodHandles.reflectAs(Field.class, real);
+            Utils.doPrivileged(() -> { MethodHandles.reflectAs(Field.class, real); });
         }
 
         private void readObject(java.io.ObjectInputStream stream) throws InvalidObjectException {
@@ -326,7 +328,7 @@ public abstract class SMethodHandle implements Serializable {
             protected final boolean isGet;
 
             SerializationProxy(DirectFieldSMethodHandle handle) {
-                Field field = MethodHandles.reflectAs(Field.class, handle.getReal());
+                Field field = Utils.doPrivileged(() -> MethodHandles.reflectAs(Field.class, handle.getReal()));
                 owner = field.getDeclaringClass();
                 name = field.getName();
                 type = field.getType();
@@ -344,7 +346,7 @@ public abstract class SMethodHandle implements Serializable {
             }
 
             private Object readResolve() throws IllegalAccessException, NoSuchFieldException {
-                Field field = getField();
+                Field field = Utils.doPrivileged(this::getField);
                 field.setAccessible(true);
                 MethodHandle handle;
                 if (isGet) handle = MethodHandles.publicLookup().unreflectGetter(field);
