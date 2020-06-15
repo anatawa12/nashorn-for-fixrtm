@@ -36,6 +36,10 @@ import jdk.internal.org.objectweb.asm.Opcodes;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.NotSerializableException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.ConstantCallSite;
@@ -53,8 +57,7 @@ import java.util.List;
  * Serializable method handle. S means Serializable
  */
 public abstract class SMethodHandle implements Serializable {
-    // non-final for serialization
-    protected transient MethodHandle real;
+    protected final transient MethodHandle real;
 
     public MethodHandle getReal() {
         return real;
@@ -64,25 +67,24 @@ public abstract class SMethodHandle implements Serializable {
         this.real = real;
     }
 
-
     public SMethodHandle asCollector(Class<?> arrayType, int arrayLength) {
-        return new HandleAndClassAndIntSMethodHandle(this, arrayType, arrayLength, HandleAndClassAndIntSMethodHandle.TYPE_COLLECTOR);
+        return new HandleAndClassAndIntSMethodHandle(this, arrayType, arrayLength, HandleAndClassAndIntSMethodHandle.COLLECTOR_HANDLE);
     }
 
     public SMethodHandle asVarargsCollector(Class<?> arrayType) {
-        return new HandleAndClassAndIntSMethodHandle(this, arrayType, 0, HandleAndClassAndIntSMethodHandle.TYPE_VARARGS_COLLECTOR);
+        return new HandleAndClassAndIntSMethodHandle(this, arrayType, 0, HandleAndClassAndIntSMethodHandle.VARARGS_COLLECTOR_HANDLE);
     }
 
     public SMethodHandle asSpreader(Class<?> arrayType, int arrayLength) {
-        return new HandleAndClassAndIntSMethodHandle(this, arrayType, arrayLength, HandleAndClassAndIntSMethodHandle.TYPE_SPREADER);
+        return new HandleAndClassAndIntSMethodHandle(this, arrayType, arrayLength, HandleAndClassAndIntSMethodHandle.SPREADER_HANDLE);
     }
 
     public SMethodHandle asFixedArity() {
-        return new HandleAndClassAndIntSMethodHandle(this, null, 0, HandleAndClassAndIntSMethodHandle.TYPE_FIXED_ARITY);
+        return new HandleAndClassAndIntSMethodHandle(this, null, 0, HandleAndClassAndIntSMethodHandle.FIXED_ARITY_HANDLE);
     }
 
     public SMethodHandle asType(MethodType newType) {
-        return new HandleAndTypeSMethodHandle(this, newType, HandleAndTypeSMethodHandle.TYPE_AS_CAST);
+        return new HandleAndTypeSMethodHandle(this, newType, 0, HandleAndTypeSMethodHandle.AS_CAST_HANDLE);
     }
 
     public SMethodHandle bindTo(Object x) {
@@ -168,7 +170,43 @@ public abstract class SMethodHandle implements Serializable {
         return new PermuteArgumentsSMethodHandle(this, newType, reorder);
     }
 
+    /** @serial */public static final int NULL_HANDLE                   = 0xFF;
+    // direct
+    /** @serial */public static final int DIRECT_METHOD_HANDLE          = 0x00;
+    /** @serial */public static final int DIRECT_SPECIAL_METHOD_HANDLE  = 0x01;
+    /** @serial */public static final int DIRECT_CONSTRUCTOR_HANDLE     = 0x02;
+    /** @serial */public static final int DIRECT_FIELD_GETTER_HANDLE    = 0x03;
+    /** @serial */public static final int DIRECT_FIELD_SETTER_HANDLE    = 0x04;
+    // for HandleAndClassAndIntSMethodHandle
+    /** @serial */public static final int COLLECTOR_HANDLE              = 0x05;
+    /** @serial */public static final int VARARGS_COLLECTOR_HANDLE      = 0x06;
+    /** @serial */public static final int SPREADER_HANDLE               = 0x07;
+    /** @serial */public static final int FIXED_ARITY_HANDLE            = 0x08;
+    /** @serial */public static final int ARRAY_GETTER_HANDLE           = 0x09;
+    /** @serial */public static final int ARRAY_SETTER_HANDLE           = 0x0A;
+    /** @serial */public static final int IDENTITY_HANDLE               = 0x0B;
+    // for HandleAndTypeSMethodHandle
+    /** @serial */public static final int AS_CAST_HANDLE                = 0x0C;
+    /** @serial */public static final int EXPLICIT_CAST_HANDLE          = 0x0D;
+    /** @serial */public static final int INVOKER_HANDLE                = 0x0E;
+    /** @serial */public static final int EXACT_INVOKER_HANDLE          = 0x0F;
+    /** @serial */public static final int SPREAD_INVOKER_HANDLE         = 0x10;
+    // for HandlesSMethodHandle
+    /** @serial */public static final int FILTER_ARGUMENTS_HANDLE       = 0x11;
+    /** @serial */public static final int COLLECT_ARGUMENTS_HANDLE      = 0x12;
+    /** @serial */public static final int FILTER_RETURN_HANDLE          = 0x13;
+    /** @serial */public static final int FOLD_ARGUMENTS_HANDLE         = 0x14;
+    /** @serial */public static final int GUARD_WITH_TEST_HANDLE        = 0x15;
+    // others
+    /** @serial */public static final int CONSTANT_HANDLE               = 0x16;
+    /** @serial */public static final int INSERT_ARGUMENTS_HANDLE       = 0x17;
+    /** @serial */public static final int CATCH_EXCEPTION_HANDLE        = 0x18;
+    /** @serial */public static final int THROW_HANDLE                  = 0x19;
+    /** @serial */public static final int PERMUTE_ARGUMENTS_HANDLE      = 0x1A;
+
     private final static class DirectMethodSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         boolean isSpecial;
 
         DirectMethodSMethodHandle(final MethodHandle real, boolean isSpecial) {
@@ -178,310 +216,295 @@ public abstract class SMethodHandle implements Serializable {
             this.isSpecial = isSpecial;
         }
 
-        private void readObject(java.io.ObjectInputStream stream) throws InvalidObjectException {
-            throw new InvalidObjectException("Proxy required");
+        @Override
+        protected int getTag() {
+            return isSpecial ? DIRECT_SPECIAL_METHOD_HANDLE : DIRECT_METHOD_HANDLE;
         }
 
-        private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-            throw new InvalidObjectException("Proxy required");
+        private static DirectMethodSMethodHandle read(int tag, ObjectInput stream)
+                throws IOException, ClassNotFoundException {
+            Class<?> owner = (Class<?>)stream.readObject();
+            Class<?> result = (Class<?>)stream.readObject();
+            String name = stream.readUTF();
+            int length = stream.readUnsignedByte();
+            Class<?>[] parameters = new Class<?>[length];
+            for (int i = 0; i < parameters.length; i++) {
+                parameters[i] = (Class<?>)stream.readObject();
+            }
+
+            try {
+                Method method = SMethodHandle.findMethod(owner, name, result, parameters);
+                return new DirectMethodSMethodHandle(MethodHandles.publicLookup().unreflect(method),
+                        tag == DIRECT_SPECIAL_METHOD_HANDLE);
+            } catch (NoSuchMethodException e) {
+                throw new IOException("can't found method: " + e.getMessage(), e);
+            } catch (IllegalAccessException e) {
+                throw new AssertionError(e);
+            }
         }
 
-        private Object writeReplace() throws NotSerializableException {
-            return new SerializationProxy(this);
-        }
-
-        private static class SerializationProxy implements Serializable {
-            private final Class<?> owner;
-            private final String name;
-            private final Class<?>[] parameters;
-            private final Class<?> result;
-
-            SerializationProxy(DirectMethodSMethodHandle handle) throws NotSerializableException {
-                Method method = Utils.doPrivileged(() -> MethodHandles.reflectAs(Method.class, handle.getReal()));
-                if (handle.isSpecial && !Modifier.isPrivate(method.getModifiers())) {
-                    throw new NotSerializableException("special invocation to non-private method is not serializable.");
-                }
-                owner = method.getDeclaringClass();
-                name = method.getName();
-                parameters = method.getParameterTypes();
-                result = method.getReturnType();
+        @Override
+        protected void writeInternal(ObjectOutput stream) throws IOException {
+            Method method = Utils.doPrivileged(() -> MethodHandles.reflectAs(Method.class, real));
+            if (isSpecial && !Modifier.isPrivate(method.getModifiers())) {
+                throw new NotSerializableException("special invocation to non-private method is not serializable.");
             }
+            Class<?> owner = method.getDeclaringClass();
+            String name = method.getName();
+            Class<?>[] parameters = method.getParameterTypes();
+            Class<?> result = method.getReturnType();
 
-            private Method getMethod() throws NoSuchMethodException {
-                for (Method declaredMethod : owner.getDeclaredMethods()) {
-                    if (declaredMethod.getName().equals(name)
-                            && Arrays.equals(declaredMethod.getGenericParameterTypes(), parameters)
-                            && declaredMethod.getReturnType() == result) {
-                        return declaredMethod;
-                    }
-                }
-                throw new NoSuchMethodException(toString());
-            }
-
-            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
-                Method method = Utils.doPrivileged(this::getMethod);
-                method.setAccessible(true);
-                return new DirectMethodSMethodHandle(MethodHandles.publicLookup().unreflect(method), true);
-            }
-
-            @Override
-            public String toString() {
-                StringBuilder builder = new StringBuilder();
-                builder.append(owner.getName())
-                        .append('.')
-                        .append(name)
-                        .append('(');
-                for (int i = 0; i < parameters.length; i++) {
-                    if (i != 0)
-                        builder.append(',');
-                    builder.append(parameters[i].getName());
-                }
-                builder.append(')').append(result.getName());
-                return builder.toString();
+            stream.writeObject(owner);
+            stream.writeObject(result);
+            stream.writeUTF(name);
+            stream.writeByte(parameters.length);
+            for (Class<?> parameter : parameters) {
+                stream.writeObject(parameter);
             }
         }
     }
 
     private final static class DirectConstructorSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         DirectConstructorSMethodHandle(final MethodHandle real) {
             super(real);
             // check is direct method method handle.
             Utils.doPrivileged(() -> { MethodHandles.reflectAs(Constructor.class, real); });
         }
 
-        private void readObject(java.io.ObjectInputStream stream) throws InvalidObjectException {
-            throw new InvalidObjectException("Proxy required");
+        @Override
+        int getTag() {
+            return DIRECT_CONSTRUCTOR_HANDLE;
         }
 
-        private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-            throw new InvalidObjectException("Proxy required");
-        }
-
-        private Object writeReplace() {
-            return new SerializationProxy(this);
-        }
-
-        private static class SerializationProxy implements Serializable {
-            private final Class<?> owner;
-            private final Class<?>[] parameters;
-
-            SerializationProxy(DirectConstructorSMethodHandle handle) {
-                Constructor<?> Constructor = Utils.doPrivileged(() -> MethodHandles.reflectAs(Constructor.class, handle.getReal()));
-                owner = Constructor.getDeclaringClass();
-                parameters = Constructor.getParameterTypes();
+        private static DirectConstructorSMethodHandle read(int tag, ObjectInput stream)
+                throws IOException, ClassNotFoundException {
+            Class<?> owner = (Class<?>)stream.readObject();
+            int length = stream.readUnsignedByte();
+            Class<?>[] parameters = new Class<?>[length];
+            for (int i = 0; i < parameters.length; i++) {
+                parameters[i] = (Class<?>)stream.readObject();
             }
 
-            protected Constructor<?> getConstructor() throws NoSuchMethodException {
-                for (Constructor<?> declaredConstructor : owner.getDeclaredConstructors()) {
-                    if (Arrays.equals(declaredConstructor.getGenericParameterTypes(), parameters)) {
-                        return declaredConstructor;
-                    }
-                }
-                throw new NoSuchMethodException(toString());
-            }
-
-            private Object readResolve() throws NoSuchMethodException, IllegalAccessException {
-                Constructor<?> constructor = Utils.doPrivileged(this::getConstructor);
-                constructor.setAccessible(true);
+            try {
+                Constructor<?> constructor = SMethodHandle.findConstructor(owner, parameters);
                 return new DirectConstructorSMethodHandle(MethodHandles.publicLookup().unreflectConstructor(constructor));
+            } catch (NoSuchMethodException e) {
+                throw new IOException("can't found method: " + e.getMessage(), e);
+            } catch (IllegalAccessException e) {
+                throw new AssertionError(e);
             }
+        }
 
-            @Override
-            public String toString() {
-                StringBuilder builder = new StringBuilder();
-                builder.append(owner.getName())
-                        .append(".<init>(");
-                for (int i = 0; i < parameters.length; i++) {
-                    if (i != 0)
-                        builder.append(',');
-                    builder.append(parameters[i].getName());
-                }
-                builder.append(')');
-                return builder.toString();
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            Constructor<?> method = Utils.doPrivileged(() -> MethodHandles.reflectAs(Constructor.class, real));
+            if (!Modifier.isPrivate(method.getModifiers())) {
+                throw new NotSerializableException("special invocation to non-private method is not serializable.");
+            }
+            Class<?> owner = method.getDeclaringClass();
+            Class<?>[] parameters = method.getParameterTypes();
+
+            stream.writeObject(owner);
+            stream.writeByte(parameters.length);
+            for (Class<?> parameter : parameters) {
+                stream.writeObject(parameter);
             }
         }
     }
 
     private final static class DirectFieldSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         DirectFieldSMethodHandle(final MethodHandle real) {
             super(real);
             // check is direct field method handle.
             Utils.doPrivileged(() -> { MethodHandles.reflectAs(Field.class, real); });
         }
 
-        private void readObject(java.io.ObjectInputStream stream) throws InvalidObjectException {
-            throw new InvalidObjectException("Proxy required");
+        @Override
+        int getTag() {
+            // if setter, will return void.
+            return real.type().returnType() == void.class
+                    ? DIRECT_FIELD_SETTER_HANDLE
+                    : DIRECT_FIELD_GETTER_HANDLE;
         }
 
-        private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-            throw new InvalidObjectException("Proxy required");
-        }
+        private static DirectFieldSMethodHandle read(int tag, ObjectInput stream)
+                throws IOException, ClassNotFoundException {
+            Class<?> owner = (Class<?>)stream.readObject();
+            String name = stream.readUTF();
+            Class<?> type = (Class<?>)stream.readObject();
+            boolean isGet = tag == DIRECT_FIELD_GETTER_HANDLE;
 
-        private Object writeReplace() {
-            return new SerializationProxy(this);
-        }
-
-        private static class SerializationProxy implements Serializable {
-            private final Class<?> owner;
-            private final String name;
-            private final Class<?> type;
-            protected final boolean isGet;
-
-            SerializationProxy(DirectFieldSMethodHandle handle) {
-                Field field = Utils.doPrivileged(() -> MethodHandles.reflectAs(Field.class, handle.getReal()));
-                owner = field.getDeclaringClass();
-                name = field.getName();
-                type = field.getType();
-                // if setter, will return void.
-                isGet = handle.getReal().type().returnType() != void.class;
-            }
-
-            protected Field getField() throws NoSuchFieldException {
-                for (Field field : owner.getFields()) {
-                    if (field.getName().equals(name)
-                            && field.getType() == type)
-                        return field;
-                }
-                throw new NoSuchFieldException(toString());
-            }
-
-            private Object readResolve() throws IllegalAccessException, NoSuchFieldException {
-                Field field = Utils.doPrivileged(this::getField);
-                field.setAccessible(true);
+            try {
+                Field field = SMethodHandle.findField(owner, name, type);
                 MethodHandle handle;
                 if (isGet) handle = MethodHandles.publicLookup().unreflectGetter(field);
                 else handle = MethodHandles.publicLookup().unreflectSetter(field);
                 return new DirectFieldSMethodHandle(handle);
+            } catch (NoSuchFieldException e) {
+                throw new IOException("can't found field: " + e.getMessage(), e);
+            } catch (IllegalAccessException e) {
+                throw new AssertionError(e);
             }
+        }
 
-            @Override
-            public String toString() {
-                return owner.getName() + '.' + name + '/' + type + '/' + (isGet ? "get" : "set");
-            }
+        @Override void writeInternal(ObjectOutput stream) throws IOException {
+            Field field = Utils.doPrivileged(() -> MethodHandles.reflectAs(Field.class, real));
+            Class<?> owner = field.getDeclaringClass();
+            String name = field.getName();
+            Class<?> type = field.getType();
+
+            stream.writeObject(owner);
+            stream.writeUTF(name);
+            stream.writeObject(type);
         }
     }
 
-    private static final int VALUE_MASK = 0x00FFFFFF;
-    private static final int TYPE_MASK = 0xFF000000;
-
-    // for HandleAndClassAndIntSMethodHandle
-    public static final int TYPE_COLLECTOR = 0x00000000;
-    public static final int TYPE_VARARGS_COLLECTOR = 0x01000000;
-    public static final int TYPE_SPREADER = 0x02000000;
-    public static final int TYPE_FIXED_ARITY = 0x03000000;
-    public static final int TYPE_ARRAY_GETTER = 0x04000000;
-    public static final int TYPE_ARRAY_SETTER = 0x05000000;
-    public static final int TYPE_IDENTITY = 0x06000000;
-
-    // for HandleAndTypeSMethodHandle
-    public static final int TYPE_AS_CAST = 0x00000000;
-    public static final int TYPE_EXPLICIT_CAST = 0x01000000;
-    public static final int TYPE_INVOKER = 0x02000000;
-    public static final int TYPE_EXACT_INVOKER = 0x03000000;
-    public static final int TYPE_SPREAD_INVOKER = 0x04000000;
-
-    // for HandlesSMethodHandle
-    public static final int TYPE_FILTER_ARGUMENTS = 0x00000000;
-    public static final int TYPE_COLLECT_ARGUMENTS = 0x01000000;
-    public static final int TYPE_FILTER_RETURN = 0x02000000;
-    public static final int TYPE_FOLD_ARGUMENTS = 0x03000000;
-    public static final int TYPE_GUARD_WITH_TEST = 0x04000000;
-
     final static class HandleAndClassAndIntSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final SMethodHandle base;
         private final Class<?> arrayType;
-        private final int lengthAndType;
+        private final byte type;
+        private final byte length;
 
         public HandleAndClassAndIntSMethodHandle(SMethodHandle base, Class<?> arrayType, int length, int type) {
             super(makeReal(base, arrayType, length, type));
             this.base = base;
             this.arrayType = arrayType;
-            this.lengthAndType = length | type;
-        }
-
-        private Object readResolve() {
-            return new HandleAndClassAndIntSMethodHandle(base, arrayType, lengthAndType & VALUE_MASK, lengthAndType & TYPE_MASK);
+            this.type = (byte) type;
+            this.length = (byte)length;
         }
 
         private static MethodHandle makeReal(SMethodHandle base, Class<?> arrayType, int length, int type) {
             MethodHandle real;
             switch (type) {
-                case TYPE_COLLECTOR:
+                case COLLECTOR_HANDLE:
                     real = base.getReal().asCollector(arrayType, length);
                     break;
-                case TYPE_VARARGS_COLLECTOR:
+                case VARARGS_COLLECTOR_HANDLE:
                     real = base.getReal().asVarargsCollector(arrayType);
                     length = 0;
                     break;
-                case TYPE_SPREADER:
+                case SPREADER_HANDLE:
                     real = base.getReal().asSpreader(arrayType, length);
                     break;
-                case TYPE_FIXED_ARITY:
+                case FIXED_ARITY_HANDLE:
                     real = base.getReal().asFixedArity();
                     length = 0;
                     break;
-                case TYPE_ARRAY_GETTER:
+                case ARRAY_GETTER_HANDLE:
                     real = MethodHandles.arrayElementGetter(arrayType);
                     length = 0;
                     break;
-                case TYPE_ARRAY_SETTER:
+                case ARRAY_SETTER_HANDLE:
                     real = MethodHandles.arrayElementSetter(arrayType);
                     length = 0;
                     break;
-                case TYPE_IDENTITY:
+                case IDENTITY_HANDLE:
                     real = MethodHandles.identity(arrayType);
                     length = 0;
                     break;
                 default:
                     throw new IllegalArgumentException(String.format("invalid type: %08x", type));
             }
-            if ((length & 0xFF) != length) throw new IllegalArgumentException("length must be le 255. : " + length);
             return real;
+        }
+
+        @Override
+        int getTag() {
+            return type & 0xFF;
+        }
+
+        private static HandleAndClassAndIntSMethodHandle read(int tag, ObjectInput stream)
+                throws IOException, ClassNotFoundException {
+            SMethodHandle base = SMethodHandle.readHandle(stream);
+            Class<?> arrayType;
+            int length;
+
+            switch (tag) {
+                case COLLECTOR_HANDLE:
+                case SPREADER_HANDLE:
+                    arrayType = (Class<?>) stream.readObject();
+                    length = stream.readUnsignedByte();
+                    break;
+                case VARARGS_COLLECTOR_HANDLE:
+                case ARRAY_SETTER_HANDLE:
+                case ARRAY_GETTER_HANDLE:
+                case IDENTITY_HANDLE:
+                    arrayType = (Class<?>) stream.readObject();
+                    length = 0;
+                    break;
+                case FIXED_ARITY_HANDLE:
+                    arrayType = null;
+                    length = 0;
+                    break;
+                default:
+                    throw new AssertionError(String.format("invalid type: %08x", tag));
+            }
+            return new HandleAndClassAndIntSMethodHandle(base, arrayType, length, tag);
+        }
+
+        @Override void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, base);
+
+            switch (getTag()) {
+                case COLLECTOR_HANDLE:
+                case SPREADER_HANDLE:
+                    stream.writeObject(arrayType);
+                    stream.writeByte(length);
+                    break;
+                case VARARGS_COLLECTOR_HANDLE:
+                case ARRAY_SETTER_HANDLE:
+                case ARRAY_GETTER_HANDLE:
+                case IDENTITY_HANDLE:
+                    stream.writeObject(arrayType);
+                    break;
+                case FIXED_ARITY_HANDLE:
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format("invalid type: %08x", getTag()));
+            }
         }
     }
 
     final static class HandleAndTypeSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final SMethodHandle base;
         private final MethodType methodType;
-        private final int type;
-
-
-        public HandleAndTypeSMethodHandle(SMethodHandle base, MethodType methodType, int type) {
-            super(makeReal(base, methodType, 0, type));
-            this.base = base;
-            this.methodType = methodType;
-            this.type = type;
-        }
+        private final byte type;
+        private final byte value;
 
         public HandleAndTypeSMethodHandle(SMethodHandle base, MethodType methodType, int value, int type) {
             super(makeReal(base, methodType, value, type));
             this.base = base;
             this.methodType = methodType;
-            this.type = type;
-        }
-
-        private Object readResolve() {
-            return new HandleAndTypeSMethodHandle(base, methodType, type & VALUE_MASK, type & TYPE_MASK);
+            this.type = (byte)type;
+            this.value = (byte)value;
         }
 
         private static MethodHandle makeReal(SMethodHandle base, MethodType methodType, int value, int type) {
             MethodHandle real;
             switch (type) {
-                case TYPE_AS_CAST:
+                case AS_CAST_HANDLE:
                     real = base.getReal().asType(methodType);
                     break;
-                case TYPE_EXPLICIT_CAST:
+                case EXPLICIT_CAST_HANDLE:
                     real = MethodHandles.explicitCastArguments(base.getReal(), methodType);
                     break;
-                case TYPE_INVOKER:
+                case INVOKER_HANDLE:
                     real = MethodHandles.invoker(methodType);
                     real = MethodHandles.filterArguments(real, 0, GET_RIAL);
                     break;
-                case TYPE_EXACT_INVOKER:
+                case EXACT_INVOKER_HANDLE:
                     real = MethodHandles.exactInvoker(methodType);
                     real = MethodHandles.filterArguments(real, 0, GET_RIAL);
                     break;
-                case TYPE_SPREAD_INVOKER:
+                case SPREAD_INVOKER_HANDLE:
                     real = MethodHandles.spreadInvoker(methodType, value);
                     break;
                 default:
@@ -489,47 +512,89 @@ public abstract class SMethodHandle implements Serializable {
             }
             return real;
         }
+
+        @Override
+        int getTag() {
+            return type & 0xFF;
+        }
+
+        private static HandleAndTypeSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            final SMethodHandle base = SMethodHandle.readHandle(stream);
+            final MethodType methodType = (MethodType) stream.readObject();
+            final int value;
+            switch (tag) {
+                case AS_CAST_HANDLE:
+                case EXPLICIT_CAST_HANDLE:
+                case INVOKER_HANDLE:
+                case EXACT_INVOKER_HANDLE:
+                    value = 0;
+                    break;
+                case SPREAD_INVOKER_HANDLE:
+                    value = stream.readUnsignedByte();
+                    break;
+                default:
+                    throw new AssertionError(String.format("invalid type: %08x", tag));
+            }
+            return new HandleAndTypeSMethodHandle(base, methodType, value, tag);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, base);
+            stream.writeObject(methodType);
+            switch (getTag()) {
+                case AS_CAST_HANDLE:
+                case EXPLICIT_CAST_HANDLE:
+                case INVOKER_HANDLE:
+                case EXACT_INVOKER_HANDLE:
+                    break;
+                case SPREAD_INVOKER_HANDLE:
+                    stream.writeByte(value);
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format("invalid type: %08x", getTag()));
+            }
+        }
     }
 
     final static class HandlesSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final SMethodHandle first;
         private final SMethodHandle[] handles;
-        private final int type;
-
+        private final byte type;
+        private final byte value;
 
         public HandlesSMethodHandle(int value, int type, SMethodHandle first, SMethodHandle... handles) {
             super(makeReal(first, handles, value, type));
             this.first = first;
             this.handles = handles.clone();
-            this.type = type;
-        }
-
-        private Object readResolve() {
-            return new HandlesSMethodHandle(type & VALUE_MASK, type & TYPE_MASK, first, handles);
+            this.type = (byte)type;
+            this.value = (byte)value;
         }
 
         private static MethodHandle makeReal(SMethodHandle first, SMethodHandle[] handles, int value, int type) {
             MethodHandle real;
             switch (type) {
-                case TYPE_FILTER_ARGUMENTS:
+                case FILTER_ARGUMENTS_HANDLE:
                     MethodHandle[] reals;
                     reals = new MethodHandle[handles.length];
                     for (int i = 0; i < reals.length; i++) {
-                        if (handles[i] != null) 
+                        if (handles[i] != null)
                             reals[i] = handles[i].getReal();
                     }
                     real = MethodHandles.filterArguments(first.getReal(), value, reals);
                     break;
-                case TYPE_COLLECT_ARGUMENTS:
+                case COLLECT_ARGUMENTS_HANDLE:
                     real = MethodHandles.collectArguments(first.getReal(), value, handles[0].getReal());
                     break;
-                case TYPE_FILTER_RETURN:
+                case FILTER_RETURN_HANDLE:
                     real = MethodHandles.filterReturnValue(first.getReal(), handles[0].getReal());
                     break;
-                case TYPE_FOLD_ARGUMENTS:
+                case FOLD_ARGUMENTS_HANDLE:
                     real = MethodHandles.foldArguments(first.getReal(), handles[0].getReal());
                     break;
-                case TYPE_GUARD_WITH_TEST:
+                case GUARD_WITH_TEST_HANDLE:
                     real = MethodHandles.guardWithTest(first.getReal(), handles[0].getReal(), handles[1].getReal());
                     break;
                 default:
@@ -537,9 +602,76 @@ public abstract class SMethodHandle implements Serializable {
             }
             return real;
         }
+
+        @Override
+        int getTag() {
+            return type & 0xFF;
+        }
+
+        private static HandlesSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            SMethodHandle first = SMethodHandle.readHandle(stream);
+            SMethodHandle[] handles;
+            int value;
+            switch (tag) {
+                case FILTER_ARGUMENTS_HANDLE:
+                    value = stream.readUnsignedByte();
+                    int length = stream.readUnsignedByte();
+                    handles = new SMethodHandle[length];
+                    for (int i = 0; i < handles.length; i++) {
+                        handles[i] = SMethodHandle.readHandle(stream);
+                    }
+                    break;
+                case COLLECT_ARGUMENTS_HANDLE:
+                    value = stream.readUnsignedByte();
+                    handles = new SMethodHandle[] {SMethodHandle.readHandle(stream)};
+                    break;
+                case FILTER_RETURN_HANDLE:
+                case FOLD_ARGUMENTS_HANDLE:
+                    value = 0;
+                    handles = new SMethodHandle[] {SMethodHandle.readHandle(stream)};
+                    break;
+                case GUARD_WITH_TEST_HANDLE:
+                    value = 0;
+                    handles = new SMethodHandle[] {SMethodHandle.readHandle(stream), SMethodHandle.readHandle(stream)};
+                    break;
+                default:
+                    throw new AssertionError(String.format("invalid type: %08x", tag));
+            }
+            return new HandlesSMethodHandle(value, tag, first, handles);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, first);
+            switch (getTag()) {
+                case FILTER_ARGUMENTS_HANDLE:
+                    stream.writeByte(value);
+                    stream.writeByte(handles.length);
+                    for (int i = 0; i < handles.length; i++) {
+                        SMethodHandle.writeHandle(stream, handles[i]);
+                    }
+                    break;
+                case COLLECT_ARGUMENTS_HANDLE:
+                    stream.writeByte(value);
+                    SMethodHandle.writeHandle(stream, handles[0]);
+                    break;
+                case FILTER_RETURN_HANDLE:
+                case FOLD_ARGUMENTS_HANDLE:
+                    SMethodHandle.writeHandle(stream, handles[0]);
+                    break;
+                case GUARD_WITH_TEST_HANDLE:
+                    SMethodHandle.writeHandle(stream, handles[0]);
+                    SMethodHandle.writeHandle(stream, handles[1]);
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format("invalid type: %08x", getTag()));
+            }
+        }
     }
 
     final static class ConstantSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final Class<?> type;
         private final Object value;
 
@@ -549,29 +681,66 @@ public abstract class SMethodHandle implements Serializable {
             this.value = value;
         }
 
-        private Object readResolve() {
-            return new ConstantSMethodHandle(type, value);
+        @Override
+        int getTag() {
+            return CONSTANT_HANDLE;
+        }
+
+        private static ConstantSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            return new ConstantSMethodHandle((Class<?>) stream.readObject(), stream.readObject());
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            stream.writeObject(type);
+            stream.writeObject(value);
         }
     }
 
     final static class InsertArgumentsSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final SMethodHandle target;
-        private final int pos;
         private final Object[] values;
+        private final byte pos;
 
         public InsertArgumentsSMethodHandle(SMethodHandle target, int pos, Object[] values) {
             super(MethodHandles.insertArguments(target.getReal(), pos, values));
             this.target = target;
-            this.pos = pos;
+            this.pos = (byte) pos;
             this.values = values.clone();
         }
 
-        private Object readResolve() {
+        @Override
+        int getTag() {
+            return INSERT_ARGUMENTS_HANDLE;
+        }
+
+        private static InsertArgumentsSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            final SMethodHandle target = SMethodHandle.readHandle(stream);
+            final int pos = stream.readUnsignedByte();
+            final Object[] values = new Object[stream.readUnsignedByte()];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = stream.readObject();
+            }
+
             return new InsertArgumentsSMethodHandle(target, pos, values);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, target);
+            stream.writeByte(pos);
+            stream.writeByte(values.length);
+            for (Object value : values) {
+                stream.writeObject(value);
+            }
         }
     }
 
     final static class CatchExceptionSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final SMethodHandle target;
         private final Class<? extends Throwable> exceptionType;
         private final SMethodHandle handle;
@@ -583,12 +752,29 @@ public abstract class SMethodHandle implements Serializable {
             this.handle = handle;
         }
 
-        private Object readResolve() {
+        @Override
+        int getTag() {
+            return CATCH_EXCEPTION_HANDLE;
+        }
+
+        private static CatchExceptionSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            final SMethodHandle target = SMethodHandle.readHandle(stream);
+            final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) stream.readObject();
+            final SMethodHandle handle = SMethodHandle.readHandle(stream);
             return new CatchExceptionSMethodHandle(target, exceptionType, handle);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, target);
+            stream.writeObject(exceptionType);
+            SMethodHandle.writeHandle(stream, handle);
         }
     }
 
     final static class ThrowSMethodHandle extends SMethodHandle {
+        private static final long serialVersionUID = 1;
+
         private final Class<?> returnType;
         private final Class<? extends Throwable> exceptionType;
 
@@ -598,15 +784,30 @@ public abstract class SMethodHandle implements Serializable {
             this.exceptionType = exceptionType;
         }
 
-        private Object readResolve() {
+        @Override
+        int getTag() {
+            return THROW_HANDLE;
+        }
+
+        private static ThrowSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            final Class<?> returnType = (Class<?>) stream.readObject();
+            final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) stream.readObject();
             return new ThrowSMethodHandle(returnType, exceptionType);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            stream.writeObject(returnType);
+            stream.writeObject(exceptionType);
         }
     }
 
     final static class PermuteArgumentsSMethodHandle extends SMethodHandle {
-        private SMethodHandle target;
-        private MethodType newType;
-        private int[] reorder;
+        private static final long serialVersionUID = 1;
+
+        private final SMethodHandle target;
+        private final MethodType newType;
+        private final int[] reorder;
 
         public PermuteArgumentsSMethodHandle(SMethodHandle target, MethodType newType, int[] reorder) {
             super(MethodHandles.permuteArguments(target.real, newType, reorder));
@@ -628,8 +829,189 @@ public abstract class SMethodHandle implements Serializable {
             return new PermuteArgumentsSMethodHandle(target, newType, newReorder);
         }
 
-        private Object readResolve() {
-            return new PermuteArgumentsSMethodHandle(target, newType, reorder.clone());
+        @Override
+        int getTag() {
+            return PERMUTE_ARGUMENTS_HANDLE;
+        }
+
+        private static PermuteArgumentsSMethodHandle read(int tag, ObjectInput stream) throws IOException, ClassNotFoundException {
+            final SMethodHandle target = SMethodHandle.readHandle(stream);
+            final MethodType newType = (MethodType) stream.readObject();
+            final int[] reorder = new int[stream.readUnsignedByte()];
+            for (int i = 0; i < reorder.length; i++) {
+                reorder[i] = stream.readUnsignedByte();
+            }
+            return new PermuteArgumentsSMethodHandle(target, newType, reorder);
+        }
+
+        @Override
+        void writeInternal(ObjectOutput stream) throws IOException {
+            SMethodHandle.writeHandle(stream, target);
+            stream.writeObject(newType);
+            stream.writeByte(reorder.length);
+            for (int i = 0; i < reorder.length; i++) {
+                stream.writeByte(reorder[i]);
+            }
         }
     }
+
+    /**
+     * @return returns SerializationProxy instance.
+     */
+    protected Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        throw new InvalidObjectException("Proxy required");
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException {
+        throw new InvalidObjectException("Proxy required");
+    }
+
+    private final static class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1;
+
+        private transient SMethodHandle handle;
+
+        private void writeObject(ObjectOutputStream stream) throws IOException {
+            stream.writeByte(handle.getTag());
+            handle.writeInternal(stream);
+        }
+
+        private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            handle = readHandle(stream);
+            handle.getClass();
+        }
+
+        public SerializationProxy(SMethodHandle handle) {
+            this.handle = handle;
+        }
+
+        private Object readResolve() {
+            assert handle != null;
+            return handle;
+        }
+    }
+
+    private static SMethodHandle readHandle(ObjectInput stream) throws IOException, ClassNotFoundException {
+        int tag = stream.readUnsignedByte();
+        switch (tag) {
+            case NULL_HANDLE:
+                return null;
+            // directs
+            case DIRECT_METHOD_HANDLE:
+            case DIRECT_SPECIAL_METHOD_HANDLE:
+                return DirectMethodSMethodHandle.read(tag, stream);
+            case DIRECT_CONSTRUCTOR_HANDLE:
+                return DirectConstructorSMethodHandle.read(tag, stream);
+            case DIRECT_FIELD_GETTER_HANDLE:
+            case DIRECT_FIELD_SETTER_HANDLE:
+                return DirectFieldSMethodHandle.read(tag, stream);
+            // for HandleAndClassAndIntSMethodHandle
+            case COLLECTOR_HANDLE:
+            case VARARGS_COLLECTOR_HANDLE:
+            case SPREADER_HANDLE:
+            case FIXED_ARITY_HANDLE:
+            case ARRAY_GETTER_HANDLE:
+            case ARRAY_SETTER_HANDLE:
+            case IDENTITY_HANDLE:
+                return HandleAndClassAndIntSMethodHandle.read(tag, stream);
+            // for HandleAndTypeSMethodHandle
+            case AS_CAST_HANDLE:
+            case EXPLICIT_CAST_HANDLE:
+            case INVOKER_HANDLE:
+            case EXACT_INVOKER_HANDLE:
+            case SPREAD_INVOKER_HANDLE:
+                return HandleAndTypeSMethodHandle.read(tag, stream);
+            // for HandlesSMethodHandle
+            case FILTER_ARGUMENTS_HANDLE:
+            case COLLECT_ARGUMENTS_HANDLE:
+            case FILTER_RETURN_HANDLE:
+            case FOLD_ARGUMENTS_HANDLE:
+            case GUARD_WITH_TEST_HANDLE:
+                return HandlesSMethodHandle.read(tag, stream);
+            // others
+            case CONSTANT_HANDLE:
+                return ConstantSMethodHandle.read(tag, stream);
+            case INSERT_ARGUMENTS_HANDLE:
+                return InsertArgumentsSMethodHandle.read(tag, stream);
+            case CATCH_EXCEPTION_HANDLE:
+                return CatchExceptionSMethodHandle.read(tag, stream);
+            case THROW_HANDLE:
+                return ThrowSMethodHandle.read(tag, stream);
+            case PERMUTE_ARGUMENTS_HANDLE:
+                return PermuteArgumentsSMethodHandle.read(tag, stream);
+            default:
+                throw new IllegalArgumentException(String.format("invalid type: %02x", tag));
+        }
+    }
+
+    private static void writeHandle(ObjectOutput stream, SMethodHandle handle) throws IOException {
+        if (handle == null) {
+            stream.writeByte(NULL_HANDLE);
+        } else {
+            stream.writeByte(handle.getTag());
+            handle.writeInternal(stream);
+        }
+    }
+
+    // abstracts
+    abstract int getTag();
+    abstract void writeInternal(ObjectOutput stream) throws IOException;
+
+    // utilities
+    private static Method findMethod(Class<?> owner, String name, Class<?> result, Class<?>[] parameters) throws NoSuchMethodException {
+        for (Method declaredMethod : owner.getDeclaredMethods()) {
+            if (declaredMethod.getName().equals(name)
+                    && Arrays.equals(declaredMethod.getGenericParameterTypes(), parameters)
+                    && declaredMethod.getReturnType() == result) {
+                declaredMethod.setAccessible(true);
+                return declaredMethod;
+            }
+        }
+        throw new NoSuchMethodException(methodToString(owner, name, result, parameters));
+    }
+
+    private static Constructor<?> findConstructor(Class<?> owner, Class<?>[] parameters) throws NoSuchMethodException {
+        for (Constructor<?> declaredConstructor : owner.getDeclaredConstructors()) {
+            if (Arrays.equals(declaredConstructor.getGenericParameterTypes(), parameters)) {
+                declaredConstructor.setAccessible(true);
+                return declaredConstructor;
+            }
+        }
+        throw new NoSuchMethodException(methodToString(owner, "<init>", void.class, parameters));
+    }
+
+    private static Field findField(Class<?> owner, String name, Class<?> type) throws NoSuchFieldException {
+        for (Field declaredField : owner.getDeclaredFields()) {
+            if (declaredField.getName().equals(name)
+                    && declaredField.getType() == type)
+                declaredField.setAccessible(true);
+            return declaredField;
+        }
+        throw new NoSuchFieldException(fieldToString(owner, name, type));
+    }
+
+    public static String methodToString(Class<?> owner, String name, Class<?> result, Class<?>[] parameters) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(owner.getName())
+                .append('.')
+                .append(name)
+                .append('(');
+        for (int i = 0; i < parameters.length; i++) {
+            if (i != 0)
+                builder.append(',');
+            builder.append(parameters[i].getName());
+        }
+        builder.append(')').append(result.getName());
+        return builder.toString();
+    }
+
+    public static String fieldToString(Class<?> owner, String name, Class<?> type) {
+        return owner.getName() + '.' + name + '/' + type;
+    }
+    
+    private static final long serialVersionUID = 1;
 }

@@ -346,7 +346,7 @@ public class SMethodHandles {
         if (elementClass == null) throw new IllegalArgumentException("not an array: " + arrayClass);
         return new SMethodHandle.HandleAndClassAndIntSMethodHandle(null, 
                 arrayClass, 0, 
-                SMethodHandle.TYPE_ARRAY_GETTER);
+                SMethodHandle.ARRAY_GETTER_HANDLE);
     }
 
     /**
@@ -360,7 +360,7 @@ public class SMethodHandles {
         if (elementClass == null) throw new IllegalArgumentException("not an array: " + arrayClass);
         return new SMethodHandle.HandleAndClassAndIntSMethodHandle(null,
                 arrayClass, 0, 
-                SMethodHandle.TYPE_ARRAY_SETTER);
+                SMethodHandle.ARRAY_SETTER_HANDLE);
     }
 
     /// method handle invocation (reflective style)
@@ -372,7 +372,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#spreadInvoker(MethodType, int)}
      */
     static public SMethodHandle spreadInvoker(MethodType type, int leadingArgCount) {
-        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, leadingArgCount, SMethodHandle.TYPE_SPREAD_INVOKER);
+        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, leadingArgCount, SMethodHandle.SPREAD_INVOKER_HANDLE);
     }
 
     /**
@@ -381,7 +381,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#exactInvoker(MethodType)}
      */
     static public SMethodHandle exactInvoker(MethodType type) {
-        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, SMethodHandle.TYPE_EXACT_INVOKER);
+        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, 0, SMethodHandle.EXACT_INVOKER_HANDLE);
     }
 
     /**
@@ -390,7 +390,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#invoker(MethodType)}
      */
     static public SMethodHandle invoker(MethodType type) {
-        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, SMethodHandle.TYPE_INVOKER);
+        return new SMethodHandle.HandleAndTypeSMethodHandle(null, type, 0, SMethodHandle.INVOKER_HANDLE);
     }
 
     /// method handle modification (creation from other method handles)
@@ -402,7 +402,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#explicitCastArguments(MethodHandle, MethodType)}
      */
     public static SMethodHandle explicitCastArguments(SMethodHandle target, MethodType newType) {
-        return new SMethodHandle.HandleAndTypeSMethodHandle(target, newType, SMethodHandle.TYPE_EXPLICIT_CAST);
+        return new SMethodHandle.HandleAndTypeSMethodHandle(target, newType, 0, SMethodHandle.EXPLICIT_CAST_HANDLE);
     }
 
     /**
@@ -432,7 +432,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#identity(Class)}
      */
     public static SMethodHandle identity(Class<?> type) {
-        return new SMethodHandle.HandleAndClassAndIntSMethodHandle(null, type, 0, SMethodHandle.HandleAndClassAndIntSMethodHandle.TYPE_IDENTITY);
+        return new SMethodHandle.HandleAndClassAndIntSMethodHandle(null, type, 0, SMethodHandle.HandleAndClassAndIntSMethodHandle.IDENTITY_HANDLE);
     }
 
     /**
@@ -492,7 +492,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)}
      */
     public static SMethodHandle filterArguments(SMethodHandle target, int pos, SMethodHandle... filters) {
-        return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.TYPE_FILTER_ARGUMENTS, target, filters);
+        return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.FILTER_ARGUMENTS_HANDLE, target, filters);
     }
 
     /**
@@ -503,7 +503,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#collectArguments(MethodHandle, int, MethodHandle)}
      */
     public static SMethodHandle collectArguments(SMethodHandle target, int pos, SMethodHandle filter) {
-        return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.TYPE_COLLECT_ARGUMENTS, target, filter);
+        return new SMethodHandle.HandlesSMethodHandle(pos, SMethodHandle.COLLECT_ARGUMENTS_HANDLE, target, filter);
     }
 
     /**
@@ -513,7 +513,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#filterReturnValue(MethodHandle, MethodHandle)}
      */
     public static SMethodHandle filterReturnValue(SMethodHandle target, SMethodHandle filter) {
-        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.TYPE_FILTER_RETURN, target, filter);
+        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.FILTER_RETURN_HANDLE, target, filter);
     }
 
     /**
@@ -523,7 +523,7 @@ public class SMethodHandles {
      * @return same as {@link MethodHandles#foldArguments(MethodHandle, MethodHandle)}
      */
     public static SMethodHandle foldArguments(SMethodHandle target, SMethodHandle combiner) {
-        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.TYPE_FOLD_ARGUMENTS, target, combiner);
+        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.FOLD_ARGUMENTS_HANDLE, target, combiner);
     }
 
     /**
@@ -536,7 +536,7 @@ public class SMethodHandles {
     public static SMethodHandle guardWithTest(SMethodHandle test,
                                               SMethodHandle target,
                                               SMethodHandle fallback) {
-        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.TYPE_GUARD_WITH_TEST, test, target, fallback);
+        return new SMethodHandle.HandlesSMethodHandle(0, SMethodHandle.GUARD_WITH_TEST_HANDLE, test, target, fallback);
     }
 
     /**
