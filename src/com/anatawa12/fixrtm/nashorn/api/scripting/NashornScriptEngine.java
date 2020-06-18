@@ -369,7 +369,7 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
     }
 
     // Retrieve nashorn Global object for a given ScriptContext object
-    private Global getNashornGlobalFrom(final ScriptContext ctxt) {
+    Global getNashornGlobalFrom(final ScriptContext ctxt) {
         if (_global_per_engine) {
             // shared single global object for all ENGINE_SCOPE Bindings
             return global;
