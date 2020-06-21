@@ -37,7 +37,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,13 +52,13 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.NativeArray;
 public final class ScriptingFunctions {
 
     /** Handle to implementation of {@link ScriptingFunctions#readLine} - Nashorn extension */
-    public static final MethodHandle READLINE = findOwnMH("readLine", Object.class, Object.class, Object.class);
+    public static final SMethodHandle READLINE = findOwnMH("readLine", Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ScriptingFunctions#readFully} - Nashorn extension */
-    public static final MethodHandle READFULLY = findOwnMH("readFully",     Object.class, Object.class, Object.class);
+    public static final SMethodHandle READFULLY = findOwnMH("readFully",     Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ScriptingFunctions#exec} - Nashorn extension */
-    public static final MethodHandle EXEC = findOwnMH("exec",     Object.class, Object.class, Object[].class);
+    public static final SMethodHandle EXEC = findOwnMH("exec",     Object.class, Object.class, Object[].class);
 
     /** EXEC name - special property used by $EXEC API. */
     public static final String EXEC_NAME = "$EXEC";
@@ -268,8 +269,8 @@ public final class ScriptingFunctions {
         return out;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), ScriptingFunctions.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ScriptingFunctions.class, name, MH.type(rtype, types));
     }
 
     /**

@@ -52,8 +52,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.invoke.CallSite;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Collections;
@@ -125,7 +126,7 @@ public abstract class Type implements Comparable<Type>, BytecodeOps, Serializabl
     /** Set way below Integer.MAX_VALUE to prevent overflow when adding weights. Objects are still heaviest. */
     protected static final int MAX_WEIGHT = 20;
 
-    static final Call BOOTSTRAP = staticCallNoLookup(Bootstrap.class, "mathBootstrap", CallSite.class, MethodHandles.Lookup.class, String.class, MethodType.class, int.class);
+    static final Call BOOTSTRAP = staticCallNoLookup(Bootstrap.class, "mathBootstrap", SCallSite.class, MethodHandles.Lookup.class, String.class, MethodType.class, int.class);
 
     static final Handle MATHBOOTSTRAP = new Handle(H_INVOKESTATIC, BOOTSTRAP.className(), "mathBootstrap", BOOTSTRAP.descriptor());
 

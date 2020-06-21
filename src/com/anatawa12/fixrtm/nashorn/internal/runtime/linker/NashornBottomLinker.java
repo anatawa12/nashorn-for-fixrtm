@@ -31,7 +31,7 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.GET_UNDEFINED
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.TYPE_OBJECT_INDEX;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.HashMap;
 import java.util.Map;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
@@ -73,13 +73,13 @@ final class NashornBottomLinker implements GuardingDynamicLinker, GuardingTypeCo
         return linkBean(linkRequest, linkerServices);
     }
 
-    private static final MethodHandle EMPTY_PROP_GETTER =
+    private static final SMethodHandle EMPTY_PROP_GETTER =
             MH.dropArguments(MH.constant(Object.class, UNDEFINED), 0, Object.class);
-    private static final MethodHandle EMPTY_ELEM_GETTER =
+    private static final SMethodHandle EMPTY_ELEM_GETTER =
             MH.dropArguments(EMPTY_PROP_GETTER, 0, Object.class);
-    private static final MethodHandle EMPTY_PROP_SETTER =
+    private static final SMethodHandle EMPTY_PROP_SETTER =
             MH.asType(EMPTY_ELEM_GETTER, EMPTY_ELEM_GETTER.type().changeReturnType(void.class));
-    private static final MethodHandle EMPTY_ELEM_SETTER =
+    private static final SMethodHandle EMPTY_ELEM_SETTER =
             MH.dropArguments(EMPTY_PROP_SETTER, 0, Object.class);
 
     private static GuardedInvocation linkBean(final LinkRequest linkRequest, final LinkerServices linkerServices) throws Exception {
@@ -150,7 +150,7 @@ final class NashornBottomLinker implements GuardingDynamicLinker, GuardingTypeCo
      * @throws Exception if something goes wrong
      */
     private static GuardedInvocation convertToTypeNoCast(final Class<?> sourceType, final Class<?> targetType) throws Exception {
-        final MethodHandle mh = CONVERTERS.get(targetType);
+        final SMethodHandle mh = CONVERTERS.get(targetType);
         if (mh != null) {
             return new GuardedInvocation(mh);
         }
@@ -158,7 +158,7 @@ final class NashornBottomLinker implements GuardingDynamicLinker, GuardingTypeCo
         return null;
     }
 
-    private static GuardedInvocation getInvocation(final MethodHandle handle, final Object self, final LinkerServices linkerServices, final CallSiteDescriptor desc) {
+    private static GuardedInvocation getInvocation(final SMethodHandle handle, final Object self, final LinkerServices linkerServices, final CallSiteDescriptor desc) {
         return Bootstrap.asTypeSafeReturn(new GuardedInvocation(handle, Guards.getClassGuard(self.getClass())), linkerServices, desc);
     }
 
@@ -190,7 +190,7 @@ final class NashornBottomLinker implements GuardingDynamicLinker, GuardingTypeCo
         throw new AssertionError("unknown call type " + desc);
     }
 
-    private static final Map<Class<?>, MethodHandle> CONVERTERS = new HashMap<>();
+    private static final Map<Class<?>, SMethodHandle> CONVERTERS = new HashMap<>();
     static {
         CONVERTERS.put(boolean.class, JSType.TO_BOOLEAN.methodHandle());
         CONVERTERS.put(double.class, JSType.TO_NUMBER.methodHandle());

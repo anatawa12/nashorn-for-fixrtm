@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.beans.GuardedInvocationComponent.ValidationType;
@@ -103,7 +104,7 @@ class ClassLinker extends BeanLinker {
         setPropertyGetter("static", FOR_CLASS, ValidationType.EXACT_CLASS);
     }
 
-    private static final MethodHandle FOR_CLASS = new Lookup(MethodHandles.lookup()).findStatic(StaticClass.class,
+    private static final SMethodHandle FOR_CLASS = new Lookup(SMethodHandles.l(MethodHandles.lookup())).findStatic(StaticClass.class,
             "forClass", MethodType.methodType(StaticClass.class, Class.class));
 
 }

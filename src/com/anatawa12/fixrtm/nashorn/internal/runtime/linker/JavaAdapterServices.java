@@ -33,6 +33,9 @@ import static jdk.internal.org.objectweb.asm.Opcodes.ALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.RETURN;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -58,7 +61,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
  */
 public final class JavaAdapterServices {
     private static final ThreadLocal<ScriptObject> classOverrides = new ThreadLocal<>();
-    private static final MethodHandle NO_PERMISSIONS_INVOKER = createNoPermissionsInvoker();
+    private static final SMethodHandle NO_PERMISSIONS_INVOKER = createNoPermissionsInvoker();
 
     private JavaAdapterServices() {
     }
@@ -72,7 +75,7 @@ public final class JavaAdapterServices {
      * @param type the method type it has to conform to
      * @return the appropriately adapted method handle for invoking the script function.
      */
-    public static MethodHandle getHandle(final ScriptFunction fn, final MethodType type) {
+    public static SMethodHandle getHandle(final ScriptFunction fn, final MethodType type) {
         // JS "this" will be global object or undefined depending on if 'fn' is strict or not
         return bindAndAdaptHandle(fn, fn.isStrict()? ScriptRuntime.UNDEFINED : Context.getGlobal(), type);
     }
@@ -89,7 +92,7 @@ public final class JavaAdapterServices {
      * property is either null or undefined, or "toString" was requested as the name, but the object doesn't directly
      * define it but just inherits it through prototype.
      */
-    public static MethodHandle getHandle(final Object obj, final String name, final MethodType type) {
+    public static SMethodHandle getHandle(final Object obj, final String name, final MethodType type) {
         if (! (obj instanceof ScriptObject)) {
             throw typeError("not.an.object", ScriptRuntime.safeToString(obj));
         }
@@ -124,14 +127,14 @@ public final class JavaAdapterServices {
 
     /**
      * Takes a method handle and an argument to it, and invokes the method handle passing it the argument. Basically
-     * equivalent to {@code method.invokeExact(arg)}, except that the method handle will be invoked in a protection
+     * equivalent to {@code method.getReal().invokeExact(arg)}, except that the method handle will be invoked in a protection
      * domain with absolutely no permissions.
      * @param method the method handle to invoke. The handle must have the exact type of {@code void(Object)}.
      * @param arg the argument to pass to the handle.
      * @throws Throwable if anything goes wrong.
      */
-    public static void invokeNoPermissions(final MethodHandle method, final Object arg) throws Throwable {
-        NO_PERMISSIONS_INVOKER.invokeExact(method, arg);
+    public static void invokeNoPermissions(final SMethodHandle method, final Object arg) throws Throwable {
+        NO_PERMISSIONS_INVOKER.getReal().invokeExact(method, arg);
     }
 
     /**
@@ -154,23 +157,26 @@ public final class JavaAdapterServices {
         classOverrides.set(overrides);
     }
 
-    private static MethodHandle bindAndAdaptHandle(final ScriptFunction fn, final Object self, final MethodType type) {
+    private static SMethodHandle bindAndAdaptHandle(final ScriptFunction fn, final Object self, final MethodType type) {
         return Bootstrap.getLinkerServices().asType(ScriptObject.pairArguments(fn.getBoundInvokeHandle(self), type, false), type);
     }
 
-    private static MethodHandle createNoPermissionsInvoker() {
+    private static SMethodHandle createNoPermissionsInvoker() {
         final String className = "NoPermissionsInvoker";
 
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         cw.visit(Opcodes.V1_7, ACC_PUBLIC | ACC_SUPER | ACC_FINAL, className, null, "java/lang/Object", null);
         final Type objectType = Type.getType(Object.class);
-        final Type methodHandleType = Type.getType(MethodHandle.class);
+        final Type javaMethodHandleType = Type.getType(MethodHandle.class);
+        final Type methodHandleType = Type.getType(SMethodHandle.class);
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "invoke",
                 Type.getMethodDescriptor(Type.VOID_TYPE, methodHandleType, objectType), null, null));
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
+        mv.invokevirtual(methodHandleType.getInternalName(), "getReal", Type.getMethodDescriptor(
+                javaMethodHandleType), false);
         mv.visitVarInsn(ALOAD, 1);
-        mv.invokevirtual(methodHandleType.getInternalName(), "invokeExact", Type.getMethodDescriptor(
+        mv.invokevirtual(javaMethodHandleType.getInternalName(), "invokeExact", Type.getMethodDescriptor(
                 Type.VOID_TYPE, objectType), false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
@@ -181,7 +187,7 @@ public final class JavaAdapterServices {
         final ClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
             @Override
             public ClassLoader run() {
-                return new SecureClassLoader(null) {
+                return new SecureClassLoader(SMethodHandle.class.getClassLoader()) {
                     @Override
                     protected Class<?> findClass(final String name) throws ClassNotFoundException {
                         if(name.equals(className)) {
@@ -195,8 +201,8 @@ public final class JavaAdapterServices {
         });
 
         try {
-            return MethodHandles.lookup().findStatic(Class.forName(className, true, loader), "invoke",
-                    MethodType.methodType(void.class, MethodHandle.class, Object.class));
+            return SMethodHandles.l(MethodHandles.lookup()).findStatic(Class.forName(className, true, loader), "invoke",
+                    MethodType.methodType(void.class, SMethodHandle.class, Object.class));
         } catch(final ReflectiveOperationException e) {
             throw new AssertionError(e.getMessage(), e);
         }
@@ -208,7 +214,7 @@ public final class JavaAdapterServices {
      * @param returnType the return type
      * @return the converter for the expected return type
      */
-    public static MethodHandle getObjectConverter(final Class<?> returnType) {
+    public static SMethodHandle getObjectConverter(final Class<?> returnType) {
         return Bootstrap.getLinkerServices().getTypeConverter(Object.class, returnType);
     }
 

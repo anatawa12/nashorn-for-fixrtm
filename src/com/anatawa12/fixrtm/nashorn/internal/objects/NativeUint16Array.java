@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.objects;
 
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.specialCall;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -77,20 +78,20 @@ public final class NativeUint16Array extends ArrayBufferView {
 
     private static final class Uint16ArrayData extends TypedArrayData<CharBuffer> {
 
-        private static final MethodHandle GET_ELEM = specialCall(MethodHandles.lookup(), Uint16ArrayData.class, "getElem", int.class, int.class).methodHandle();
-        private static final MethodHandle SET_ELEM = specialCall(MethodHandles.lookup(), Uint16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
+        private static final SMethodHandle GET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint16ArrayData.class, "getElem", int.class, int.class).methodHandle();
+        private static final SMethodHandle SET_ELEM = specialCall(SMethodHandles.l(MethodHandles.lookup()), Uint16ArrayData.class, "setElem", void.class, int.class, int.class).methodHandle();
 
         private Uint16ArrayData(final CharBuffer nb, final int start, final int end) {
             super(((CharBuffer)nb.position(start).limit(end)).slice(), end - start);
         }
 
         @Override
-        protected MethodHandle getGetElem() {
+        protected SMethodHandle getGetElem() {
             return GET_ELEM;
         }
 
         @Override
-        protected MethodHandle getSetElem() {
+        protected SMethodHandle getSetElem() {
             return SET_ELEM;
         }
 

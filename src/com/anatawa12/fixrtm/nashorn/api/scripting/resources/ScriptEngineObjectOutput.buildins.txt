@@ -1,0 +1,265 @@
+# ecma standard defined objects
+# defined in ECMA-262 5.1 section 15 Standard Built-in ECMAScript Objects
+# the line starts with '#' is comment, '!' is excluded
+# excluded values are small objects (e.g. number values) or singleton object so they will be commented.
+!NaN
+!Infinity
+# undefined always be undefined so commented
+#undefined
+eval
+parseInt
+parseFloat
+isNaN
+isFinite
+decodeURI
+decodeURIComponent
+encodeURI
+encodeURIComponent
+Object
+{
+ getPrototypeOf
+ getOwnPropertyDescriptor
+ getOwnPropertyNames
+ create
+ defineProperty
+ defineProperties
+ seal
+ freeze
+ preventExtensions
+ isSealed
+ isFrozen
+ isExtensible
+ keys
+ prototype
+ {
+  constructor
+  toString
+  toLocaleString
+  valueOf
+  hasOwnProperty
+  isPrototypeOf
+  propertyIsEnumerable
+ }
+}
+Function
+{
+ !length
+ prototype
+ {
+  constructor
+  toString
+  apply
+  call
+  bind
+ }
+}
+Array
+{
+ isArray
+ prototype
+ {
+  constructor
+  toString
+  toLocaleString
+  concat
+  join
+  pop
+  push
+  reverse
+  shift
+  slice
+  sort
+  splice
+  unshift
+  indexOf
+  lastIndexOf
+  every
+  some
+  forEach
+  map
+  filter
+  reduce
+  reduceRight
+ }
+}
+String
+{
+ fromCharCode
+ prototype
+ {
+  constructor
+  toString
+  valueOf
+  charAt
+  charCodeAt
+  concat
+  indexOf
+  lastIndexOf
+  localeCompare
+  match
+  replace
+  search
+  slice
+  split
+  substring
+  toLowerCase
+  toLocaleLowerCase
+  toUpperCase
+  trim
+ }
+}
+Boolean
+{
+ prototype
+ {
+  toString
+  valueOf
+ }
+}
+Number
+{
+ !MAX_VALUE
+ !MIN_VALUE
+ !NaN
+ !NEGATIVE_INFINITY
+ !POSITIVE_INFINITY
+ prototype
+ {
+  constructor
+  toString
+  toLocaleString
+  valueOf
+  toFixed
+  toExponential
+  toPrecision
+ }
+}
+Math
+{
+ #E
+ #LN10
+ #LN2
+ #LOG2E
+ #LOG10E
+ #PI
+ #SQRT1_2
+ #SQRT2
+ abs
+ acos
+ asin
+ atan
+ atan2
+ ceil
+ cos
+ exp
+ floor
+ log
+ max
+ min
+ pow
+ random
+ round
+ sin
+ sqrt
+ tan
+}
+Date
+{
+ parse
+ UTC
+ now
+ prototype
+ {
+  constructor
+  toString
+  toDateString
+  toTimeString
+  toLocaleString
+  toLocaleDateString
+  toLocaleTimeString
+  valueOf
+  getTime
+  getFullYear
+  getUTCFullYear
+  getMonth
+  getUTCMonth
+  getDate
+  getUTCDate
+  getDay
+  getUTCDay
+  getHours
+  getUTCHours
+  getMinutes
+  getUTCMinutes
+  getSeconds
+  getUTCSeconds
+  getMilliseconds
+  getUTCMilliseconds
+  getTimezoneOffset
+  setTime
+  setMilliseconds
+  setUTCMilliseconds
+  setSeconds
+  setUTCSeconds
+  setMinutes
+  setUTCMinutes
+  setHours
+  setUTCHours
+  setDate
+  setUTCDate
+  setMonth
+  setUTCMonth
+  setFullYear
+  setUTCFullYear
+  toUTCString
+  toISOString
+  toJSON
+ }
+}
+RegExp
+{
+ prototype
+ {
+  constructor
+  exec
+  test
+  toString
+ }
+}
+Error
+{
+ prototype
+ {
+  constructor
+  !name
+  !message
+  toString
+ }
+}
+EvalError
+RangeError
+ReferenceError
+SyntaxError
+TypeError
+URIError
+JSON
+{
+ parse
+ stringify
+}
+# non-required standard objects
+# defined in ECMA-262 5.1 section B
+escape
+unescape
+String.prototype.substr
+Date.prototype.getYear
+Date.prototype.setYear
+Date.prototype.toGMTString
+# defined in nashorn
+print
+load
+exit
+quit
+JSAdapter
+JavaImporter
+Java

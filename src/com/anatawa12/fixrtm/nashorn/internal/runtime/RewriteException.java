@@ -31,11 +31,12 @@ import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.vi
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.invoke.CallSite;
-import java.lang.invoke.ConstantCallSite;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SConstantCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -70,10 +71,10 @@ public final class RewriteException extends Exception {
     /** Call for getting the return value for the exception */
     public static final Call GET_RETURN_VALUE         = virtualCallNoLookup(RewriteException.class, "getReturnValueDestructive", Object.class);
     /** Call for the populate array bootstrap */
-    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", CallSite.class, Lookup.class, String.class, MethodType.class, int.class);
+    public static final Call BOOTSTRAP                = staticCallNoLookup(RewriteException.class, "populateArrayBootstrap", SCallSite.class, MethodHandles.Lookup.class, String.class, MethodType.class, int.class);
 
     /** Call for populating an array with local variable state */
-    private static final Call POPULATE_ARRAY           = staticCall(MethodHandles.lookup(), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
+    private static final Call POPULATE_ARRAY           = staticCall(SMethodHandles.l(MethodHandles.lookup()), RewriteException.class, "populateArray", Object[].class, Object[].class, int.class, Object[].class);
 
     /** Call for converting an array to a long array. */
     public static final Call TO_LONG_ARRAY   = staticCallNoLookup(RewriteException.class, "toLongArray",   long[].class, Object.class, RewriteException.class);
@@ -134,6 +135,9 @@ public final class RewriteException extends Exception {
         return new RewriteException(e, byteCodeSlots, byteCodeSymbolNames, previousContinuationEntryPoints);
     }
 
+    public static SCallSite populateArrayBootstrap(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
+        return populateArrayBootstrap(SMethodHandles.l(lookup), name, type, startIndex);
+    }
     /**
      * Bootstrap method for populate array
      * @param lookup     lookup
@@ -142,12 +146,12 @@ public final class RewriteException extends Exception {
      * @param startIndex start index to start writing to
      * @return callsite to array populator (constant)
      */
-    public static CallSite populateArrayBootstrap(final MethodHandles.Lookup lookup, final String name, final MethodType type, final int startIndex) {
-        MethodHandle mh = POPULATE_ARRAY.methodHandle();
+    public static SCallSite populateArrayBootstrap(final Lookup lookup, final String name, final MethodType type, final int startIndex) {
+        SMethodHandle mh = POPULATE_ARRAY.methodHandle();
         mh = MH.insertArguments(mh, 1, startIndex);
         mh = MH.asCollector(mh, Object[].class, type.parameterCount() - 1);
         mh = MH.asType(mh, type);
-        return new ConstantCallSite(mh);
+        return new SConstantCallSite(mh);
     }
 
     private static ScriptObject mergeSlotsWithScope(final Object[] byteCodeSlots, final String[] byteCodeSymbolNames) {

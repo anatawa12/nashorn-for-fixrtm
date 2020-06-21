@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.logging.Level;
@@ -113,7 +114,7 @@ public class Guards {
      * @return a method handle testing whether its first argument is of the specified class.
      */
     @SuppressWarnings("boxing")
-    public static MethodHandle isOfClass(final Class<?> clazz, final MethodType type) {
+    public static SMethodHandle isOfClass(final Class<?> clazz, final MethodType type) {
         final Class<?> declaredType = type.parameterType(0);
         if(clazz == declaredType) {
             LOG.log(Level.WARNING, "isOfClassGuardAlwaysTrue", new Object[] { clazz.getName(), 0, type, DynamicLinker.getLinkedCallSiteLocation() });
@@ -135,7 +136,7 @@ public class Guards {
      * @param type the method type
      * @return a method handle testing whether its first argument is of the specified class or subclass.
      */
-    public static MethodHandle isInstance(final Class<?> clazz, final MethodType type) {
+    public static SMethodHandle isInstance(final Class<?> clazz, final MethodType type) {
         return isInstance(clazz, 0, type);
     }
 
@@ -150,7 +151,7 @@ public class Guards {
      * @return a method handle testing whether its first argument is of the specified class or subclass.
      */
     @SuppressWarnings("boxing")
-    public static MethodHandle isInstance(final Class<?> clazz, final int pos, final MethodType type) {
+    public static SMethodHandle isInstance(final Class<?> clazz, final int pos, final MethodType type) {
         final Class<?> declaredType = type.parameterType(pos);
         if(clazz.isAssignableFrom(declaredType)) {
             LOG.log(Level.WARNING, "isInstanceGuardAlwaysTrue", new Object[] { clazz.getName(), pos, type, DynamicLinker.getLinkedCallSiteLocation() });
@@ -172,7 +173,7 @@ public class Guards {
      * the arguments are ignored.
      */
     @SuppressWarnings("boxing")
-    public static MethodHandle isArray(final int pos, final MethodType type) {
+    public static SMethodHandle isArray(final int pos, final MethodType type) {
         final Class<?> declaredType = type.parameterType(pos);
         if(declaredType.isArray()) {
             LOG.log(Level.WARNING, "isArrayGuardAlwaysTrue", new Object[] { pos, type, DynamicLinker.getLinkedCallSiteLocation() });
@@ -215,61 +216,61 @@ public class Guards {
         return false;
     }
 
-    private static MethodHandle getClassBoundArgumentTest(final MethodHandle test, final Class<?> clazz, final int pos, final MethodType type) {
+    private static SMethodHandle getClassBoundArgumentTest(final SMethodHandle test, final Class<?> clazz, final int pos, final MethodType type) {
         // Bind the class to the first argument of the test
         return asType(test.bindTo(clazz), pos, type);
     }
 
     /**
      * Takes a guard-test method handle, and adapts it to the requested type, returning a boolean. Only applies
-     * conversions as per {@link MethodHandle#asType(MethodType)}.
+     * conversions as per {@link SMethodHandle#asType(MethodType)}.
      * @param test the test method handle
      * @param type the type to adapt the method handle to
      * @return the adapted method handle
      */
-    public static MethodHandle asType(final MethodHandle test, final MethodType type) {
+    public static SMethodHandle asType(final SMethodHandle test, final MethodType type) {
         return test.asType(getTestType(test, type));
     }
 
     /**
      * Takes a guard-test method handle, and adapts it to the requested type, returning a boolean. Applies the passed
-     * {@link LinkerServices} object's {@link LinkerServices#asType(MethodHandle, MethodType)}.
+     * {@link LinkerServices} object's {@link LinkerServices#asType(SMethodHandle, MethodType)}.
      * @param linkerServices the linker services to use for type conversions
      * @param test the test method handle
      * @param type the type to adapt the method handle to
      * @return the adapted method handle
      */
-    public static MethodHandle asType(final LinkerServices linkerServices, final MethodHandle test, final MethodType type) {
+    public static SMethodHandle asType(final LinkerServices linkerServices, final SMethodHandle test, final MethodType type) {
         return linkerServices.asType(test, getTestType(test, type));
     }
 
-    private static MethodType getTestType(final MethodHandle test, final MethodType type) {
+    private static MethodType getTestType(final SMethodHandle test, final MethodType type) {
         return type.dropParameterTypes(test.type().parameterCount(),
                 type.parameterCount()).changeReturnType(boolean.class);
     }
 
-    private static MethodHandle asType(final MethodHandle test, final int pos, final MethodType type) {
+    private static SMethodHandle asType(final SMethodHandle test, final int pos, final MethodType type) {
         assert test != null;
         assert type != null;
         assert type.parameterCount() > 0;
         assert pos >= 0 && pos < type.parameterCount();
         assert test.type().parameterCount() == 1;
         assert test.type().returnType() == Boolean.TYPE;
-        return MethodHandles.permuteArguments(test.asType(test.type().changeParameterType(0, type.parameterType(pos))),
+        return SMethodHandles.permuteArguments(test.asType(test.type().changeParameterType(0, type.parameterType(pos))),
                 type.changeReturnType(Boolean.TYPE), new int[] { pos });
     }
 
-    private static final MethodHandle IS_INSTANCE = Lookup.PUBLIC.findVirtual(Class.class, "isInstance",
+    private static final SMethodHandle IS_INSTANCE = Lookup.PUBLIC.findVirtual(Class.class, "isInstance",
             MethodType.methodType(Boolean.TYPE, Object.class));
 
-    private static final MethodHandle IS_OF_CLASS;
-    private static final MethodHandle IS_ARRAY;
-    private static final MethodHandle IS_IDENTICAL;
-    private static final MethodHandle IS_NULL;
-    private static final MethodHandle IS_NOT_NULL;
+    private static final SMethodHandle IS_OF_CLASS;
+    private static final SMethodHandle IS_ARRAY;
+    private static final SMethodHandle IS_IDENTICAL;
+    private static final SMethodHandle IS_NULL;
+    private static final SMethodHandle IS_NOT_NULL;
 
     static {
-        final Lookup lookup = new Lookup(MethodHandles.lookup());
+        final Lookup lookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
 
         IS_OF_CLASS  = lookup.findOwnStatic("isOfClass",   Boolean.TYPE, Class.class, Object.class);
         IS_ARRAY     = lookup.findOwnStatic("isArray",     Boolean.TYPE, Object.class);
@@ -283,7 +284,7 @@ public class Guards {
      * @param clazz the class to test for.
      * @return the desired guard method.
      */
-    public static MethodHandle getClassGuard(final Class<?> clazz) {
+    public static SMethodHandle getClassGuard(final Class<?> clazz) {
         return IS_OF_CLASS.bindTo(clazz);
     }
 
@@ -292,7 +293,7 @@ public class Guards {
      * @param clazz the class to test for.
      * @return the desired guard method.
      */
-    public static MethodHandle getInstanceOfGuard(final Class<?> clazz) {
+    public static SMethodHandle getInstanceOfGuard(final Class<?> clazz) {
         return IS_INSTANCE.bindTo(clazz);
     }
 
@@ -301,7 +302,7 @@ public class Guards {
      * @param obj the object used as referential identity test
      * @return the desired guard method.
      */
-    public static MethodHandle getIdentityGuard(final Object obj) {
+    public static SMethodHandle getIdentityGuard(final Object obj) {
         return IS_IDENTICAL.bindTo(obj);
     }
 
@@ -309,7 +310,7 @@ public class Guards {
      * Returns a guard that tests whether the first argument is null.
      * @return a guard that tests whether the first argument is null.
      */
-    public static MethodHandle isNull() {
+    public static SMethodHandle isNull() {
         return IS_NULL;
     }
 
@@ -317,7 +318,7 @@ public class Guards {
      * Returns a guard that tests whether the first argument is not null.
      * @return a guard that tests whether the first argument is not null.
      */
-    public static MethodHandle isNotNull() {
+    public static SMethodHandle isNotNull() {
         return IS_NOT_NULL;
     }
 
@@ -346,16 +347,16 @@ public class Guards {
         return o1 == o2;
     }
 
-    private static MethodHandle constantTrue(final MethodType type) {
+    private static SMethodHandle constantTrue(final MethodType type) {
         return constantBoolean(Boolean.TRUE, type);
     }
 
-    private static MethodHandle constantFalse(final MethodType type) {
+    private static SMethodHandle constantFalse(final MethodType type) {
         return constantBoolean(Boolean.FALSE, type);
     }
 
-    private static MethodHandle constantBoolean(final Boolean value, final MethodType type) {
-        return MethodHandles.permuteArguments(MethodHandles.constant(Boolean.TYPE, value),
+    private static SMethodHandle constantBoolean(final Boolean value, final MethodType type) {
+        return SMethodHandles.permuteArguments(SMethodHandles.constant(Boolean.TYPE, value),
                 type.changeReturnType(Boolean.TYPE));
     }
 }

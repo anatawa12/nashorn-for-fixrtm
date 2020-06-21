@@ -28,7 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.objects;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
@@ -72,11 +72,11 @@ public final class NativeJSON extends ScriptObject {
 
     private static final Object JSOBJECT_INVOKER = new Object();
 
-    private static MethodHandle getJSOBJECT_INVOKER() {
+    private static SMethodHandle getJSOBJECT_INVOKER() {
         return Global.instance().getDynamicInvoker(JSOBJECT_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call",
                             Object.class, Object.class, Object.class);
                     }
@@ -85,11 +85,11 @@ public final class NativeJSON extends ScriptObject {
 
     private static final Object REPLACER_INVOKER = new Object();
 
-    private static MethodHandle getREPLACER_INVOKER() {
+    private static SMethodHandle getREPLACER_INVOKER() {
         return Global.instance().getDynamicInvoker(REPLACER_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", Object.class,
                             Object.class, Object.class, Object.class, Object.class);
                     }
@@ -233,20 +233,20 @@ public final class NativeJSON extends ScriptObject {
             if (value instanceof ScriptObject) {
                 final InvokeByName toJSONInvoker = getTO_JSON();
                 final ScriptObject svalue = (ScriptObject)value;
-                final Object toJSON = toJSONInvoker.getGetter().invokeExact(svalue);
+                final Object toJSON = toJSONInvoker.getGetter().getReal().invokeExact(svalue);
                 if (Bootstrap.isCallable(toJSON)) {
-                    value = toJSONInvoker.getInvoker().invokeExact(toJSON, svalue, key);
+                    value = toJSONInvoker.getInvoker().getReal().invokeExact(toJSON, svalue, key);
                 }
             } else if (value instanceof JSObject) {
                 final JSObject jsObj = (JSObject)value;
                 final Object toJSON = jsObj.getMember("toJSON");
                 if (Bootstrap.isCallable(toJSON)) {
-                    value = getJSOBJECT_INVOKER().invokeExact(toJSON, value);
+                    value = getJSOBJECT_INVOKER().getReal().invokeExact(toJSON, value);
                 }
             }
 
             if (state.replacerFunction != null) {
-                value = getREPLACER_INVOKER().invokeExact(state.replacerFunction, holder, key, value);
+                value = getREPLACER_INVOKER().getReal().invokeExact(state.replacerFunction, holder, key, value);
             }
         } catch(Error|RuntimeException t) {
             throw t;

@@ -29,7 +29,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,10 +58,10 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.arrays.ArrayIndex;
  */
 public final class NativeArguments extends ScriptObject {
 
-    private static final MethodHandle G$LENGTH = findOwnMH("G$length", Object.class, Object.class);
-    private static final MethodHandle S$LENGTH = findOwnMH("S$length", void.class, Object.class, Object.class);
-    private static final MethodHandle G$CALLEE = findOwnMH("G$callee", Object.class, Object.class);
-    private static final MethodHandle S$CALLEE = findOwnMH("S$callee", void.class, Object.class, Object.class);
+    private static final SMethodHandle G$LENGTH = findOwnMH("G$length", Object.class, Object.class);
+    private static final SMethodHandle S$LENGTH = findOwnMH("S$length", void.class, Object.class, Object.class);
+    private static final SMethodHandle G$CALLEE = findOwnMH("G$callee", Object.class, Object.class);
+    private static final SMethodHandle S$CALLEE = findOwnMH("S$callee", void.class, Object.class, Object.class);
 
     private static final PropertyMap map$;
 
@@ -334,7 +335,7 @@ public final class NativeArguments extends ScriptObject {
         this.callee = callee;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeArguments.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeArguments.class, name, MH.type(rtype, types));
     }
 }

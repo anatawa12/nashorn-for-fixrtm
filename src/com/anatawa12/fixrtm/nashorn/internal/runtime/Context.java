@@ -40,10 +40,11 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
@@ -132,7 +133,7 @@ public final class Context {
     private static final String LOAD_FX = "fx:";
     private static final String LOAD_NASHORN = "nashorn:";
 
-    private static MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
     private static MethodType CREATE_PROGRAM_FUNCTION_TYPE = MethodType.methodType(ScriptFunction.class, ScriptObject.class);
 
     /**
@@ -160,7 +161,7 @@ public final class Context {
      * ever needs this, given the very rare occurrence of swapping out only parts of
      * a builtin v.s. the entire builtin object
      */
-    private final Map<String, SwitchPoint> builtinSwitchPoints = new HashMap<>();
+    private final Map<String, SSwitchPoint> builtinSwitchPoints = new HashMap<>();
 
     /* Force DebuggerSupport to be loaded. */
     static {
@@ -715,7 +716,7 @@ public final class Context {
     }
 
     private static final class MultiGlobalCompiledScriptImpl implements MultiGlobalCompiledScript {
-        private final transient MethodHandle createProgramFunctionHandle;
+        private final transient SMethodHandle createProgramFunctionHandle;
 
         private MultiGlobalCompiledScriptImpl(Class<?> clazz) {
             this.createProgramFunctionHandle = getCreateProgramFunctionHandle(clazz);
@@ -1297,7 +1298,7 @@ public final class Context {
         return invokeCreateProgramFunctionHandle(getCreateProgramFunctionHandle(script), scope);
     }
 
-    private static MethodHandle getCreateProgramFunctionHandle(final Class<?> script) {
+    private static SMethodHandle getCreateProgramFunctionHandle(final Class<?> script) {
         try {
             return LOOKUP.findStatic(script, CREATE_PROGRAM_FUNCTION.symbolName(), CREATE_PROGRAM_FUNCTION_TYPE);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -1305,9 +1306,9 @@ public final class Context {
         }
     }
 
-    private static ScriptFunction invokeCreateProgramFunctionHandle(final MethodHandle createProgramFunctionHandle, final ScriptObject scope) {
+    private static ScriptFunction invokeCreateProgramFunctionHandle(final SMethodHandle createProgramFunctionHandle, final ScriptObject scope) {
         try {
-            return (ScriptFunction)createProgramFunctionHandle.invokeExact(scope);
+            return (ScriptFunction)createProgramFunctionHandle.getReal().invokeExact(scope);
         } catch (final RuntimeException|Error e) {
             throw e;
         } catch (final Throwable t) {
@@ -1531,7 +1532,7 @@ public final class Context {
      *
      * @return instrumented method handle, or null if logger not enabled
      */
-    public MethodHandle addLoggingToHandle(final Class<? extends Loggable> clazz, final MethodHandle mh, final Supplier<String> text) {
+    public SMethodHandle addLoggingToHandle(final Class<? extends Loggable> clazz, final SMethodHandle mh, final Supplier<String> text) {
         return addLoggingToHandle(clazz, Level.INFO, mh, Integer.MAX_VALUE, false, text);
     }
 
@@ -1547,7 +1548,7 @@ public final class Context {
      *
      * @return instrumented method handle, or null if logger not enabled
      */
-    public MethodHandle addLoggingToHandle(final Class<? extends Loggable> clazz, final Level level, final MethodHandle mh, final int paramStart, final boolean printReturnValue, final Supplier<String> text) {
+    public SMethodHandle addLoggingToHandle(final Class<? extends Loggable> clazz, final Level level, final SMethodHandle mh, final int paramStart, final boolean printReturnValue, final Supplier<String> text) {
         final DebugLogger log = getLogger(clazz);
         if (log.isEnabled()) {
             return MethodHandleFactory.addDebugPrintout(log, level, mh, paramStart, printReturnValue, text.get());
@@ -1574,7 +1575,7 @@ public final class Context {
      * properties and prototypes. In the future it might contain
      * logic to e.g. multiple switchpoint classes.
      */
-    public static final class BuiltinSwitchPoint extends SwitchPoint {
+    public static final class BuiltinSwitchPoint extends SSwitchPoint {
         //empty
     }
 
@@ -1583,9 +1584,9 @@ public final class Context {
      * @param name key name
      * @return new builtin switchpoint
      */
-    public SwitchPoint newBuiltinSwitchPoint(final String name) {
+    public SSwitchPoint newBuiltinSwitchPoint(final String name) {
         assert builtinSwitchPoints.get(name) == null;
-        final SwitchPoint sp = new BuiltinSwitchPoint();
+        final SSwitchPoint sp = new BuiltinSwitchPoint();
         builtinSwitchPoints.put(name, sp);
         return sp;
     }
@@ -1595,7 +1596,7 @@ public final class Context {
      * @param name key name
      * @return builtin switchpoint or null if none
      */
-    public SwitchPoint getBuiltinSwitchPoint(final String name) {
+    public SSwitchPoint getBuiltinSwitchPoint(final String name) {
         return builtinSwitchPoints.get(name);
     }
 

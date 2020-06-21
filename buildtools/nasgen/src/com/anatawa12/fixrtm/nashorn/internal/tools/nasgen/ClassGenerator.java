@@ -25,6 +25,8 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE_DESC;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_FINAL;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_PUBLIC;
@@ -277,6 +279,7 @@ public class ClassGenerator {
 
         mi.loadLiteral(memInfo.getName());
         mi.visitLdcInsn(new Handle(H_INVOKESTATIC, className, memInfo.getJavaName(), memInfo.getJavaDesc()));
+        mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKESTATIC);
 
         assert specs != null;
         if (!specs.isEmpty()) {
@@ -306,12 +309,14 @@ public class ClassGenerator {
         // setup getter method handle
         String javaName = GETTER_PREFIX + memInfo.getJavaName();
         mi.visitLdcInsn(new Handle(H_INVOKEVIRTUAL, className, javaName, getterDesc(memInfo)));
+        mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKEVIRTUAL);
         // setup setter method handle
         if (memInfo.isFinal()) {
             mi.pushNull();
         } else {
             javaName = SETTER_PREFIX + memInfo.getJavaName();
             mi.visitLdcInsn(new Handle(H_INVOKEVIRTUAL, className, javaName, setterDesc(memInfo)));
+            mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKEVIRTUAL);
         }
         mi.invokeStatic(ACCESSORPROPERTY_TYPE, ACCESSORPROPERTY_CREATE, ACCESSORPROPERTY_CREATE_DESC);
         // boolean Collection.add(property)
@@ -334,12 +339,14 @@ public class ClassGenerator {
         // setup getter method handle
         mi.visitLdcInsn(new Handle(H_INVOKESTATIC, className,
                 getter.getJavaName(), getter.getJavaDesc()));
+        mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKESTATIC);
         // setup setter method handle
         if (setter == null) {
             mi.pushNull();
         } else {
             mi.visitLdcInsn(new Handle(H_INVOKESTATIC, className,
                     setter.getJavaName(), setter.getJavaDesc()));
+            mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKESTATIC);
         }
         mi.invokeStatic(ACCESSORPROPERTY_TYPE, ACCESSORPROPERTY_CREATE, ACCESSORPROPERTY_CREATE_DESC);
         // boolean Collection.add(property)

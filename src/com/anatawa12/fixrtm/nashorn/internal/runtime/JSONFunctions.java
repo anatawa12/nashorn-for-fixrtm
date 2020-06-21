@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.concurrent.Callable;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 import com.anatawa12.fixrtm.nashorn.internal.parser.JSONParser;
@@ -40,11 +40,11 @@ public final class JSONFunctions {
 
     private static final Object REVIVER_INVOKER = new Object();
 
-    private static MethodHandle getREVIVER_INVOKER() {
+    private static SMethodHandle getREVIVER_INVOKER() {
         return Context.getGlobal().getDynamicInvoker(REVIVER_INVOKER,
-                new Callable<MethodHandle>() {
+                new Callable<SMethodHandle>() {
                     @Override
-                    public MethodHandle call() {
+                    public SMethodHandle call() {
                         return Bootstrap.createDynamicInvoker("dyn:call", Object.class,
                              Object.class, Object.class, String.class, Object.class);
                     }
@@ -131,7 +131,7 @@ public final class JSONFunctions {
 
         try {
              // Object.class, ScriptFunction.class, ScriptObject.class, String.class, Object.class);
-             return getREVIVER_INVOKER().invokeExact(reviver, (Object)holder, JSType.toString(name), val);
+             return getREVIVER_INVOKER().getReal().invokeExact(reviver, (Object)holder, JSType.toString(name), val);
         } catch(Error|RuntimeException t) {
             throw t;
         } catch(final Throwable t) {

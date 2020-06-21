@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.HashMap;
@@ -95,30 +96,30 @@ class StaticClassIntrospector extends FacetIntrospector {
     }
 
     @Override
-    Map<String, MethodHandle> getInnerClassGetters() {
-        final Map<String, MethodHandle> map = new HashMap<>();
+    Map<String, SMethodHandle> getInnerClassGetters() {
+        final Map<String, SMethodHandle> map = new HashMap<>();
         for(final Class<?> innerClass: membersLookup.getInnerClasses()) {
-            map.put(innerClass.getSimpleName(), editMethodHandle(MethodHandles.constant(StaticClass.class,
+            map.put(innerClass.getSimpleName(), editMethodHandle(SMethodHandles.constant(StaticClass.class,
                     StaticClass.forClass(innerClass))));
         }
         return map;
     }
 
     @Override
-    MethodHandle editMethodHandle(final MethodHandle mh) {
+    SMethodHandle editMethodHandle(final SMethodHandle mh) {
         return editStaticMethodHandle(mh);
     }
 
-    static MethodHandle editStaticMethodHandle(final MethodHandle mh) {
+    static SMethodHandle editStaticMethodHandle(final SMethodHandle mh) {
         return dropReceiver(mh, Object.class);
     }
 
-    static MethodHandle editConstructorMethodHandle(final MethodHandle cmh) {
+    static SMethodHandle editConstructorMethodHandle(final SMethodHandle cmh) {
         return dropReceiver(cmh, StaticClass.class);
     }
 
-    private static MethodHandle dropReceiver(final MethodHandle mh, final Class<?> receiverClass) {
-        MethodHandle newHandle = MethodHandles.dropArguments(mh, 0, receiverClass);
+    private static SMethodHandle dropReceiver(final SMethodHandle mh, final Class<?> receiverClass) {
+        SMethodHandle newHandle = SMethodHandles.dropArguments(mh, 0, receiverClass);
         // NOTE: this is a workaround for the fact that dropArguments doesn't preserve vararg collector state.
         if(mh.isVarargsCollector() && !newHandle.isVarargsCollector()) {
             final MethodType type = mh.type();

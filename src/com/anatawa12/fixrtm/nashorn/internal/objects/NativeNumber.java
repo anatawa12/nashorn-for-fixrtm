@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.rangeErro
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.math.RoundingMode;
@@ -60,9 +61,9 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.PrimitiveLookup;
 public final class NativeNumber extends ScriptObject {
 
     /** Method handle to create an object wrapper for a primitive number. */
-    static final MethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeNumber.class, Object.class));
+    static final SMethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeNumber.class, Object.class));
     /** Method handle to retrieve the Number prototype object. */
-    private static final MethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
+    private static final SMethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
 
     /** ECMA 15.7.3.2 largest positive finite value */
     @Property(attributes = Attribute.NON_ENUMERABLE_CONSTANT, where = Where.CONSTRUCTOR)
@@ -384,7 +385,7 @@ public final class NativeNumber extends ScriptObject {
         return str;
     }
 
-    private static MethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeNumber.class, name, type);
+    private static SMethodHandle findOwnMH(final String name, final MethodType type) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeNumber.class, name, type);
     }
 }

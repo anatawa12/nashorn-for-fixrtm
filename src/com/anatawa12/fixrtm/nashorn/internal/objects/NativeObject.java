@@ -29,7 +29,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.nio.ByteBuffer;
@@ -76,10 +77,10 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornBeansLinker;
 @ScriptClass("Object")
 public final class NativeObject {
     /** Methodhandle to proto getter */
-    public static final MethodHandle GET__PROTO__ = findOwnMH("get__proto__", ScriptObject.class, Object.class);
+    public static final SMethodHandle GET__PROTO__ = findOwnMH("get__proto__", ScriptObject.class, Object.class);
 
     /** Methodhandle to proto setter */
-    public static final MethodHandle SET__PROTO__ = findOwnMH("set__proto__", Object.class, Object.class, Object.class);
+    public static final SMethodHandle SET__PROTO__ = findOwnMH("set__proto__", Object.class, Object.class, Object.class);
 
     private static final Object TO_STRING = new Object();
 
@@ -501,10 +502,10 @@ public final class NativeObject {
             final InvokeByName toStringInvoker = getTO_STRING();
             final ScriptObject sobj = (ScriptObject)obj;
             try {
-                final Object toString = toStringInvoker.getGetter().invokeExact(sobj);
+                final Object toString = toStringInvoker.getGetter().getReal().invokeExact(sobj);
 
                 if (Bootstrap.isCallable(toString)) {
-                    return toStringInvoker.getInvoker().invokeExact(toString, sobj);
+                    return toStringInvoker.getInvoker().getReal().invokeExact(toString, sobj);
                 }
             } catch (final RuntimeException | Error e) {
                 throw e;
@@ -695,8 +696,8 @@ public final class NativeObject {
             final AccessorProperty[] props = new AccessorProperty[keys.length];
             for (int idx = 0; idx < keys.length; idx++) {
                 final String name = keys[idx];
-                final MethodHandle getter = Bootstrap.createDynamicInvoker("dyn:getMethod|getProp|getElem:" + name, MIRROR_GETTER_TYPE);
-                final MethodHandle setter = Bootstrap.createDynamicInvoker("dyn:setProp|setElem:" + name, MIRROR_SETTER_TYPE);
+                final SMethodHandle getter = Bootstrap.createDynamicInvoker("dyn:getMethod|getProp|getElem:" + name, MIRROR_GETTER_TYPE);
+                final SMethodHandle setter = Bootstrap.createDynamicInvoker("dyn:setProp|setElem:" + name, MIRROR_SETTER_TYPE);
                 props[idx] = AccessorProperty.create(name, 0, getter, setter);
             }
 
@@ -732,8 +733,8 @@ public final class NativeObject {
         final AccessorProperty[] props = new AccessorProperty[keys.size()];
         int idx = 0;
         for (final String name : keys) {
-            final MethodHandle getter = Bootstrap.createDynamicInvoker("dyn:getMethod|getProp|getElem:" + name, MIRROR_GETTER_TYPE);
-            final MethodHandle setter = Bootstrap.createDynamicInvoker("dyn:setProp|setElem:" + name, MIRROR_SETTER_TYPE);
+            final SMethodHandle getter = Bootstrap.createDynamicInvoker("dyn:getMethod|getProp|getElem:" + name, MIRROR_GETTER_TYPE);
+            final SMethodHandle setter = Bootstrap.createDynamicInvoker("dyn:setProp|setElem:" + name, MIRROR_SETTER_TYPE);
             props[idx] = AccessorProperty.create(name, 0, getter, setter);
             idx++;
         }
@@ -757,7 +758,7 @@ public final class NativeObject {
 
         final List<AccessorProperty> properties = new ArrayList<>(propertyNames.size() + methodNames.size());
         for(final String methodName: methodNames) {
-            final MethodHandle method;
+            final SMethodHandle method;
             try {
                 method = getBeanOperation(linker, "dyn:getMethod:" + methodName, getterType, source);
             } catch(final IllegalAccessError e) {
@@ -768,7 +769,7 @@ public final class NativeObject {
                     method), Lookup.EMPTY_SETTER));
         }
         for(final String propertyName: propertyNames) {
-            MethodHandle getter;
+            SMethodHandle getter;
             if(readablePropertyNames.contains(propertyName)) {
                 try {
                     getter = getBeanOperation(linker, "dyn:getProp:" + propertyName, getterType, source);
@@ -780,7 +781,7 @@ public final class NativeObject {
                 getter = Lookup.EMPTY_GETTER;
             }
             final boolean isWritable = writablePropertyNames.contains(propertyName);
-            MethodHandle setter;
+            SMethodHandle setter;
             if(isWritable) {
                 try {
                     setter = getBeanOperation(linker, "dyn:setProp:" + propertyName, setterType, source);
@@ -799,13 +800,13 @@ public final class NativeObject {
         targetObj.addBoundProperties(source, properties.toArray(new AccessorProperty[properties.size()]));
     }
 
-    private static MethodHandle getBoundBeanMethodGetter(final Object source, final MethodHandle methodGetter) {
+    private static SMethodHandle getBoundBeanMethodGetter(final Object source, final SMethodHandle methodGetter) {
         try {
             // NOTE: we're relying on the fact that "dyn:getMethod:..." return value is constant for any given method
             // name and object linked with BeansLinker. (Actually, an even stronger assumption is true: return value is
             // constant for any given method name and object's class.)
-            return MethodHandles.dropArguments(MethodHandles.constant(Object.class,
-                    Bootstrap.bindCallable(methodGetter.invoke(source), source, null)), 0, Object.class);
+            return SMethodHandles.dropArguments(SMethodHandles.constant(Object.class,
+                    Bootstrap.bindCallable(methodGetter.getReal().invoke(source), source, null)), 0, Object.class);
         } catch(RuntimeException|Error e) {
             throw e;
         } catch(final Throwable t) {
@@ -813,7 +814,7 @@ public final class NativeObject {
         }
     }
 
-    private static MethodHandle getBeanOperation(final GuardingDynamicLinker linker, final String operation,
+    private static SMethodHandle getBeanOperation(final GuardingDynamicLinker linker, final String operation,
             final MethodType methodType, final Object source) {
         final GuardedInvocation inv;
         try {
@@ -829,16 +830,16 @@ public final class NativeObject {
         return inv.getInvocation();
     }
 
-    private static boolean passesGuard(final Object obj, final MethodHandle guard) throws Throwable {
-        return guard == null || (boolean)guard.invoke(obj);
+    private static boolean passesGuard(final Object obj, final SMethodHandle guard) throws Throwable {
+        return guard == null || (boolean)guard.getReal().invoke(obj);
     }
 
     private static LinkRequest createLinkRequest(final String operation, final MethodType methodType, final Object source) {
-        return new LinkRequestImpl(CallSiteDescriptorFactory.create(MethodHandles.publicLookup(), operation,
+        return new LinkRequestImpl(CallSiteDescriptorFactory.create(SMethodHandles.publicLookup(), operation,
                 methodType), null, 0, false, source);
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeObject.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeObject.class, name, MH.type(rtype, types));
     }
 }

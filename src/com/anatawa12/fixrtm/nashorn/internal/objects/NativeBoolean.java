@@ -28,7 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.objects;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
@@ -52,9 +53,9 @@ public final class NativeBoolean extends ScriptObject {
     private final boolean value;
 
     /** Method handle to create an object wrapper for a primitive boolean. */
-    static final MethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeBoolean.class, Object.class));
+    static final SMethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeBoolean.class, Object.class));
     /** Method handle to retrieve the Boolean prototype object. */
-    private static final MethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
+    private static final SMethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
 
     // initialized by nasgen
     private static PropertyMap $nasgenmap$;
@@ -183,7 +184,7 @@ public final class NativeBoolean extends ScriptObject {
         return Global.instance().getBooleanPrototype();
     }
 
-    private static MethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeBoolean.class, name, type);
+    private static SMethodHandle findOwnMH(final String name, final MethodType type) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeBoolean.class, name, type);
     }
 }

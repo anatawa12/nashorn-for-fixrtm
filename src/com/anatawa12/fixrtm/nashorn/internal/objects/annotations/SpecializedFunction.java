@@ -29,7 +29,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptFunction;
@@ -159,7 +159,7 @@ public @interface SpecializedFunction {
          *
          * @return methodhandle for guard, or null if no guard is needed
          */
-        public MethodHandle getGuard() {
+        public SMethodHandle getGuard() {
             return null;
         }
 

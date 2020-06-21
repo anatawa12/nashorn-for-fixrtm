@@ -872,9 +872,9 @@ public final class NativeDate extends ScriptObject {
 
         try {
             final InvokeByName toIsoString = getTO_ISO_STRING();
-            final Object func = toIsoString.getGetter().invokeExact(sobj);
+            final Object func = toIsoString.getGetter().getReal().invokeExact(sobj);
             if (Bootstrap.isCallable(func)) {
-                return toIsoString.getInvoker().invokeExact(func, sobj, key);
+                return toIsoString.getInvoker().getReal().invokeExact(func, sobj, key);
             }
             throw typeError("not.a.function", ScriptRuntime.safeToString(func));
         } catch (final RuntimeException | Error e) {

@@ -28,7 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.isValid;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
@@ -75,8 +76,8 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.annotations.Function;
  */
 public final class NativeJavaPackage extends ScriptObject {
     private static final MethodHandleFunctionality MH = MethodHandleFactory.getFunctionality();
-    private static final MethodHandle CLASS_NOT_FOUND = findOwnMH("classNotFound", Void.TYPE, NativeJavaPackage.class);
-    private static final MethodHandle TYPE_GUARD = Guards.getClassGuard(NativeJavaPackage.class);
+    private static final SMethodHandle CLASS_NOT_FOUND = findOwnMH("classNotFound", Void.TYPE, NativeJavaPackage.class);
+    private static final SMethodHandle TYPE_GUARD = Guards.getClassGuard(NativeJavaPackage.class);
 
     /** Full name of package (includes path.) */
     private final String name;
@@ -219,8 +220,8 @@ public final class NativeJavaPackage extends ScriptObject {
         return noSuchProperty(desc, request);
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeJavaPackage.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeJavaPackage.class, name, MH.type(rtype, types));
     }
 
     private Object createProperty(final String propertyName) {

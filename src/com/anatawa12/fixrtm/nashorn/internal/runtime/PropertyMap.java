@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -95,8 +95,8 @@ public class PropertyMap implements Iterable<Object>, Serializable {
      * property map should only be used if it the same as the actual prototype map. */
     private transient SharedPropertyMap sharedProtoMap;
 
-    /** {@link SwitchPoint}s for gets on inherited properties. */
-    private transient HashMap<String, SwitchPoint> protoSwitches;
+    /** {@link SSwitchPoint}s for gets on inherited properties. */
+    private transient HashMap<String, SSwitchPoint> protoSwitches;
 
     /** History of maps, used to limit map duplication. */
     private transient WeakHashMap<Property, Reference<PropertyMap>> history;
@@ -330,19 +330,19 @@ public class PropertyMap implements Iterable<Object>, Serializable {
     }
 
     /**
-     * Return a SwitchPoint used to track changes of a property in a prototype.
+     * Return a SSwitchPoint used to track changes of a property in a prototype.
      *
      * @param key Property key.
-     * @return A shared {@link SwitchPoint} for the property.
+     * @return A shared {@link SSwitchPoint} for the property.
      */
-    public synchronized SwitchPoint getSwitchPoint(final String key) {
+    public synchronized SSwitchPoint getSwitchPoint(final String key) {
         if (protoSwitches == null) {
             protoSwitches = new HashMap<>();
         }
 
-        SwitchPoint switchPoint = protoSwitches.get(key);
+        SSwitchPoint switchPoint = protoSwitches.get(key);
         if (switchPoint == null) {
-            switchPoint = new SwitchPoint();
+            switchPoint = new SSwitchPoint();
             protoSwitches.put(key, switchPoint);
         }
 
@@ -356,13 +356,13 @@ public class PropertyMap implements Iterable<Object>, Serializable {
      */
     synchronized void invalidateProtoSwitchPoint(final String key) {
         if (protoSwitches != null) {
-            final SwitchPoint sp = protoSwitches.get(key);
+            final SSwitchPoint sp = protoSwitches.get(key);
             if (sp != null) {
                 protoSwitches.remove(key);
                 if (Context.DEBUG) {
                     protoInvalidations.increment();
                 }
-                SwitchPoint.invalidateAll(new SwitchPoint[]{sp});
+                SSwitchPoint.invalidateAll(new SSwitchPoint[]{sp});
             }
         }
     }
@@ -377,7 +377,7 @@ public class PropertyMap implements Iterable<Object>, Serializable {
                 if (Context.DEBUG) {
                     protoInvalidations.add(size);
                 }
-                SwitchPoint.invalidateAll(protoSwitches.values().toArray(new SwitchPoint[size]));
+                SSwitchPoint.invalidateAll(protoSwitches.values().toArray(new SSwitchPoint[size]));
                 protoSwitches.clear();
             }
         }
@@ -977,7 +977,7 @@ public class PropertyMap implements Iterable<Object>, Serializable {
      * Returns the shared prototype switch point, or null if this is not a shared prototype map.
      * @return the shared prototype switch point, or null
      */
-    SwitchPoint getSharedProtoSwitchPoint() {
+    SSwitchPoint getSharedProtoSwitchPoint() {
         return null;
     }
 

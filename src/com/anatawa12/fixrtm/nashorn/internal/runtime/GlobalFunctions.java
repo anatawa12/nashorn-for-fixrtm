@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 
@@ -37,58 +38,58 @@ import java.util.Locale;
 public final class GlobalFunctions {
 
     /** Methodhandle to implementation of ECMA 15.1.2.2, parseInt */
-    public static final MethodHandle PARSEINT = findOwnMH("parseInt", double.class, Object.class, Object.class, Object.class);
+    public static final SMethodHandle PARSEINT = findOwnMH("parseInt", double.class, Object.class, Object.class, Object.class);
 
     /** Methodhandle (specialized) to implementation of ECMA 15.1.2.2, parseInt */
-    public static final MethodHandle PARSEINT_OI = findOwnMH("parseInt", double.class, Object.class, Object.class, int.class);
+    public static final SMethodHandle PARSEINT_OI = findOwnMH("parseInt", double.class, Object.class, Object.class, int.class);
 
     /** ParseInt - NaN for booleans (thru string conversion to number conversion) */
-    public static final MethodHandle PARSEINT_Z = MH.dropArguments(MH.dropArguments(MH.constant(double.class, Double.NaN), 0, boolean.class), 0, Object.class);
+    public static final SMethodHandle PARSEINT_Z = MH.dropArguments(MH.dropArguments(MH.constant(double.class, Double.NaN), 0, boolean.class), 0, Object.class);
 
     /** ParseInt - identity for ints */
-    public static final MethodHandle PARSEINT_I = MH.dropArguments(MH.identity(int.class), 0, Object.class);
+    public static final SMethodHandle PARSEINT_I = MH.dropArguments(MH.identity(int.class), 0, Object.class);
 
     /** Methodhandle (specialized) to implementation of ECMA 15.1.2.2, parseInt */
-    public static final MethodHandle PARSEINT_O = findOwnMH("parseInt", double.class, Object.class, Object.class);
+    public static final SMethodHandle PARSEINT_O = findOwnMH("parseInt", double.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.2.3, parseFloat */
-    public static final MethodHandle PARSEFLOAT = findOwnMH("parseFloat", double.class, Object.class, Object.class);
+    public static final SMethodHandle PARSEFLOAT = findOwnMH("parseFloat", double.class, Object.class, Object.class);
 
     /** isNan for integers - always false */
-    public static final MethodHandle IS_NAN_I = MH.dropArguments(MH.constant(boolean.class, false), 0, Object.class);
+    public static final SMethodHandle IS_NAN_I = MH.dropArguments(MH.constant(boolean.class, false), 0, Object.class);
 
     /** isNan for longs - always false */
-    public static final MethodHandle IS_NAN_J = MH.dropArguments(MH.constant(boolean.class, false), 0, Object.class);
+    public static final SMethodHandle IS_NAN_J = MH.dropArguments(MH.constant(boolean.class, false), 0, Object.class);
 
     /** IsNan for doubles - use Double.isNaN */
-    public static final MethodHandle IS_NAN_D = MH.dropArguments(MH.findStatic(MethodHandles.lookup(), Double.class, "isNaN", MH.type(boolean.class, double.class)), 0, Object.class);
+    public static final SMethodHandle IS_NAN_D = MH.dropArguments(MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Double.class, "isNaN", MH.type(boolean.class, double.class)), 0, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.2.4, isNaN */
-    public static final MethodHandle IS_NAN = findOwnMH("isNaN",      boolean.class, Object.class, Object.class);
+    public static final SMethodHandle IS_NAN = findOwnMH("isNaN",      boolean.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.2.5, isFinite */
-    public static final MethodHandle IS_FINITE = findOwnMH("isFinite",   boolean.class, Object.class, Object.class);
+    public static final SMethodHandle IS_FINITE = findOwnMH("isFinite",   boolean.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.3.3, encodeURI */
-    public static final MethodHandle ENCODE_URI = findOwnMH("encodeURI",  Object.class, Object.class, Object.class);
+    public static final SMethodHandle ENCODE_URI = findOwnMH("encodeURI",  Object.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.3.4, encodeURIComponent */
-    public static final MethodHandle ENCODE_URICOMPONENT = findOwnMH("encodeURIComponent", Object.class, Object.class, Object.class);
+    public static final SMethodHandle ENCODE_URICOMPONENT = findOwnMH("encodeURIComponent", Object.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.3.1, decodeURI */
-    public static final MethodHandle DECODE_URI = findOwnMH("decodeURI", Object.class, Object.class, Object.class);
+    public static final SMethodHandle DECODE_URI = findOwnMH("decodeURI", Object.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.1.3.2, decodeURIComponent */
-    public static final MethodHandle DECODE_URICOMPONENT = findOwnMH("decodeURIComponent", Object.class, Object.class, Object.class);
+    public static final SMethodHandle DECODE_URICOMPONENT = findOwnMH("decodeURIComponent", Object.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA B.2.1, escape */
-    public static final MethodHandle ESCAPE = findOwnMH("escape",    String.class, Object.class, Object.class);
+    public static final SMethodHandle ESCAPE = findOwnMH("escape",    String.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA B.2.2, unescape */
-    public static final MethodHandle UNESCAPE = findOwnMH("unescape",  String.class, Object.class, Object.class);
+    public static final SMethodHandle UNESCAPE = findOwnMH("unescape",  String.class, Object.class, Object.class);
 
     /** Methodhandle to implementation of ECMA 15.3.4, "anonymous" - Properties of the Function Prototype Object. */
-    public static final MethodHandle ANONYMOUS = findOwnMH("anonymous", Object.class, Object.class);
+    public static final SMethodHandle ANONYMOUS = findOwnMH("anonymous", Object.class, Object.class);
 
     private static final String UNESCAPED = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@*_+-./";
 
@@ -515,7 +516,7 @@ loop:
         return n < radix ? n : -1;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), GlobalFunctions.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), GlobalFunctions.class, name, MH.type(rtype, types));
     }
 }

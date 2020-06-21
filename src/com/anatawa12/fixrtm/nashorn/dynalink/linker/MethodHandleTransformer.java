@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 
 /**
  * A generic interface describing operations that transform method handles.
@@ -94,5 +94,5 @@ public interface MethodHandleTransformer {
      * @param target the method handle being transformed.
      * @return transformed method handle.
      */
-    public MethodHandle transform(final MethodHandle target);
+    public SMethodHandle transform(final SMethodHandle target);
 }

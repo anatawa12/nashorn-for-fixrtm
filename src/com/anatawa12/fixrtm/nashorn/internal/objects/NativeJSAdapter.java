@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public final class NativeJSAdapter extends ScriptObject {
     private final ScriptObject adaptee;
     private final boolean overrides;
 
-    private static final MethodHandle IS_JSADAPTOR = findOwnMH("isJSAdaptor", boolean.class, Object.class, Object.class, MethodHandle.class, Object.class, ScriptFunction.class);
+    private static final SMethodHandle IS_JSADAPTOR = findOwnMH("isJSAdaptor", boolean.class, Object.class, Object.class, SMethodHandle.class, Object.class, ScriptFunction.class);
 
     // initialized by nasgen
     private static PropertyMap $nasgenmap$;
@@ -572,7 +573,7 @@ public final class NativeJSAdapter extends ScriptObject {
             if (value instanceof ScriptFunction) {
                 final ScriptFunction func = (ScriptFunction)value;
 
-                final MethodHandle methodHandle = getCallMethodHandle(findData, type,
+                final SMethodHandle methodHandle = getCallMethodHandle(findData, type,
                     useName ? name : null);
                 if (methodHandle != null) {
                     return new GuardedInvocation(
@@ -587,23 +588,23 @@ public final class NativeJSAdapter extends ScriptObject {
         case __call__:
             throw typeError("no.such.function", desc.getNameToken(2), ScriptRuntime.safeToString(this));
         default:
-            final MethodHandle methodHandle = hook.equals(__put__) ?
+            final SMethodHandle methodHandle = hook.equals(__put__) ?
             MH.asType(Lookup.EMPTY_SETTER, type) :
             Lookup.emptyGetter(type.returnType());
             return new GuardedInvocation(methodHandle, testJSAdaptor(adaptee, null, null, null), adaptee.getProtoSwitchPoints(hook, null), null);
         }
     }
 
-    private static MethodHandle testJSAdaptor(final Object adaptee, final MethodHandle getter, final Object where, final ScriptFunction func) {
+    private static SMethodHandle testJSAdaptor(final Object adaptee, final SMethodHandle getter, final Object where, final ScriptFunction func) {
         return MH.insertArguments(IS_JSADAPTOR, 1, adaptee, getter, where, func);
     }
 
     @SuppressWarnings("unused")
-    private static boolean isJSAdaptor(final Object self, final Object adaptee, final MethodHandle getter, final Object where, final ScriptFunction func) {
+    private static boolean isJSAdaptor(final Object self, final Object adaptee, final SMethodHandle getter, final Object where, final ScriptFunction func) {
         final boolean res = self instanceof NativeJSAdapter && ((NativeJSAdapter)self).getAdaptee() == adaptee;
         if (res && getter != null) {
             try {
-                return getter.invokeExact(where) == func;
+                return getter.getReal().invokeExact(where) == func;
             } catch (final RuntimeException | Error e) {
                 throw e;
             } catch (final Throwable t) {
@@ -622,7 +623,7 @@ public final class NativeJSAdapter extends ScriptObject {
         return adaptee;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), NativeJSAdapter.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeJSAdapter.class, name, MH.type(rtype, types));
     }
 }

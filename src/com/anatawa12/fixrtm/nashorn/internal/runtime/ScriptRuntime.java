@@ -34,9 +34,10 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isRepresentableAsInt;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isString;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Iterator;
@@ -107,17 +108,17 @@ public final class ScriptRuntime {
       * call sites that are known to be megamorphic. Using an invoke dynamic here would
       * lead to the JVM deoptimizing itself to death
       */
-    public static final Call APPLY = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "apply", Object.class, ScriptFunction.class, Object.class, Object[].class);
+    public static final Call APPLY = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "apply", Object.class, ScriptFunction.class, Object.class, Object[].class);
 
     /**
      * Throws a reference error for an undefined variable.
      */
-    public static final Call THROW_REFERENCE_ERROR = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "throwReferenceError", void.class, String.class);
+    public static final Call THROW_REFERENCE_ERROR = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "throwReferenceError", void.class, String.class);
 
     /**
      * Throws a reference error for an undefined variable.
      */
-    public static final Call THROW_CONST_TYPE_ERROR = staticCall(MethodHandles.lookup(), ScriptRuntime.class, "throwConstTypeError", void.class, String.class);
+    public static final Call THROW_CONST_TYPE_ERROR = staticCall(SMethodHandles.l(MethodHandles.lookup()), ScriptRuntime.class, "throwConstTypeError", void.class, String.class);
 
     /**
      * Used to invalidate builtin names, e.g "Function" mapping to all properties in Function.prototype and Function.prototype itself.
@@ -381,7 +382,7 @@ public final class ScriptRuntime {
     /**
      * Call a function given self and args. If the number of the arguments is known in advance, you can likely achieve
      * better performance by {@link Bootstrap#createDynamicInvoker(String, Class, Class...) creating a dynamic invoker}
-     * for operation {@code "dyn:call"}, then using its {@link MethodHandle#invokeExact(Object...)} method instead.
+     * for operation {@code "dyn:call"}, then using its {@link java.lang.invoke.MethodHandle#invokeExact(Object...)} method instead.
      *
      * @param target ScriptFunction object.
      * @param self   Receiver in call.
@@ -1045,9 +1046,9 @@ public final class ScriptRuntime {
      */
     public static void invalidateReservedBuiltinName(final String name) {
         final Context context = Context.getContextTrusted();
-        final SwitchPoint sp = context.getBuiltinSwitchPoint(name);
+        final SSwitchPoint sp = context.getBuiltinSwitchPoint(name);
         assert sp != null;
         context.getLogger(ApplySpecialization.class).info("Overwrote special name '" + name +"' - invalidating switchpoint");
-        SwitchPoint.invalidateAll(new SwitchPoint[] { sp });
+        SSwitchPoint.invalidateAll(new SSwitchPoint[] { sp });
     }
 }

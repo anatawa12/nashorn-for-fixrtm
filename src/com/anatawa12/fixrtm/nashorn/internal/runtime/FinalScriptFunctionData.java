@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +61,7 @@ final class FinalScriptFunctionData extends ScriptFunctionData {
      * @param specs specializations
      * @param flags {@link ScriptFunctionData} flags
      */
-    FinalScriptFunctionData(final String name, final MethodHandle mh, final Specialization[] specs, final int flags) {
+    FinalScriptFunctionData(final String name, final SMethodHandle mh, final Specialization[] specs, final int flags) {
         super(name, methodHandleArity(mh), flags);
 
         addInvoker(mh);
@@ -129,7 +129,7 @@ final class FinalScriptFunctionData extends ScriptFunctionData {
         return MethodType.genericMethodType(max + 1);
     }
 
-    private CompiledFunction addInvoker(final MethodHandle mh, final Specialization specialization) {
+    private CompiledFunction addInvoker(final SMethodHandle mh, final Specialization specialization) {
         assert !needsCallee(mh);
 
         final CompiledFunction invoker;
@@ -146,11 +146,11 @@ final class FinalScriptFunctionData extends ScriptFunctionData {
         return invoker;
     }
 
-    private CompiledFunction addInvoker(final MethodHandle mh) {
+    private CompiledFunction addInvoker(final SMethodHandle mh) {
         return addInvoker(mh, null);
     }
 
-    private static int methodHandleArity(final MethodHandle mh) {
+    private static int methodHandleArity(final SMethodHandle mh) {
         if (isVarArg(mh)) {
             return MAX_ARITY;
         }
@@ -159,7 +159,7 @@ final class FinalScriptFunctionData extends ScriptFunctionData {
         return mh.type().parameterCount() - 1 - (needsCallee(mh) ? 1 : 0) - (isConstructor(mh) ? 1 : 0);
     }
 
-    private static boolean isConstructor(final MethodHandle mh) {
+    private static boolean isConstructor(final SMethodHandle mh) {
         return mh.type().parameterCount() >= 1 && mh.type().parameterType(0) == boolean.class;
     }
 

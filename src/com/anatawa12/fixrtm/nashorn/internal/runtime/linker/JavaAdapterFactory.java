@@ -27,9 +27,10 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Modifier;
 import java.security.AccessControlContext;
@@ -132,7 +133,7 @@ public final class JavaAdapterFactory {
      *         generated because the original class is final, non-public, or has
      *         no public or protected constructors.
      */
-    public static StaticClass getAdapterClassFor(final Class<?>[] types, final ScriptObject classOverrides, final MethodHandles.Lookup lookup) {
+    public static StaticClass getAdapterClassFor(final Class<?>[] types, final ScriptObject classOverrides, final SMethodHandles.Lookup lookup) {
         return getAdapterClassFor(types, classOverrides, getProtectionDomain(lookup));
     }
 
@@ -150,7 +151,7 @@ public final class JavaAdapterFactory {
         return getAdapterInfo(types).getAdapterClass(classOverrides, protectionDomain);
     }
 
-    private static ProtectionDomain getProtectionDomain(final MethodHandles.Lookup lookup) {
+    private static ProtectionDomain getProtectionDomain(final SMethodHandles.Lookup lookup) {
         if((lookup.lookupModes() & Lookup.PRIVATE) == 0) {
             return MINIMAL_PERMISSION_DOMAIN;
         }
@@ -186,7 +187,7 @@ public final class JavaAdapterFactory {
      *
      * @throws Exception if anything goes wrong
      */
-    public static MethodHandle getConstructor(final Class<?> sourceType, final Class<?> targetType, final MethodHandles.Lookup lookup) throws Exception {
+    public static SMethodHandle getConstructor(final Class<?> sourceType, final Class<?> targetType, final SMethodHandles.Lookup lookup) throws Exception {
         final StaticClass adapterClass = getAdapterClassFor(new Class<?>[] { targetType }, null, lookup);
         return MH.bindTo(Bootstrap.getLinkerServices().getGuardedInvocation(new LinkRequestImpl(
                 NashornCallSiteDescriptor.get(lookup, "dyn:new",

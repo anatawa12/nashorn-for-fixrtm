@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.staticCall;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -69,7 +70,7 @@ public abstract class ArrayData {
      * Method handle to throw an {@link UnwarrantedOptimismException} when getting an element
      * of the wrong type
      */
-    protected static final CompilerConstants.Call THROW_UNWARRANTED = staticCall(MethodHandles.lookup(), ArrayData.class, "throwUnwarranted", void.class, ArrayData.class, int.class, int.class);
+    protected static final CompilerConstants.Call THROW_UNWARRANTED = staticCall(SMethodHandles.l(MethodHandles.lookup()), ArrayData.class, "throwUnwarranted", void.class, ArrayData.class, int.class, int.class);
 
     /**
      * Immutable empty array to get ScriptObjects started.
@@ -209,12 +210,12 @@ public abstract class ArrayData {
         }
 
         @Override
-        public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+        public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
             return null;
         }
 
         @Override
-        public MethodHandle getElementSetter(final Class<?> elementType) {
+        public SMethodHandle getElementSetter(final Class<?> elementType) {
             return null;
         }
 
@@ -825,9 +826,9 @@ public abstract class ArrayData {
         return index + 1;
     }
 
-    static Object invoke(final MethodHandle mh, final Object arg) {
+    static Object invoke(final SMethodHandle mh, final Object arg) {
         try {
-            return mh.invoke(arg);
+            return mh.getReal().invoke(arg);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {

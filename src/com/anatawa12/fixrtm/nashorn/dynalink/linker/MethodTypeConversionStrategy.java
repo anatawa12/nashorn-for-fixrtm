@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.linker;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.lang.invoke.MethodType;
 
 /**
@@ -96,5 +96,5 @@ public interface MethodTypeConversionStrategy {
      * @param newType new type
      * @return target converted to the new type.
      */
-    public MethodHandle asType(final MethodHandle target, final MethodType newType);
+    public SMethodHandle asType(final SMethodHandle target, final MethodType newType);
 }

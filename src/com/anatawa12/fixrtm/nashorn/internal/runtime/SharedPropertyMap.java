@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime;
 
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 
 /**
  * This class represents a property map that can be shared among multiple prototype objects, allowing all inheriting
@@ -40,7 +40,7 @@ import java.lang.invoke.SwitchPoint;
  */
 public final class SharedPropertyMap extends PropertyMap {
 
-    private SwitchPoint switchPoint;
+    private SSwitchPoint switchPoint;
 
     private static final long serialVersionUID = 2166297719721778876L;
 
@@ -50,7 +50,7 @@ public final class SharedPropertyMap extends PropertyMap {
      */
     public SharedPropertyMap(final PropertyMap map) {
         super(map);
-        this.switchPoint = new SwitchPoint();
+        this.switchPoint = new SSwitchPoint();
     }
 
     @Override
@@ -83,7 +83,7 @@ public final class SharedPropertyMap extends PropertyMap {
     }
 
     @Override
-    synchronized SwitchPoint getSharedProtoSwitchPoint() {
+    synchronized SSwitchPoint getSharedProtoSwitchPoint() {
         return switchPoint;
     }
 
@@ -93,7 +93,7 @@ public final class SharedPropertyMap extends PropertyMap {
     synchronized void invalidateSwitchPoint() {
         if (switchPoint != null) {
             assert !switchPoint.hasBeenInvalidated();
-            SwitchPoint.invalidateAll(new SwitchPoint[]{ switchPoint });
+            SSwitchPoint.invalidateAll(new SSwitchPoint[]{ switchPoint });
             switchPoint = null;
         }
     }

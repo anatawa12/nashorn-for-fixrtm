@@ -83,19 +83,19 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.CallSite;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MutableCallSite;
-import java.lang.invoke.VolatileCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMutableCallSite;
+import com.anatawa12.fixrtm.nashorn.invoke.SVolatileCallSite;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 
 /**
  * Interface for relinkable call sites. Language runtimes wishing to use this framework must use subclasses of
- * {@link CallSite} that also implement this interface as their call sites. There is a readily usable
+ * {@link SCallSite} that also implement this interface as their call sites. There is a readily usable
  * {@link MonomorphicCallSite} subclass that implements monomorphic inline caching strategy as well as a
  * {@link ChainedCallSite} that retains a chain of already linked method handles. The reason this is defined as an
  * interface instead of a concrete, albeit abstract class is that it allows independent implementations to choose
- * between {@link MutableCallSite} and {@link VolatileCallSite} as they see fit.
+ * between {@link SMutableCallSite} and {@link SVolatileCallSite} as they see fit.
  *
  * @author Attila Szegedi
  */
@@ -105,7 +105,7 @@ public interface RelinkableCallSite {
      * is supposed to set this method handle as its target.
      * @param relinkAndInvoke a relink-and-invoke method handle supplied by the {@link DynamicLinker}.
      */
-    public void initialize(MethodHandle relinkAndInvoke);
+    public void initialize(SMethodHandle relinkAndInvoke);
 
     /**
      * Returns the descriptor for this call site.
@@ -125,10 +125,10 @@ public interface RelinkableCallSite {
      * @param fallback the fallback method. This is a method matching the method type of the call site that is supplied
      * by the {@link DynamicLinker} to be used by this call site as a fallback when it can't invoke its target with the
      * passed arguments. The fallback method is such that when it's invoked, it'll try to discover the adequate target
-     * for the invocation, subsequently invoke {@link #relink(GuardedInvocation, MethodHandle)} or
-     * {@link #resetAndRelink(GuardedInvocation, MethodHandle)}, and finally invoke the target.
+     * for the invocation, subsequently invoke {@link #relink(GuardedInvocation, SMethodHandle)} or
+     * {@link #resetAndRelink(GuardedInvocation, SMethodHandle)}, and finally invoke the target.
      */
-    public void relink(GuardedInvocation guardedInvocation, MethodHandle fallback);
+    public void relink(GuardedInvocation guardedInvocation, SMethodHandle fallback);
 
     /**
      * This method will be called by the dynamic linker every time the call site is relinked and the linker wishes the
@@ -140,8 +140,8 @@ public interface RelinkableCallSite {
      * @param fallback the fallback method. This is a method matching the method type of the call site that is supplied
      * by the {@link DynamicLinker} to be used by this call site as a fallback when it can't invoke its target with the
      * passed arguments. The fallback method is such that when it's invoked, it'll try to discover the adequate target
-     * for the invocation, subsequently invoke {@link #relink(GuardedInvocation, MethodHandle)} or
-     * {@link #resetAndRelink(GuardedInvocation, MethodHandle)}, and finally invoke the target.
+     * for the invocation, subsequently invoke {@link #relink(GuardedInvocation, SMethodHandle)} or
+     * {@link #resetAndRelink(GuardedInvocation, SMethodHandle)}, and finally invoke the target.
      */
-    public void resetAndRelink(GuardedInvocation guardedInvocation, MethodHandle fallback);
+    public void resetAndRelink(GuardedInvocation guardedInvocation, SMethodHandle fallback);
 }

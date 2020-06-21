@@ -27,7 +27,7 @@ package com.anatawa12.fixrtm.nashorn.api.scripting;
 
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.beans.StaticClass;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
@@ -174,14 +174,14 @@ public final class ScriptUtils {
 
         final LinkerServices linker = Bootstrap.getLinkerServices();
         final Object objToConvert = unwrap(obj);
-        final MethodHandle converter = linker.getTypeConverter(objToConvert.getClass(),  clazz);
+        final SMethodHandle converter = linker.getTypeConverter(objToConvert.getClass(),  clazz);
         if (converter == null) {
             // no supported conversion!
             throw new UnsupportedOperationException("conversion not supported");
         }
 
         try {
-            return converter.invoke(objToConvert);
+            return converter.getReal().invoke(objToConvert);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {
