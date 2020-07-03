@@ -85,6 +85,8 @@ package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
+
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.ArrayList;
@@ -104,11 +106,12 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
  *
  * @author Attila Szegedi
  */
-class OverloadedMethod {
+class OverloadedMethod implements Serializable {
     private final Map<ClassString, SMethodHandle> argTypesToMethods = new ConcurrentHashMap<>();
     private final OverloadedDynamicMethod parent;
     private final MethodType callSiteType;
     private final SMethodHandle invoker;
+    // serializable with excludedObject
     private final LinkerServices linkerServices;
     private final ArrayList<SMethodHandle> fixArgMethods;
     private final ArrayList<SMethodHandle> varArgMethods;
