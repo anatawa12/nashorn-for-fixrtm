@@ -84,6 +84,8 @@
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
 import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+
+import java.io.Serializable;
 import java.lang.invoke.MethodType;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,14 +97,14 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
  *
  * @author Attila Szegedi
  */
-final class ClassString {
+final class ClassString implements Serializable {
     /**
      * An anonymous inner class used solely to represent the "type" of null values for method applicability checking.
      */
     static final Class<?> NULL_CLASS = (new Object() { /* Intentionally empty */ }).getClass();
 
     private final Class<?>[] classes;
-    private int hashCode;
+    private transient int hashCode;
 
     ClassString(final Class<?>[] classes) {
         this.classes = classes;
