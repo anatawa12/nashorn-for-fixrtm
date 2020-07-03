@@ -87,6 +87,8 @@ import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
 
+import java.io.Serializable;
+
 /**
  * Represents a single dynamic method. A "dynamic" method can be bound to a single Java method, or can be bound to all
  * overloaded methods of the same name on a class. Getting an invocation of a dynamic method bound to multiple
@@ -96,7 +98,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
  *
  * @author Attila Szegedi
  */
-abstract class DynamicMethod {
+abstract class DynamicMethod implements Serializable {
     private final String name;
 
     DynamicMethod(final String name) {

@@ -110,7 +110,8 @@ class OverloadedDynamicMethod extends DynamicMethod {
      * Holds a list of all methods.
      */
     private final LinkedList<SingleDynamicMethod> methods;
-    private final ClassLoader classLoader;
+    private final Class<?> loaderClass;
+    private transient ClassLoader classLoader;
 
     /**
      * Creates a new overloaded dynamic method.
@@ -119,13 +120,19 @@ class OverloadedDynamicMethod extends DynamicMethod {
      * @param name the name of the method
      */
     OverloadedDynamicMethod(final Class<?> clazz, final String name) {
-        this(new LinkedList<SingleDynamicMethod>(), clazz.getClassLoader(), getClassAndMethodName(clazz, name));
+        this(new LinkedList<SingleDynamicMethod>(), clazz, clazz.getClassLoader(), getClassAndMethodName(clazz, name));
     }
 
-    private OverloadedDynamicMethod(final LinkedList<SingleDynamicMethod> methods, final ClassLoader classLoader, final String name) {
+    private OverloadedDynamicMethod(final LinkedList<SingleDynamicMethod> methods, final Class<?> clazz, final ClassLoader classLoader, final String name) {
         super(name);
+        this.loaderClass = clazz;
         this.methods = methods;
         this.classLoader = classLoader;
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        classLoader = loaderClass.getClassLoader();
     }
 
     @Override
