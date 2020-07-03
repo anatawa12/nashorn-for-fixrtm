@@ -4,6 +4,7 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Context;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptObject;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.Undefined;
+import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -282,6 +283,10 @@ public class ScriptEngineObjectOutput implements ObjectOutput {
             }
             addExcludedObject.accept(ctxt, "context");
             addExcludedObject.accept(engine, "engine");
+            
+            // extra build-ins (not visible from the js) are starts with '<>'
+
+            addExcludedObject.accept(Bootstrap.getLinkerServices(), "<>linkerServices");
         }
     }
 
