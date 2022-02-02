@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.ref.Reference;
@@ -133,7 +134,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
     /** Copy of the {@link FunctionNode} flags. */
     private final int functionFlags;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     private transient volatile DebugLogger log;
 
@@ -857,19 +858,19 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         }
     }
 
-    private MethodHandle lookup(final FunctionInitializer fnInit, final boolean shouldLog) {
+    private SMethodHandle lookup(final FunctionInitializer fnInit, final boolean shouldLog) {
         final MethodType type = fnInit.getMethodType();
         logLookup(shouldLog, type);
         return lookupCodeMethod(fnInit.getCode(), type);
     }
 
-    MethodHandle lookup(final FunctionNode fn) {
+    SMethodHandle lookup(final FunctionNode fn) {
         final MethodType type = new FunctionSignature(fn).getMethodType();
         logLookup(true, type);
         return lookupCodeMethod(fn.getCompileUnit().getCode(), type);
     }
 
-    MethodHandle lookupCodeMethod(final Class<?> codeClass, final MethodType targetType) {
+    SMethodHandle lookupCodeMethod(final Class<?> codeClass, final MethodType targetType) {
         return MH.findStatic(LOOKUP, codeClass, functionName, targetType);
     }
 
@@ -896,7 +897,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
         addCode(lookup(initializer, true), null, null, initializer.getFlags());
     }
 
-    private CompiledFunction addCode(final MethodHandle target, final Map<Integer, Type> invalidatedProgramPoints,
+    private CompiledFunction addCode(final SMethodHandle target, final Map<Integer, Type> invalidatedProgramPoints,
                                      final MethodType callSiteType, final int fnFlags) {
         final CompiledFunction cfn = new CompiledFunction(target, this, invalidatedProgramPoints, callSiteType, fnFlags);
         assert noDuplicateCode(cfn) : "duplicate code";
@@ -919,7 +920,7 @@ public final class RecompilableScriptFunctionData extends ScriptFunctionData imp
             return addCode(lookup(fnInit, true), fnInit.getInvalidatedProgramPoints(), callSiteType, fnInit.getFlags());
         }
 
-        final MethodHandle handle = lookup(fnInit, true);
+        final SMethodHandle handle = lookup(fnInit, true);
         final MethodType fromType = handle.type();
         MethodType toType = needsCallee(fromType) ? callSiteType.changeParameterType(0, ScriptFunction.class) : callSiteType.dropParameterTypes(0, 1);
         toType = toType.changeReturnType(fromType.returnType());

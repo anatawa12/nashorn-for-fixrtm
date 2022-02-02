@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.codegen;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -579,7 +580,7 @@ public enum CompilerConstants {
      *
      * @return the call object representing the static call
      */
-    public static Call staticCall(final MethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public static Call staticCall(final SMethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return new Call(MH.findStatic(lookup, clazz, name, MH.type(rtype, ptypes)), className(clazz), name, methodDescriptor(rtype, ptypes)) {
             @Override
             MethodEmitter invoke(final MethodEmitter method) {
@@ -604,7 +605,7 @@ public enum CompilerConstants {
      *
      * @return the call object representing the virtual call
      */
-    public static Call virtualCall(final MethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public static Call virtualCall(final SMethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return new Call(MH.findVirtual(lookup, clazz, name, MH.type(rtype, ptypes)), className(clazz), name, methodDescriptor(rtype, ptypes)) {
             @Override
             MethodEmitter invoke(final MethodEmitter method) {
@@ -630,7 +631,7 @@ public enum CompilerConstants {
      *
      * @return the call object representing the virtual call
      */
-    public static Call specialCall(final MethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
+    public static Call specialCall(final SMethodHandles.Lookup lookup, final Class<?> clazz, final String name, final Class<?> rtype, final Class<?>... ptypes) {
         return new Call(MH.findSpecial(lookup, clazz, name, MH.type(rtype, ptypes), clazz), className(clazz), name, methodDescriptor(rtype, ptypes)) {
             @Override
             MethodEmitter invoke(final MethodEmitter method) {
@@ -661,7 +662,7 @@ public enum CompilerConstants {
      * a field access.
      */
     private abstract static class Access {
-        protected final MethodHandle methodHandle;
+        protected final SMethodHandle methodHandle;
         protected final String       className;
         protected final String       name;
         protected final String       descriptor;
@@ -674,7 +675,7 @@ public enum CompilerConstants {
          * @param name         field or method name for access
          * @param descriptor   descriptor for access field or method
          */
-        protected Access(final MethodHandle methodHandle, final String className, final String name, final String descriptor) {
+        protected Access(final SMethodHandle methodHandle, final String className, final String name, final String descriptor) {
             this.methodHandle = methodHandle;
             this.className    = className;
             this.name         = name;
@@ -686,7 +687,7 @@ public enum CompilerConstants {
          *
          * @return method handle
          */
-        public MethodHandle methodHandle() {
+        public SMethodHandle methodHandle() {
             return methodHandle;
         }
 
@@ -775,7 +776,7 @@ public enum CompilerConstants {
          * @param name         method name
          * @param descriptor   method descriptor
          */
-        protected Call(final MethodHandle methodHandle, final String className, final String name, final String descriptor) {
+        protected Call(final SMethodHandle methodHandle, final String className, final String name, final String descriptor) {
             super(methodHandle, className, name, descriptor);
         }
 

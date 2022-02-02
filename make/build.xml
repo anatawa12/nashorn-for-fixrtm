@@ -462,6 +462,7 @@ grant codeBase "file:/${basedir}/test/script/basic/JDK-8158467.js" {
           <include name="**/runtime/regexp/test/*Test.class"/>
           <include name="**/runtime/regexp/joni/test/*Test.class"/>
           <include name="**/framework/*Test.class"/>
+          <include name="**/invoke/*Test.class"/>
      </fileset>
   </target>
 
@@ -476,10 +477,11 @@ grant codeBase "file:/${basedir}/test/script/basic/JDK-8158467.js" {
   <target name="-test-nosecurity" unless="test.class">
     <fileset id="test.nosecurity.classes" dir="${build.test.classes.dir}">
       <include name="**/framework/ScriptTest.class"/>
+      <include name="**/*TestNoSecurity.class"/>
     </fileset>
     <testng outputdir="${build.nosecurity.test.results.dir}/${testResultsSubDir}" classfilesetref="test.nosecurity.classes"
        verbose="${testng.verbose}" haltonfailure="true" useDefaultListeners="false" listeners="${testng.listeners}" workingDir="${basedir}">
-      <jvmarg line="${ext.class.path}"/>
+      <!--<jvmarg line="${ext.class.path}"/>-->
       <jvmarg line="${run.test.jvmargs} -Xmx${run.test.xmx} -Dbuild.dir=${build.dir}"/>
       <sysproperty key="nashorn.jar" value="${dist.dir}/nashorn.jar"/>
       <propertyset>
@@ -491,7 +493,7 @@ grant codeBase "file:/${basedir}/test/script/basic/JDK-8158467.js" {
       </propertyset>
       <sysproperty key="optimistic.override" value="${optimistic}"/>
       <classpath>
-          <pathelement path="${run.test.classpath}"/>
+          <pathelement path="${run.test.classpath}${path.separator}${dist.jar}"/>
       </classpath>
     </testng>
   </target>

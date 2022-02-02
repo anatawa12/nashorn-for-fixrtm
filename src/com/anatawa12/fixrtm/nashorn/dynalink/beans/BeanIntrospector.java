@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.util.Collections;
 import java.util.Map;
 
@@ -93,12 +93,12 @@ class BeanIntrospector extends FacetIntrospector {
     }
 
     @Override
-    Map<String, MethodHandle> getInnerClassGetters() {
+    Map<String, SMethodHandle> getInnerClassGetters() {
         return Collections.emptyMap(); // NOTE: non-static inner classes are also on StaticClassIntrospector.
     }
 
     @Override
-    MethodHandle editMethodHandle(final MethodHandle mh) {
+    SMethodHandle editMethodHandle(final SMethodHandle mh) {
         return mh;
     }
 }

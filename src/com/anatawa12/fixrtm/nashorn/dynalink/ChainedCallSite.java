@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -95,7 +96,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 /**
  * A relinkable call site that maintains a chain of linked method handles. In the default implementation, up to 8 method
  * handles can be chained, cascading from one to the other through
- * {@link MethodHandles#guardWithTest(MethodHandle, MethodHandle, MethodHandle)}. When this call site has to link a new
+ * {@link SMethodHandles#guardWithTest(SMethodHandle, SMethodHandle, SMethodHandle)}. When this call site has to link a new
  * method handle and the length of the chain is already at the maximum, it will throw away the oldest method handle.
  * Switchpoint-invalidated handles in the chain are removed eagerly (on each linking request, and whenever a
  * switchpoint-invalidated method handle is traversed during invocation). There is currently no profiling
@@ -103,24 +104,24 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
  * handle is always at the start of the chain.
  */
 public class ChainedCallSite extends AbstractRelinkableCallSite {
-    private static final MethodHandle PRUNE_CATCHES =
-            MethodHandles.insertArguments(
+    private static final SMethodHandle PRUNE_CATCHES =
+            SMethodHandles.insertArguments(
                     Lookup.findOwnSpecial(
-                            MethodHandles.lookup(),
+                            SMethodHandles.l(MethodHandles.lookup()),
                             "prune",
-                            MethodHandle.class,
-                            MethodHandle.class,
+                            SMethodHandle.class,
+                            SMethodHandle.class,
                             boolean.class),
                     2,
                     true);
 
-    private static final MethodHandle PRUNE_SWITCHPOINTS =
-            MethodHandles.insertArguments(
+    private static final SMethodHandle PRUNE_SWITCHPOINTS =
+            SMethodHandles.insertArguments(
                     Lookup.findOwnSpecial(
-                            MethodHandles.lookup(),
+                            SMethodHandles.l(MethodHandles.lookup()),
                             "prune",
-                            MethodHandle.class,
-                            MethodHandle.class,
+                            SMethodHandle.class,
+                            SMethodHandle.class,
                             boolean.class),
                     2,
                     false);
@@ -145,16 +146,16 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
     }
 
     @Override
-    public void relink(final GuardedInvocation guardedInvocation, final MethodHandle fallback) {
+    public void relink(final GuardedInvocation guardedInvocation, final SMethodHandle fallback) {
         relinkInternal(guardedInvocation, fallback, false, false);
     }
 
     @Override
-    public void resetAndRelink(final GuardedInvocation guardedInvocation, final MethodHandle fallback) {
+    public void resetAndRelink(final GuardedInvocation guardedInvocation, final SMethodHandle fallback) {
         relinkInternal(guardedInvocation, fallback, true, false);
     }
 
-    private MethodHandle relinkInternal(final GuardedInvocation invocation, final MethodHandle relink, final boolean reset, final boolean removeCatches) {
+    private SMethodHandle relinkInternal(final GuardedInvocation invocation, final SMethodHandle relink, final boolean reset, final boolean removeCatches) {
         final LinkedList<GuardedInvocation> currentInvocations = invocations.get();
         @SuppressWarnings({ "unchecked", "rawtypes" })
         final LinkedList<GuardedInvocation> newInvocations =
@@ -181,11 +182,11 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
 
         // prune-and-invoke is used as the fallback for invalidated switchpoints. If a switchpoint gets invalidated, we
         // rebuild the chain and get rid of all invalidated switchpoints instead of letting them linger.
-        final MethodHandle pruneAndInvokeSwitchPoints = makePruneAndInvokeMethod(relink, getPruneSwitchpoints());
-        final MethodHandle pruneAndInvokeCatches      = makePruneAndInvokeMethod(relink, getPruneCatches());
+        final SMethodHandle pruneAndInvokeSwitchPoints = makePruneAndInvokeMethod(relink, getPruneSwitchpoints());
+        final SMethodHandle pruneAndInvokeCatches      = makePruneAndInvokeMethod(relink, getPruneCatches());
 
         // Fold the new chain
-        MethodHandle target = relink;
+        SMethodHandle target = relink;
         for(final GuardedInvocation inv: newInvocations) {
             target = inv.compose(target, pruneAndInvokeSwitchPoints, pruneAndInvokeCatches);
         }
@@ -203,7 +204,7 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
      * Get the switchpoint pruning function for a chained call site
      * @return function that removes invalidated switchpoints tied to callsite guard chain and relinks
      */
-    protected MethodHandle getPruneSwitchpoints() {
+    protected SMethodHandle getPruneSwitchpoints() {
         return PRUNE_SWITCHPOINTS;
     }
 
@@ -211,7 +212,7 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
      * Get the catch pruning function for a chained call site
      * @return function that removes all catches tied to callsite guard chain and relinks
      */
-    protected MethodHandle getPruneCatches() {
+    protected SMethodHandle getPruneCatches() {
         return PRUNE_CATCHES;
     }
 
@@ -221,17 +222,17 @@ public class ChainedCallSite extends AbstractRelinkableCallSite {
      * @param relink the ultimate fallback for the chain (the {@code DynamicLinker}'s relink).
      * @return a method handle for prune-and-invoke
      */
-    private MethodHandle makePruneAndInvokeMethod(final MethodHandle relink, final MethodHandle prune) {
+    private SMethodHandle makePruneAndInvokeMethod(final SMethodHandle relink, final SMethodHandle prune) {
         // Bind prune to (this, relink)
-        final MethodHandle boundPrune = MethodHandles.insertArguments(prune, 0, this, relink);
+        final SMethodHandle boundPrune = SMethodHandles.insertArguments(prune, 0, this, relink);
         // Make it ignore all incoming arguments
-        final MethodHandle ignoreArgsPrune = MethodHandles.dropArguments(boundPrune, 0, type().parameterList());
+        final SMethodHandle ignoreArgsPrune = SMethodHandles.dropArguments(boundPrune, 0, type().parameterList());
         // Invoke prune, then invoke the call site target with original arguments
-        return MethodHandles.foldArguments(MethodHandles.exactInvoker(type()), ignoreArgsPrune);
+        return SMethodHandles.foldArguments(SMethodHandles.exactInvoker(type()), ignoreArgsPrune);
     }
 
     @SuppressWarnings("unused")
-    private MethodHandle prune(final MethodHandle relink, final boolean catches) {
+    private SMethodHandle prune(final SMethodHandle relink, final boolean catches) {
         return relinkInternal(null, relink, false, catches);
     }
 }

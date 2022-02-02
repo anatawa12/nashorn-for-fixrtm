@@ -28,7 +28,7 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.SOURCE;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashSet;
@@ -105,7 +105,7 @@ final class DebuggerSupport {
      *
      * @param mh script class method about to be invoked.
      */
-    static void notifyInvoke(final MethodHandle mh) {
+    static void notifyInvoke(final SMethodHandle mh) {
         // Do nothing here. This is placeholder method on which a
         // debugger can place a breakpoint so that it can access the
         // (script class) method handle that is about to be invoked.

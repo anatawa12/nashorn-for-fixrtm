@@ -83,9 +83,11 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
+
+import java.io.Serializable;
 
 /**
  * Represents a single dynamic method. A "dynamic" method can be bound to a single Java method, or can be bound to all
@@ -96,7 +98,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkerServices;
  *
  * @author Attila Szegedi
  */
-abstract class DynamicMethod {
+abstract class DynamicMethod implements Serializable {
     private final String name;
 
     DynamicMethod(final String name) {
@@ -119,7 +121,7 @@ abstract class DynamicMethod {
      * @param linkerServices linker services. Used for language-specific type conversions.
      * @return an invocation suitable for calling the method from the specified call site.
      */
-    abstract MethodHandle getInvocation(CallSiteDescriptor callSiteDescriptor, LinkerServices linkerServices);
+    abstract SMethodHandle getInvocation(CallSiteDescriptor callSiteDescriptor, LinkerServices linkerServices);
 
     /**
      * Returns a single dynamic method representing a single underlying Java method (possibly selected among several

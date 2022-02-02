@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.MethodHandles.Lookup;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.support.CallSiteDescriptorFactory;
 

@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFI
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.UnwarrantedOptimismException.INVALID_PROGRAM_POINT;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.NashornCallSiteDescriptor.CALLSITE_PROGRAM_POINT_SHIFT;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.concurrent.Callable;
@@ -66,29 +67,29 @@ public final class UserAccessorProperty extends SpillProperty {
         }
     }
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     /** Getter method handle */
-    private final static MethodHandle INVOKE_OBJECT_GETTER = findOwnMH_S("invokeObjectGetter", Object.class, Accessors.class, MethodHandle.class, Object.class);
-    private final static MethodHandle INVOKE_INT_GETTER  = findOwnMH_S("invokeIntGetter", int.class, Accessors.class, MethodHandle.class, int.class, Object.class);
-    private final static MethodHandle INVOKE_NUMBER_GETTER  = findOwnMH_S("invokeNumberGetter", double.class, Accessors.class, MethodHandle.class, int.class, Object.class);
+    private final static SMethodHandle INVOKE_OBJECT_GETTER = findOwnMH_S("invokeObjectGetter", Object.class, Accessors.class, SMethodHandle.class, Object.class);
+    private final static SMethodHandle INVOKE_INT_GETTER  = findOwnMH_S("invokeIntGetter", int.class, Accessors.class, SMethodHandle.class, int.class, Object.class);
+    private final static SMethodHandle INVOKE_NUMBER_GETTER  = findOwnMH_S("invokeNumberGetter", double.class, Accessors.class, SMethodHandle.class, int.class, Object.class);
 
     /** Setter method handle */
-    private final static MethodHandle INVOKE_OBJECT_SETTER = findOwnMH_S("invokeObjectSetter", void.class, Accessors.class, MethodHandle.class, String.class, Object.class, Object.class);
-    private final static MethodHandle INVOKE_INT_SETTER = findOwnMH_S("invokeIntSetter", void.class, Accessors.class, MethodHandle.class, String.class, Object.class, int.class);
-    private final static MethodHandle INVOKE_NUMBER_SETTER = findOwnMH_S("invokeNumberSetter", void.class, Accessors.class, MethodHandle.class, String.class, Object.class, double.class);
+    private final static SMethodHandle INVOKE_OBJECT_SETTER = findOwnMH_S("invokeObjectSetter", void.class, Accessors.class, SMethodHandle.class, String.class, Object.class, Object.class);
+    private final static SMethodHandle INVOKE_INT_SETTER = findOwnMH_S("invokeIntSetter", void.class, Accessors.class, SMethodHandle.class, String.class, Object.class, int.class);
+    private final static SMethodHandle INVOKE_NUMBER_SETTER = findOwnMH_S("invokeNumberSetter", void.class, Accessors.class, SMethodHandle.class, String.class, Object.class, double.class);
 
     private static final Object OBJECT_GETTER_INVOKER_KEY = new Object();
-    private static MethodHandle getObjectGetterInvoker() {
-        return Context.getGlobal().getDynamicInvoker(OBJECT_GETTER_INVOKER_KEY, new Callable<MethodHandle>() {
+    private static SMethodHandle getObjectGetterInvoker() {
+        return Context.getGlobal().getDynamicInvoker(OBJECT_GETTER_INVOKER_KEY, new Callable<SMethodHandle>() {
             @Override
-            public MethodHandle call() throws Exception {
+            public SMethodHandle call() throws Exception {
                 return getINVOKE_UA_GETTER(Object.class, INVALID_PROGRAM_POINT);
             }
         });
     }
 
-    static MethodHandle getINVOKE_UA_GETTER(final Class<?> returnType, final int programPoint) {
+    static SMethodHandle getINVOKE_UA_GETTER(final Class<?> returnType, final int programPoint) {
         if (UnwarrantedOptimismException.isValid(programPoint)) {
             final int flags = NashornCallSiteDescriptor.CALLSITE_OPTIMISTIC | programPoint << CALLSITE_PROGRAM_POINT_SHIFT;
             return Bootstrap.createDynamicInvoker("dyn:call", flags, returnType, Object.class, Object.class);
@@ -98,16 +99,16 @@ public final class UserAccessorProperty extends SpillProperty {
     }
 
     private static final Object OBJECT_SETTER_INVOKER_KEY = new Object();
-    private static MethodHandle getObjectSetterInvoker() {
-        return Context.getGlobal().getDynamicInvoker(OBJECT_SETTER_INVOKER_KEY, new Callable<MethodHandle>() {
+    private static SMethodHandle getObjectSetterInvoker() {
+        return Context.getGlobal().getDynamicInvoker(OBJECT_SETTER_INVOKER_KEY, new Callable<SMethodHandle>() {
             @Override
-            public MethodHandle call() throws Exception {
+            public SMethodHandle call() throws Exception {
                 return getINVOKE_UA_SETTER(Object.class);
             }
         });
     }
 
-    static MethodHandle getINVOKE_UA_SETTER(final Class<?> valueType) {
+    static SMethodHandle getINVOKE_UA_SETTER(final Class<?> valueType) {
         return Bootstrap.createDynamicInvoker("dyn:call", void.class, Object.class, Object.class, valueType);
     }
 
@@ -143,7 +144,7 @@ public final class UserAccessorProperty extends SpillProperty {
     void setAccessors(final ScriptObject sobj, final PropertyMap map, final Accessors gs) {
         try {
             //invoke the getter and find out
-            super.getSetter(Object.class, map).invokeExact((Object)sobj, (Object)gs);
+            super.getSetter(Object.class, map).getReal().invokeExact((Object)sobj, (Object)gs);
         } catch (final Error | RuntimeException t) {
             throw t;
         } catch (final Throwable t) {
@@ -156,7 +157,7 @@ public final class UserAccessorProperty extends SpillProperty {
         try {
             //invoke the super getter with this spill slot
             //get the getter setter from the correct spill slot
-            final Object gs = super.getGetter(Object.class).invokeExact((Object)sobj);
+            final Object gs = super.getGetter(Object.class).getReal().invokeExact((Object)sobj);
             return (Accessors)gs;
         } catch (final Error | RuntimeException t) {
             throw t;
@@ -223,13 +224,13 @@ public final class UserAccessorProperty extends SpillProperty {
     }
 
     @Override
-    public MethodHandle getGetter(final Class<?> type) {
+    public SMethodHandle getGetter(final Class<?> type) {
         //this returns a getter on the format (Accessors, Object receiver)
         return Lookup.filterReturnType(INVOKE_OBJECT_GETTER, type);
     }
 
     @Override
-    public MethodHandle getOptimisticGetter(final Class<?> type, final int programPoint) {
+    public SMethodHandle getOptimisticGetter(final Class<?> type, final int programPoint) {
         if (type == int.class) {
             return INVOKE_INT_GETTER;
         } else if (type == double.class) {
@@ -252,7 +253,7 @@ public final class UserAccessorProperty extends SpillProperty {
     }
 
     @Override
-    public MethodHandle getSetter(final Class<?> type, final PropertyMap currentMap) {
+    public SMethodHandle getSetter(final Class<?> type, final PropertyMap currentMap) {
         if (type == int.class) {
             return INVOKE_INT_SETTER;
         } else if (type == double.class) {
@@ -275,7 +276,7 @@ public final class UserAccessorProperty extends SpillProperty {
      *
      * @return The getter handle for the Accessors
      */
-    MethodHandle getAccessorsGetter() {
+    SMethodHandle getAccessorsGetter() {
         return super.getGetter(Object.class).asType(MethodType.methodType(Accessors.class, Object.class));
     }
 
@@ -284,66 +285,66 @@ public final class UserAccessorProperty extends SpillProperty {
     // inherited or self case, slot is also bound during lookup. Actual ScriptFunction
     // to be called is retrieved everytime and applied.
     @SuppressWarnings("unused")
-    private static Object invokeObjectGetter(final Accessors gs, final MethodHandle invoker, final Object self) throws Throwable {
+    private static Object invokeObjectGetter(final Accessors gs, final SMethodHandle invoker, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return invoker.invokeExact(func, self);
+            return invoker.getReal().invokeExact(func, self);
         }
 
         return UNDEFINED;
     }
 
     @SuppressWarnings("unused")
-    private static int invokeIntGetter(final Accessors gs, final MethodHandle invoker, final int programPoint, final Object self) throws Throwable {
+    private static int invokeIntGetter(final Accessors gs, final SMethodHandle invoker, final int programPoint, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return (int) invoker.invokeExact(func, self);
+            return (int) invoker.getReal().invokeExact(func, self);
         }
 
         throw new UnwarrantedOptimismException(UNDEFINED, programPoint);
     }
 
     @SuppressWarnings("unused")
-    private static double invokeNumberGetter(final Accessors gs, final MethodHandle invoker, final int programPoint, final Object self) throws Throwable {
+    private static double invokeNumberGetter(final Accessors gs, final SMethodHandle invoker, final int programPoint, final Object self) throws Throwable {
         final Object func = gs.getter;
         if (func instanceof ScriptFunction) {
-            return (double) invoker.invokeExact(func, self);
+            return (double) invoker.getReal().invokeExact(func, self);
         }
 
         throw new UnwarrantedOptimismException(UNDEFINED, programPoint);
     }
 
     @SuppressWarnings("unused")
-    private static void invokeObjectSetter(final Accessors gs, final MethodHandle invoker, final String name, final Object self, final Object value) throws Throwable {
+    private static void invokeObjectSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final Object value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }
     }
 
     @SuppressWarnings("unused")
-    private static void invokeIntSetter(final Accessors gs, final MethodHandle invoker, final String name, final Object self, final int value) throws Throwable {
+    private static void invokeIntSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final int value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }
     }
 
     @SuppressWarnings("unused")
-    private static void invokeNumberSetter(final Accessors gs, final MethodHandle invoker, final String name, final Object self, final double value) throws Throwable {
+    private static void invokeNumberSetter(final Accessors gs, final SMethodHandle invoker, final String name, final Object self, final double value) throws Throwable {
         final Object func = gs.setter;
         if (func instanceof ScriptFunction) {
-            invoker.invokeExact(func, self, value);
+            invoker.getReal().invokeExact(func, self, value);
         } else if (name != null) {
             throw typeError("property.has.no.setter", name, ScriptRuntime.safeToString(self));
         }
     }
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
         return MH.findStatic(LOOKUP, UserAccessorProperty.class, name, MH.type(rtype, types));
     }
 

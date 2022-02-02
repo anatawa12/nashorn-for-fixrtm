@@ -33,7 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
@@ -44,10 +45,10 @@ import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
 public final class ShellFunctions {
 
     /** Handle to implementation of {@link ShellFunctions#input} - Nashorn extension */
-    public static final MethodHandle INPUT = findOwnMH("input", Object.class, Object.class, Object.class, Object.class);
+    public static final SMethodHandle INPUT = findOwnMH("input", Object.class, Object.class, Object.class, Object.class);
 
     /** Handle to implementation of {@link ShellFunctions#evalinput} - Nashorn extension */
-    public static final MethodHandle EVALINPUT = findOwnMH("evalinput",     Object.class, Object.class, Object.class, Object.class);
+    public static final SMethodHandle EVALINPUT = findOwnMH("evalinput",     Object.class, Object.class, Object.class, Object.class);
 
     private ShellFunctions() {
     }
@@ -98,7 +99,7 @@ public final class ShellFunctions {
         return Global.eval(self, input(self, endMarker, prompt));
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), ShellFunctions.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), ShellFunctions.class, name, MH.type(rtype, types));
     }
 }

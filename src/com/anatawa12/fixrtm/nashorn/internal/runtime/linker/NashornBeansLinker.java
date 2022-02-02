@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
@@ -64,12 +65,12 @@ public class NashornBeansLinker implements GuardingDynamicLinker {
     // Object type arguments of Java method calls, field set and array set.
     private static final boolean MIRROR_ALWAYS = Options.getBooleanProperty("nashorn.mirror.always", true);
 
-    private static final MethodHandle EXPORT_ARGUMENT;
-    private static final MethodHandle IMPORT_RESULT;
-    private static final MethodHandle FILTER_CONSSTRING;
+    private static final SMethodHandle EXPORT_ARGUMENT;
+    private static final SMethodHandle IMPORT_RESULT;
+    private static final SMethodHandle FILTER_CONSSTRING;
 
     static {
-        final Lookup lookup  = new Lookup(MethodHandles.lookup());
+        final Lookup lookup  = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
         EXPORT_ARGUMENT      = lookup.findOwnStatic("exportArgument", Object.class, Object.class);
         IMPORT_RESULT        = lookup.findOwnStatic("importResult", Object.class, Object.class);
         FILTER_CONSSTRING    = lookup.findOwnStatic("consStringFilter", Object.class, Object.class);
@@ -223,17 +224,17 @@ public class NashornBeansLinker implements GuardingDynamicLinker {
         }
 
         @Override
-        public MethodHandle asType(final MethodHandle handle, final MethodType fromType) {
+        public SMethodHandle asType(final SMethodHandle handle, final MethodType fromType) {
             return linkerServices.asType(handle, fromType);
         }
 
         @Override
-        public MethodHandle asTypeLosslessReturn(final MethodHandle handle, final MethodType fromType) {
+        public SMethodHandle asTypeLosslessReturn(final SMethodHandle handle, final MethodType fromType) {
             return Implementation.asTypeLosslessReturn(this, handle, fromType);
         }
 
         @Override
-        public MethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
+        public SMethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
             return linkerServices.getTypeConverter(sourceType, targetType);
         }
 
@@ -262,7 +263,7 @@ public class NashornBeansLinker implements GuardingDynamicLinker {
         }
 
         @Override
-        public MethodHandle filterInternalObjects(final MethodHandle target) {
+        public SMethodHandle filterInternalObjects(final SMethodHandle target) {
             return linkerServices.filterInternalObjects(target);
         }
     }

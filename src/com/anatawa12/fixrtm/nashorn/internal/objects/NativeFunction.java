@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.Source.sourceFor;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
@@ -61,7 +62,7 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.linker.Bootstrap;
 public final class NativeFunction {
 
     /** apply arg converter handle */
-    public static final MethodHandle TO_APPLY_ARGS = Lookup.findOwnStatic(MethodHandles.lookup(), "toApplyArgs", Object[].class, Object.class);
+    public static final SMethodHandle TO_APPLY_ARGS = Lookup.findOwnStatic(SMethodHandles.l(MethodHandles.lookup()), "toApplyArgs", Object[].class, Object.class);
 
     // initialized by nasgen
     @SuppressWarnings("unused")

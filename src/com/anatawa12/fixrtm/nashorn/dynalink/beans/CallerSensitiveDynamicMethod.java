@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.AccessibleObject;
@@ -91,12 +92,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
 import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 
 /**
  * A dynamic method bound to exactly one Java method or constructor that is caller sensitive. Since the target method is
  * caller sensitive, it doesn't cache a method handle but rather uses the passed lookup object in
- * {@link #getTarget(java.lang.invoke.MethodHandles.Lookup)} to unreflect a method handle from the reflective member on
+ * {@link #getTarget(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup)} to unreflect a method handle from the reflective member on
  * every request.
  *
  * @author Attila Szegedi
@@ -104,8 +107,8 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.Lookup;
 class CallerSensitiveDynamicMethod extends SingleDynamicMethod {
     // Typed as "AccessibleObject" as it can be either a method or a constructor.
     // If we were Java8-only, we could use java.lang.reflect.Executable
-    private final AccessibleObject target;
-    private final MethodType type;
+    private AccessibleObject target;
+    private MethodType type;
 
     CallerSensitiveDynamicMethod(final AccessibleObject target) {
         super(getName(target));
@@ -145,9 +148,9 @@ class CallerSensitiveDynamicMethod extends SingleDynamicMethod {
     }
 
     @Override
-    MethodHandle getTarget(final MethodHandles.Lookup lookup) {
+    SMethodHandle getTarget(final SMethodHandles.Lookup lookup) {
         if(target instanceof Method) {
-            final MethodHandle mh = Lookup.unreflect(lookup, (Method)target);
+            final SMethodHandle mh = Lookup.unreflect(lookup, (Method)target);
             if(Modifier.isStatic(((Member)target).getModifiers())) {
                 return StaticClassIntrospector.editStaticMethodHandle(mh);
             }
@@ -160,5 +163,43 @@ class CallerSensitiveDynamicMethod extends SingleDynamicMethod {
     @Override
     boolean isConstructor() {
         return target instanceof Constructor;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+        Class<?> targetDeclaringClass;
+        String targetName;
+        MethodType targetType;
+        if (target instanceof Method) {
+            Method m = (Method) target;
+            targetDeclaringClass = m.getDeclaringClass();
+            targetName = m.getName();
+            targetType = MethodType.methodType(m.getReturnType(), m.getParameterTypes());
+        } else {
+            Constructor<?> c = (Constructor<?>) target;
+            targetDeclaringClass = c.getDeclaringClass();
+            targetName = "<init>";
+            targetType = MethodType.methodType(Void.TYPE, c.getParameterTypes());
+        }
+        out.writeObject(targetDeclaringClass);
+        out.writeUTF(targetName);
+        out.writeObject(targetType);
+        out.writeObject(type);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException, NoSuchMethodException {
+        Class<?> targetDeclaringClass = (Class<?>) in.readObject();
+        String targetName = in.readUTF();
+        MethodType targetType = (MethodType) in.readObject();
+        type = (MethodType) in.readObject();
+        if (targetName.equals("<init>")) {
+            // constructor
+            target = targetDeclaringClass.getDeclaredConstructor(targetType.parameterArray());
+        } else {
+            target = Arrays.stream(targetDeclaringClass.getDeclaredMethods())
+                    .filter(it -> it.getName().equals(targetName) && it.getReturnType() == targetType.returnType() && Arrays.equals(it.getParameterTypes(), targetType.parameterArray()))
+                    .findFirst()
+                    .orElseGet(() -> { throw new NoSuchMethodError(targetName + ":" + targetType); });
+            target = targetDeclaringClass.getConstructor(targetType.parameterArray());
+        }
     }
 }

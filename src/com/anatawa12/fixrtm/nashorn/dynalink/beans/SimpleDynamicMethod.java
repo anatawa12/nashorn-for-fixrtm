@@ -83,8 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles.Lookup;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 
 /**
@@ -97,7 +97,7 @@ import java.lang.invoke.MethodType;
  * @author Attila Szegedi
  */
 class SimpleDynamicMethod extends SingleDynamicMethod {
-    private final MethodHandle target;
+    private final SMethodHandle target;
     private final boolean constructor;
 
     /**
@@ -108,7 +108,7 @@ class SimpleDynamicMethod extends SingleDynamicMethod {
      * @param clazz the class declaring the method
      * @param name the simple name of the method
      */
-    SimpleDynamicMethod(final MethodHandle target, final Class<?> clazz, final String name) {
+    SimpleDynamicMethod(final SMethodHandle target, final Class<?> clazz, final String name) {
         this(target, clazz, name, false);
     }
 
@@ -121,13 +121,13 @@ class SimpleDynamicMethod extends SingleDynamicMethod {
      * @param name the simple name of the method
      * @param constructor does this represent a constructor?
      */
-    SimpleDynamicMethod(final MethodHandle target, final Class<?> clazz, final String name, final boolean constructor) {
+    SimpleDynamicMethod(final SMethodHandle target, final Class<?> clazz, final String name, final boolean constructor) {
         super(getName(target, clazz, name, constructor));
         this.target = target;
         this.constructor = constructor;
     }
 
-    private static String getName(final MethodHandle target, final Class<?> clazz, final String name, final boolean constructor) {
+    private static String getName(final SMethodHandle target, final Class<?> clazz, final String name, final boolean constructor) {
         return getMethodNameWithSignature(target.type(), constructor ? name : getClassAndMethodName(clazz, name), !constructor);
     }
 
@@ -142,7 +142,7 @@ class SimpleDynamicMethod extends SingleDynamicMethod {
     }
 
     @Override
-    MethodHandle getTarget(final Lookup lookup) {
+    SMethodHandle getTarget(final Lookup lookup) {
         return target;
     }
 

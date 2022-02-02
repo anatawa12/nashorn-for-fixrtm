@@ -32,7 +32,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.BrowserJSObje
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.BrowserJSObjectLinker.JSObjectHandles.JSOBJECT_SETMEMBER;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.BrowserJSObjectLinker.JSObjectHandles.JSOBJECT_SETSLOT;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
@@ -140,12 +141,12 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
             return inv;
         }
         final String name = desc.getNameToken(CallSiteDescriptor.NAME_OPERAND);
-        final MethodHandle getter = MH.insertArguments(JSOBJECT_GETMEMBER, 1, name);
+        final SMethodHandle getter = MH.insertArguments(JSOBJECT_GETMEMBER, 1, name);
         return new GuardedInvocation(getter, IS_JSOBJECT_GUARD);
     }
 
     private static GuardedInvocation findGetIndexMethod(final GuardedInvocation inv) {
-        final MethodHandle getter = MH.insertArguments(JSOBJECTLINKER_GET, 0, inv.getInvocation());
+        final SMethodHandle getter = MH.insertArguments(JSOBJECTLINKER_GET, 0, inv.getInvocation());
         return inv.replaceMethods(getter, inv.getGuard());
     }
 
@@ -153,7 +154,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
         if (inv != null) {
             return inv;
         }
-        final MethodHandle getter = MH.insertArguments(JSOBJECT_SETMEMBER, 1, desc.getNameToken(2));
+        final SMethodHandle getter = MH.insertArguments(JSOBJECT_SETMEMBER, 1, desc.getNameToken(2));
         return new GuardedInvocation(getter, IS_JSOBJECT_GUARD);
     }
 
@@ -162,7 +163,7 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     }
 
     private static GuardedInvocation findCallMethod(final CallSiteDescriptor desc) {
-        final MethodHandle call = MH.insertArguments(JSOBJECT_CALL, 1, "call");
+        final SMethodHandle call = MH.insertArguments(JSOBJECT_CALL, 1, "call");
         return new GuardedInvocation(MH.asCollector(call, Object[].class, desc.getMethodType().parameterCount() - 1), IS_JSOBJECT_GUARD);
     }
 
@@ -172,20 +173,20 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     }
 
     @SuppressWarnings("unused")
-    private static Object get(final MethodHandle fallback, final Object jsobj, final Object key) throws Throwable {
+    private static Object get(final SMethodHandle fallback, final Object jsobj, final Object key) throws Throwable {
         if (key instanceof Integer) {
-            return JSOBJECT_GETSLOT.invokeExact(jsobj, (int)key);
+            return JSOBJECT_GETSLOT.getReal().invokeExact(jsobj, (int)key);
         } else if (key instanceof Number) {
             final int index = getIndex((Number)key);
             if (index > -1) {
-                return JSOBJECT_GETSLOT.invokeExact(jsobj, index);
+                return JSOBJECT_GETSLOT.getReal().invokeExact(jsobj, index);
             }
         } else if (isString(key)) {
             final String name = key.toString();
             if (name.indexOf('(') != -1) {
-                return fallback.invokeExact(jsobj, (Object) name);
+                return fallback.getReal().invokeExact(jsobj, (Object) name);
             }
-            return JSOBJECT_GETMEMBER.invokeExact(jsobj, name);
+            return JSOBJECT_GETMEMBER.getReal().invokeExact(jsobj, name);
         }
         return null;
     }
@@ -193,11 +194,11 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     @SuppressWarnings("unused")
     private static void put(final Object jsobj, final Object key, final Object value) throws Throwable {
         if (key instanceof Integer) {
-            JSOBJECT_SETSLOT.invokeExact(jsobj, (int)key, value);
+            JSOBJECT_SETSLOT.getReal().invokeExact(jsobj, (int)key, value);
         } else if (key instanceof Number) {
-            JSOBJECT_SETSLOT.invokeExact(jsobj, getIndex((Number)key), value);
+            JSOBJECT_SETSLOT.getReal().invokeExact(jsobj, getIndex((Number)key), value);
         } else if (isString(key)) {
-            JSOBJECT_SETMEMBER.invokeExact(jsobj, key.toString(), value);
+            JSOBJECT_SETMEMBER.getReal().invokeExact(jsobj, key.toString(), value);
         }
     }
 
@@ -208,12 +209,12 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
 
     private static final MethodHandleFunctionality MH = MethodHandleFactory.getFunctionality();
     // method handles of the current class
-    private static final MethodHandle IS_JSOBJECT_GUARD  = findOwnMH_S("isJSObject", boolean.class, Object.class);
-    private static final MethodHandle JSOBJECTLINKER_GET = findOwnMH_S("get", Object.class, MethodHandle.class, Object.class, Object.class);
-    private static final MethodHandle JSOBJECTLINKER_PUT = findOwnMH_S("put", Void.TYPE, Object.class, Object.class, Object.class);
+    private static final SMethodHandle IS_JSOBJECT_GUARD  = findOwnMH_S("isJSObject", boolean.class, Object.class);
+    private static final SMethodHandle JSOBJECTLINKER_GET = findOwnMH_S("get", Object.class, SMethodHandle.class, Object.class, Object.class);
+    private static final SMethodHandle JSOBJECTLINKER_PUT = findOwnMH_S("put", Void.TYPE, Object.class, Object.class, Object.class);
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-            return MH.findStatic(MethodHandles.lookup(), BrowserJSObjectLinker.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+            return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), BrowserJSObjectLinker.class, name, MH.type(rtype, types));
     }
 
     // method handles of netscape.javascript.JSObject class
@@ -221,15 +222,15 @@ final class BrowserJSObjectLinker implements TypeBasedGuardingDynamicLinker {
     // method handles when we hit a subclass of JSObject first time.
     static class JSObjectHandles {
         // method handles of JSObject class
-        static final MethodHandle JSOBJECT_GETMEMBER     = findJSObjectMH_V("getMember", Object.class, String.class).asType(MH.type(Object.class, Object.class, String.class));
-        static final MethodHandle JSOBJECT_GETSLOT       = findJSObjectMH_V("getSlot", Object.class, int.class).asType(MH.type(Object.class, Object.class, int.class));
-        static final MethodHandle JSOBJECT_SETMEMBER     = findJSObjectMH_V("setMember", Void.TYPE, String.class, Object.class).asType(MH.type(Void.TYPE, Object.class, String.class, Object.class));
-        static final MethodHandle JSOBJECT_SETSLOT       = findJSObjectMH_V("setSlot", Void.TYPE, int.class, Object.class).asType(MH.type(Void.TYPE, Object.class, int.class, Object.class));
-        static final MethodHandle JSOBJECT_CALL          = findJSObjectMH_V("call", Object.class, String.class, Object[].class).asType(MH.type(Object.class, Object.class, String.class, Object[].class));
+        static final SMethodHandle JSOBJECT_GETMEMBER     = findJSObjectMH_V("getMember", Object.class, String.class).asType(MH.type(Object.class, Object.class, String.class));
+        static final SMethodHandle JSOBJECT_GETSLOT       = findJSObjectMH_V("getSlot", Object.class, int.class).asType(MH.type(Object.class, Object.class, int.class));
+        static final SMethodHandle JSOBJECT_SETMEMBER     = findJSObjectMH_V("setMember", Void.TYPE, String.class, Object.class).asType(MH.type(Void.TYPE, Object.class, String.class, Object.class));
+        static final SMethodHandle JSOBJECT_SETSLOT       = findJSObjectMH_V("setSlot", Void.TYPE, int.class, Object.class).asType(MH.type(Void.TYPE, Object.class, int.class, Object.class));
+        static final SMethodHandle JSOBJECT_CALL          = findJSObjectMH_V("call", Object.class, String.class, Object[].class).asType(MH.type(Object.class, Object.class, String.class, Object[].class));
 
-        private static MethodHandle findJSObjectMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
+        private static SMethodHandle findJSObjectMH_V(final String name, final Class<?> rtype, final Class<?>... types) {
             checkJSObjectClass();
-            return MH.findVirtual(MethodHandles.publicLookup(), jsObjectClass, name, MH.type(rtype, types));
+            return MH.findVirtual(SMethodHandles.publicLookup(), jsObjectClass, name, MH.type(rtype, types));
         }
     }
 }

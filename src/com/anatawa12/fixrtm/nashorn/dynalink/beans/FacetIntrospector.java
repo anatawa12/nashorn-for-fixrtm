@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -117,7 +117,7 @@ abstract class FacetIntrospector {
      * Returns getters for inner classes.
      * @return getters for inner classes.
      */
-    abstract Map<String, MethodHandle> getInnerClassGetters();
+    abstract Map<String, SMethodHandle> getInnerClassGetters();
 
     /**
      * Returns the fields for the class facet.
@@ -166,11 +166,11 @@ abstract class FacetIntrospector {
     }
 
 
-    MethodHandle unreflectGetter(final Field field) {
+    SMethodHandle unreflectGetter(final Field field) {
         return editMethodHandle(Lookup.PUBLIC.unreflectGetter(field));
     }
 
-    MethodHandle unreflectSetter(final Field field) {
+    SMethodHandle unreflectSetter(final Field field) {
         return editMethodHandle(Lookup.PUBLIC.unreflectSetter(field));
     }
 
@@ -181,5 +181,5 @@ abstract class FacetIntrospector {
      * @param mh the method handle to edit.
      * @return the edited method handle.
      */
-    abstract MethodHandle editMethodHandle(MethodHandle mh);
+    abstract SMethodHandle editMethodHandle(SMethodHandle mh);
 }

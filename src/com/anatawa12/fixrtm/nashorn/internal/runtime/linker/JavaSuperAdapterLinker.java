@@ -28,7 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.EMPTY_GETTER;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.JavaAdapterBytecodeGenerator.SUPER_PREFIX;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
@@ -51,13 +52,13 @@ final class JavaSuperAdapterLinker implements TypeBasedGuardingDynamicLinker {
     private static final String DYN_GET_METHOD = "dyn:" + GET_METHOD;
     private static final String DYN_GET_METHOD_FIXED = DYN_GET_METHOD + ":" + SUPER_PREFIX;
 
-    private static final MethodHandle ADD_PREFIX_TO_METHOD_NAME;
-    private static final MethodHandle BIND_DYNAMIC_METHOD;
-    private static final MethodHandle GET_ADAPTER;
-    private static final MethodHandle IS_ADAPTER_OF_CLASS;
+    private static final SMethodHandle ADD_PREFIX_TO_METHOD_NAME;
+    private static final SMethodHandle BIND_DYNAMIC_METHOD;
+    private static final SMethodHandle GET_ADAPTER;
+    private static final SMethodHandle IS_ADAPTER_OF_CLASS;
 
     static {
-        final Lookup lookup = new Lookup(MethodHandles.lookup());
+        final Lookup lookup = new Lookup(SMethodHandles.l(MethodHandles.lookup()));
         ADD_PREFIX_TO_METHOD_NAME = lookup.findOwnStatic("addPrefixToMethodName", Object.class, Object.class);
         BIND_DYNAMIC_METHOD = lookup.findOwnStatic("bindDynamicMethod", Object.class, Object.class, Object.class);
         GET_ADAPTER = lookup.findVirtual(JavaSuperAdapter.class, "getAdapter", MethodType.methodType(Object.class));
@@ -104,36 +105,36 @@ final class JavaSuperAdapterLinker implements TypeBasedGuardingDynamicLinker {
                 BeansLinker.getLinkerForClass(adapterClass), linkRequest.replaceArguments(newDescriptor, args),
                 linkerServices);
 
-        final MethodHandle guard = IS_ADAPTER_OF_CLASS.bindTo(adapterClass);
+        final SMethodHandle guard = IS_ADAPTER_OF_CLASS.bindTo(adapterClass);
         if(guardedInv == null) {
             // Short circuit the lookup here for non-existent methods by linking an empty getter. If we just returned
             // null instead, BeansLinker would find final methods on the JavaSuperAdapter instead: getClass() and
             // wait().
-            return new GuardedInvocation(MethodHandles.dropArguments(EMPTY_GETTER, 1,type.parameterList().subList(1,
+            return new GuardedInvocation(SMethodHandles.dropArguments(EMPTY_GETTER, 1,type.parameterList().subList(1,
                     type.parameterCount())), guard).asType(descriptor);
         }
 
-        final MethodHandle invocation = guardedInv.getInvocation();
+        final SMethodHandle invocation = guardedInv.getInvocation();
         final MethodType invType = invocation.type();
         // For invocation typed R(T0, ...) create a dynamic method binder of type Object(R, T0)
-        final MethodHandle typedBinder = BIND_DYNAMIC_METHOD.asType(MethodType.methodType(Object.class,
+        final SMethodHandle typedBinder = BIND_DYNAMIC_METHOD.asType(MethodType.methodType(Object.class,
                 invType.returnType(), invType.parameterType(0)));
         // For invocation typed R(T0, T1, ...) create a dynamic method binder of type Object(R, T0, T1, ...)
-        final MethodHandle droppingBinder = MethodHandles.dropArguments(typedBinder, 2,
+        final SMethodHandle droppingBinder = SMethodHandles.dropArguments(typedBinder, 2,
                 invType.parameterList().subList(1, invType.parameterCount()));
         // Finally, fold the invocation into the binder to produce a method handle that will bind every returned
         // DynamicMethod object from dyn:getMethod calls to the actual receiver
         // Object(R(T0, T1, ...), T0, T1, ...)
-        final MethodHandle bindingInvocation = MethodHandles.foldArguments(droppingBinder, invocation);
+        final SMethodHandle bindingInvocation = SMethodHandles.foldArguments(droppingBinder, invocation);
 
-        final MethodHandle typedGetAdapter = asFilterType(GET_ADAPTER, 0, invType, type);
-        final MethodHandle adaptedInvocation;
+        final SMethodHandle typedGetAdapter = asFilterType(GET_ADAPTER, 0, invType, type);
+        final SMethodHandle adaptedInvocation;
         if(hasFixedName) {
-            adaptedInvocation = MethodHandles.filterArguments(bindingInvocation, 0, typedGetAdapter);
+            adaptedInvocation = SMethodHandles.filterArguments(bindingInvocation, 0, typedGetAdapter);
         } else {
             // Add a filter that'll prepend "super$" to each name passed to the variable-name "dyn:getMethod".
-            final MethodHandle typedAddPrefix = asFilterType(ADD_PREFIX_TO_METHOD_NAME, 1, invType, type);
-            adaptedInvocation = MethodHandles.filterArguments(bindingInvocation, 0, typedGetAdapter, typedAddPrefix);
+            final SMethodHandle typedAddPrefix = asFilterType(ADD_PREFIX_TO_METHOD_NAME, 1, invType, type);
+            adaptedInvocation = SMethodHandles.filterArguments(bindingInvocation, 0, typedGetAdapter, typedAddPrefix);
         }
 
         return guardedInv.replaceMethods(adaptedInvocation, guard).asType(descriptor);
@@ -147,7 +148,7 @@ final class JavaSuperAdapterLinker implements TypeBasedGuardingDynamicLinker {
      * @param sourceType the source method type for filtering
      * @return a type adapted filter
      */
-    private static MethodHandle asFilterType(final MethodHandle filter, final int pos, final MethodType targetType, final MethodType sourceType) {
+    private static SMethodHandle asFilterType(final SMethodHandle filter, final int pos, final MethodType targetType, final MethodType sourceType) {
         return filter.asType(MethodType.methodType(targetType.parameterType(pos), sourceType.parameterType(pos)));
     }
 

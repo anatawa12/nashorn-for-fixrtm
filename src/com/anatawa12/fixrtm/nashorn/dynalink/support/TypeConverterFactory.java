@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.support;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.WrongMethodTypeException;
@@ -101,7 +102,7 @@ import com.anatawa12.fixrtm.nashorn.dynalink.linker.MethodTypeConversionStrategy
 
 /**
  * A factory for type converters. This class is the main implementation behind the
- * {@link LinkerServices#asType(MethodHandle, MethodType)}. It manages the known {@link GuardingTypeConverterFactory}
+ * {@link LinkerServices#asType(SMethodHandle, MethodType)}. It manages the known {@link GuardingTypeConverterFactory}
  * instances and creates appropriate converters for method handles.
  *
  * @author Attila Szegedi
@@ -112,12 +113,12 @@ public class TypeConverterFactory {
     private final ConversionComparator[] comparators;
     private final MethodTypeConversionStrategy autoConversionStrategy;
 
-    private final ClassValue<ClassMap<MethodHandle>> converterMap = new ClassValue<ClassMap<MethodHandle>>() {
+    private final ClassValue<ClassMap<SMethodHandle>> converterMap = new ClassValue<ClassMap<SMethodHandle>>() {
         @Override
-        protected ClassMap<MethodHandle> computeValue(final Class<?> sourceType) {
-            return new ClassMap<MethodHandle>(getClassLoader(sourceType)) {
+        protected ClassMap<SMethodHandle> computeValue(final Class<?> sourceType) {
+            return new ClassMap<SMethodHandle>(getClassLoader(sourceType)) {
                 @Override
-                protected MethodHandle computeValue(final Class<?> targetType) {
+                protected SMethodHandle computeValue(final Class<?> targetType) {
                     try {
                         return createConverter(sourceType, targetType);
                     } catch (final RuntimeException e) {
@@ -130,14 +131,14 @@ public class TypeConverterFactory {
         }
     };
 
-    private final ClassValue<ClassMap<MethodHandle>> converterIdentityMap = new ClassValue<ClassMap<MethodHandle>>() {
+    private final ClassValue<ClassMap<SMethodHandle>> converterIdentityMap = new ClassValue<ClassMap<SMethodHandle>>() {
         @Override
-        protected ClassMap<MethodHandle> computeValue(final Class<?> sourceType) {
-            return new ClassMap<MethodHandle>(getClassLoader(sourceType)) {
+        protected ClassMap<SMethodHandle> computeValue(final Class<?> sourceType) {
+            return new ClassMap<SMethodHandle>(getClassLoader(sourceType)) {
                 @Override
-                protected MethodHandle computeValue(final Class<?> targetType) {
+                protected SMethodHandle computeValue(final Class<?> targetType) {
                     if(!canAutoConvert(sourceType, targetType)) {
-                        final MethodHandle converter = getCacheableTypeConverter(sourceType, targetType);
+                        final SMethodHandle converter = getCacheableTypeConverter(sourceType, targetType);
                         if(converter != IDENTITY_CONVERSION) {
                             return converter;
                         }
@@ -180,16 +181,16 @@ public class TypeConverterFactory {
      *
      * @param factories the {@link GuardingTypeConverterFactory} instances to compose.
      * @param autoConversionStrategy conversion strategy for automatic type conversions. After
-     * {@link #asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)} has applied all custom
+     * {@link #asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)} has applied all custom
      * conversions to a method handle, it still needs to effect
      * {@link TypeUtilities#isMethodInvocationConvertible(Class, Class) method invocation conversions} that
      * can usually be automatically applied as per
-     * {@link java.lang.invoke.MethodHandle#asType(java.lang.invoke.MethodType)}.
+     * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asType(java.lang.invoke.MethodType)}.
      * However, sometimes language runtimes will want to customize even those conversions for their own call
      * sites. A typical example is allowing unboxing of null return values, which is by default prohibited by
-     * ordinary {@code MethodHandles.asType}. In this case, a language runtime can install its own custom
+     * ordinary {@code SMethodHandles.asType}. In this case, a language runtime can install its own custom
      * automatic conversion strategy, that can deal with null values. Note that when the strategy's
-     * {@link MethodTypeConversionStrategy#asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)}
+     * {@link MethodTypeConversionStrategy#asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)}
      * is invoked, the custom language conversions will already have been applied to the method handle, so by
      * design the difference between the handle's current method type and the desired final type will always
      * only be ones that can be subjected to method invocation conversions. Can be null, in which case no
@@ -211,39 +212,39 @@ public class TypeConverterFactory {
     }
 
     /**
-     * Similar to {@link MethodHandle#asType(MethodType)} except it also hooks in method handles produced by
+     * Similar to {@link SMethodHandle#asType(MethodType)} except it also hooks in method handles produced by
      * {@link GuardingTypeConverterFactory} implementations, providing for language-specific type coercing of
      * parameters. For all conversions that are not a JLS method invocation conversion it'll insert
-     * {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)} with composite filters
+     * {@link SMethodHandles#filterArguments(SMethodHandle, int, SMethodHandle...)} with composite filters
      * provided by {@link GuardingTypeConverterFactory} implementations. For the remaining JLS method invocation
-     * conversions, it will invoke {@link MethodTypeConversionStrategy#asType(MethodHandle, MethodType)} first
+     * conversions, it will invoke {@link MethodTypeConversionStrategy#asType(SMethodHandle, MethodType)} first
      * if an automatic conversion strategy was specified in the
      * {@link #TypeConverterFactory(Iterable, MethodTypeConversionStrategy) constructor}, and finally apply
-     * {@link MethodHandle#asType(MethodType)} for any remaining conversions.
+     * {@link SMethodHandle#asType(MethodType)} for any remaining conversions.
      *
      * @param handle target method handle
      * @param fromType the types of source arguments
-     * @return a method handle that is a suitable combination of {@link MethodHandle#asType(MethodType)},
-     * {@link MethodTypeConversionStrategy#asType(MethodHandle, MethodType)}, and
-     * {@link MethodHandles#filterArguments(MethodHandle, int, MethodHandle...)} with
+     * @return a method handle that is a suitable combination of {@link SMethodHandle#asType(MethodType)},
+     * {@link MethodTypeConversionStrategy#asType(SMethodHandle, MethodType)}, and
+     * {@link SMethodHandles#filterArguments(SMethodHandle, int, SMethodHandle...)} with
      * {@link GuardingTypeConverterFactory} produced type converters as filters.
      */
-    public MethodHandle asType(final MethodHandle handle, final MethodType fromType) {
-        MethodHandle newHandle = handle;
+    public SMethodHandle asType(final SMethodHandle handle, final MethodType fromType) {
+        SMethodHandle newHandle = handle;
         final MethodType toType = newHandle.type();
         final int l = toType.parameterCount();
         if(l != fromType.parameterCount()) {
             throw new WrongMethodTypeException("Parameter counts differ: " + handle.type() + " vs. " + fromType);
         }
         int pos = 0;
-        final List<MethodHandle> converters = new LinkedList<>();
+        final List<SMethodHandle> converters = new LinkedList<>();
         for(int i = 0; i < l; ++i) {
             final Class<?> fromParamType = fromType.parameterType(i);
             final Class<?> toParamType = toType.parameterType(i);
             if(canAutoConvert(fromParamType, toParamType)) {
                 newHandle = applyConverters(newHandle, pos, converters);
             } else {
-                final MethodHandle converter = getTypeConverterNull(fromParamType, toParamType);
+                final SMethodHandle converter = getTypeConverterNull(fromParamType, toParamType);
                 if(converter != null) {
                     if(converters.isEmpty()) {
                         pos = i;
@@ -261,27 +262,27 @@ public class TypeConverterFactory {
         final Class<?> toRetType = toType.returnType();
         if(fromRetType != Void.TYPE && toRetType != Void.TYPE) {
             if(!canAutoConvert(toRetType, fromRetType)) {
-                final MethodHandle converter = getTypeConverterNull(toRetType, fromRetType);
+                final SMethodHandle converter = getTypeConverterNull(toRetType, fromRetType);
                 if(converter != null) {
-                    newHandle = MethodHandles.filterReturnValue(newHandle, converter);
+                    newHandle = SMethodHandles.filterReturnValue(newHandle, converter);
                 }
             }
         }
 
         // Give change to automatic conversion strategy, if one is present.
-        final MethodHandle autoConvertedHandle =
+        final SMethodHandle autoConvertedHandle =
                 autoConversionStrategy != null ? autoConversionStrategy.asType(newHandle, fromType) : newHandle;
 
         // Do a final asType for any conversions that remain.
         return autoConvertedHandle.asType(fromType);
     }
 
-    private static MethodHandle applyConverters(final MethodHandle handle, final int pos, final List<MethodHandle> converters) {
+    private static SMethodHandle applyConverters(final SMethodHandle handle, final int pos, final List<SMethodHandle> converters) {
         if(converters.isEmpty()) {
             return handle;
         }
-        final MethodHandle newHandle =
-                MethodHandles.filterArguments(handle, pos, converters.toArray(new MethodHandle[converters.size()]));
+        final SMethodHandle newHandle =
+                SMethodHandles.filterArguments(handle, pos, converters.toArray(new SMethodHandle[converters.size()]));
         converters.clear();
         return newHandle;
     }
@@ -333,18 +334,18 @@ public class TypeConverterFactory {
      *
      * @param fromType convert from this class
      * @param toType convert to this class
-     * @return true if it's safe to let MethodHandles.convertArguments() to handle this conversion.
+     * @return true if it's safe to let SMethodHandles.convertArguments() to handle this conversion.
      */
     /*private*/ static boolean canAutoConvert(final Class<?> fromType, final Class<?> toType) {
         return TypeUtilities.isMethodInvocationConvertible(fromType, toType);
     }
 
-    /*private*/ MethodHandle getCacheableTypeConverterNull(final Class<?> sourceType, final Class<?> targetType) {
-        final MethodHandle converter = getCacheableTypeConverter(sourceType, targetType);
+    /*private*/ SMethodHandle getCacheableTypeConverterNull(final Class<?> sourceType, final Class<?> targetType) {
+        final SMethodHandle converter = getCacheableTypeConverter(sourceType, targetType);
         return converter == IDENTITY_CONVERSION ? null : converter;
     }
 
-    /*private*/ MethodHandle getTypeConverterNull(final Class<?> sourceType, final Class<?> targetType) {
+    /*private*/ SMethodHandle getTypeConverterNull(final Class<?> sourceType, final Class<?> targetType) {
         try {
             return getCacheableTypeConverterNull(sourceType, targetType);
         } catch(final NotCacheableConverter e) {
@@ -352,7 +353,7 @@ public class TypeConverterFactory {
         }
     }
 
-    /*private*/ MethodHandle getCacheableTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
+    /*private*/ SMethodHandle getCacheableTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
         return converterMap.get(sourceType).get(targetType);
     }
 
@@ -365,7 +366,7 @@ public class TypeConverterFactory {
      * @param targetType the type to convert to
      * @return a method handle performing the conversion.
      */
-    public MethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
+    public SMethodHandle getTypeConverter(final Class<?> sourceType, final Class<?> targetType) {
         try {
             return converterIdentityMap.get(sourceType).get(targetType);
         } catch(final NotCacheableConverter e) {
@@ -373,10 +374,10 @@ public class TypeConverterFactory {
         }
     }
 
-    /*private*/ MethodHandle createConverter(final Class<?> sourceType, final Class<?> targetType) throws Exception {
+    /*private*/ SMethodHandle createConverter(final Class<?> sourceType, final Class<?> targetType) throws Exception {
         final MethodType type = MethodType.methodType(targetType, sourceType);
-        final MethodHandle identity = IDENTITY_CONVERSION.asType(type);
-        MethodHandle last = identity;
+        final SMethodHandle identity = IDENTITY_CONVERSION.asType(type);
+        SMethodHandle last = identity;
         boolean cacheable = true;
         for(int i = factories.length; i-- > 0;) {
             final GuardedTypeConversion next = factories[i].convertToType(sourceType, targetType);
@@ -396,13 +397,13 @@ public class TypeConverterFactory {
         throw new NotCacheableConverter(last);
     }
 
-    /*private*/ static final MethodHandle IDENTITY_CONVERSION = MethodHandles.identity(Object.class);
+    /*private*/ static final SMethodHandle IDENTITY_CONVERSION = SMethodHandles.identity(Object.class);
 
     @SuppressWarnings("serial")
     private static class NotCacheableConverter extends RuntimeException {
-        final MethodHandle converter;
+        final SMethodHandle converter;
 
-        NotCacheableConverter(final MethodHandle converter) {
+        NotCacheableConverter(final SMethodHandle converter) {
             super("", null, false, false);
             this.converter = converter;
         }

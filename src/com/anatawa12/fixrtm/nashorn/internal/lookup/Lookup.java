@@ -28,21 +28,22 @@ package com.anatawa12.fixrtm.nashorn.internal.lookup;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.JSType;
 import com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime;
 
 /**
- * MethodHandle Lookup management for Nashorn.
+ * SMethodHandle Lookup management for Nashorn.
  */
 public final class Lookup {
 
     /**
      * A global singleton that points to the {@link MethodHandleFunctionality}. This is basically
-     * a collection of wrappers to the standard methods in {@link MethodHandle}, {@link MethodHandles} and
-     * {@link java.lang.invoke.MethodHandles.Lookup}, but instrumentation and debugging purposes we need
+     * a collection of wrappers to the standard methods in {@link SMethodHandle}, {@link SMethodHandles} and
+     * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles.Lookup}, but instrumentation and debugging purposes we need
      * intercept points.
      * <p>
      * All method handle operations in Nashorn should go through this field, not directly to the classes
@@ -51,16 +52,16 @@ public final class Lookup {
     public static final MethodHandleFunctionality MH = MethodHandleFactory.getFunctionality();
 
     /** Method handle to the empty getter */
-    public static final MethodHandle EMPTY_GETTER = findOwnMH("emptyGetter", Object.class, Object.class);
+    public static final SMethodHandle EMPTY_GETTER = findOwnMH("emptyGetter", Object.class, Object.class);
 
     /** Method handle to the empty setter */
-    public static final MethodHandle EMPTY_SETTER = findOwnMH("emptySetter", void.class, Object.class, Object.class);
+    public static final SMethodHandle EMPTY_SETTER = findOwnMH("emptySetter", void.class, Object.class, Object.class);
 
     /** Method handle to a getter that only throws type error */
-    public static final MethodHandle TYPE_ERROR_THROWER_GETTER = findOwnMH("typeErrorThrowerGetter", Object.class, Object.class);
+    public static final SMethodHandle TYPE_ERROR_THROWER_GETTER = findOwnMH("typeErrorThrowerGetter", Object.class, Object.class);
 
     /** Method handle to a setter that only throws type error */
-    public static final MethodHandle TYPE_ERROR_THROWER_SETTER = findOwnMH("typeErrorThrowerSetter", void.class, Object.class, Object.class);
+    public static final SMethodHandle TYPE_ERROR_THROWER_SETTER = findOwnMH("typeErrorThrowerSetter", void.class, Object.class, Object.class);
 
     /** Method handle to the most generic of getters, the one that returns an Object */
     public static final MethodType GET_OBJECT_TYPE = MH.type(Object.class, Object.class);
@@ -104,7 +105,7 @@ public final class Lookup {
      *
      * @return undefined as return value type
      */
-    public static MethodHandle emptyGetter(final Class<?> type) {
+    public static SMethodHandle emptyGetter(final Class<?> type) {
         return filterReturnType(EMPTY_GETTER, type);
     }
 
@@ -140,7 +141,7 @@ public final class Lookup {
      * @param from old argument type, the new one is given by the sent method handle
      * @return method handle for appropriate argument type conversion
      */
-    public static MethodHandle filterArgumentType(final MethodHandle mh, final int n, final Class<?> from) {
+    public static SMethodHandle filterArgumentType(final SMethodHandle mh, final int n, final Class<?> from) {
         final Class<?> to = mh.type().parameterType(n);
 
         if (from == int.class) {
@@ -186,7 +187,7 @@ public final class Lookup {
      * @param type new return type
      * @return method handle for appropriate return type conversion
      */
-    public static MethodHandle filterReturnType(final MethodHandle mh, final Class<?> type) {
+    public static SMethodHandle filterReturnType(final SMethodHandle mh, final Class<?> type) {
         final Class<?> retType = mh.type().returnType();
 
         if (retType == int.class) {
@@ -221,8 +222,8 @@ public final class Lookup {
         return MH.explicitCastArguments(mh, mh.type().changeReturnType(type));
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), Lookup.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Lookup.class, name, MH.type(rtype, types));
     }
 
 }

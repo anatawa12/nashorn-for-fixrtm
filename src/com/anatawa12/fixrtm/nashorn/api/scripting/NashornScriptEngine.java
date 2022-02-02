@@ -34,6 +34,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Serializable;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -215,6 +216,10 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param reader the body of script
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final Reader reader) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(reader, getScriptName(context)));
@@ -222,6 +227,11 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param reader the body of script
+     * @param scriptName the name of the script.
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final Reader reader, final String scriptName) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(reader, scriptName));
@@ -229,6 +239,10 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param str the body of script
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final String str) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(str, getScriptName(context)));
@@ -236,6 +250,11 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
 
     /**
      * compile script to Compiled Script which is serializable, not have relationship to ScriptEngine.
+     * @param str the body of script
+     * @param scriptName the name of the script.
+     * @return compiled script which is serializable, not have relationship to ScriptEngine.
+     * @throws ScriptException if compilation fails.
+     * @throws NullPointerException if the argument is null.
      */
     public NoLinkedCompileScript compileToNoLinked(final String str, final String scriptName) throws ScriptException {
         return asNoLinkedCompileScript(makeSource(str, scriptName));
@@ -336,7 +355,7 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
                     return null;
                 }
                 return clazz.cast(JavaAdapterFactory.getConstructor(realSelf.getClass(), clazz,
-                        MethodHandles.publicLookup()).invoke(realSelf));
+                        SMethodHandles.publicLookup()).getReal().invoke(realSelf));
             } finally {
                 if (globalChanged) {
                     Context.setGlobal(oldGlobal);
@@ -350,7 +369,7 @@ public final class NashornScriptEngine extends AbstractScriptEngine implements C
     }
 
     // Retrieve nashorn Global object for a given ScriptContext object
-    private Global getNashornGlobalFrom(final ScriptContext ctxt) {
+    Global getNashornGlobalFrom(final ScriptContext ctxt) {
         if (_global_per_engine) {
             // shared single global object for all ENGINE_SCOPE Bindings
             return global;

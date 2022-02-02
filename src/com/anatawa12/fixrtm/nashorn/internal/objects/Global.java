@@ -33,10 +33,11 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFI
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -909,14 +910,14 @@ public final class Global extends Scope {
     // Used to store the last RegExp result to support deprecated RegExp constructor properties
     private RegExpResult lastRegExpResult;
 
-    private static final MethodHandle EVAL                 = findOwnMH_S("eval",                Object.class, Object.class, Object.class);
-    private static final MethodHandle NO_SUCH_PROPERTY     = findOwnMH_S(NO_SUCH_PROPERTY_NAME, Object.class, Object.class, Object.class);
-    private static final MethodHandle PRINT                = findOwnMH_S("print",               Object.class, Object.class, Object[].class);
-    private static final MethodHandle PRINTLN              = findOwnMH_S("println",             Object.class, Object.class, Object[].class);
-    private static final MethodHandle LOAD                 = findOwnMH_S("load",                Object.class, Object.class, Object.class);
-    private static final MethodHandle LOAD_WITH_NEW_GLOBAL = findOwnMH_S("loadWithNewGlobal",   Object.class, Object.class, Object[].class);
-    private static final MethodHandle EXIT                 = findOwnMH_S("exit",                Object.class, Object.class, Object.class);
-    private static final MethodHandle LEXICAL_SCOPE_FILTER = findOwnMH_S("lexicalScopeFilter",  Object.class, Object.class);
+    private static final SMethodHandle EVAL                 = findOwnMH_S("eval",                Object.class, Object.class, Object.class);
+    private static final SMethodHandle NO_SUCH_PROPERTY     = findOwnMH_S(NO_SUCH_PROPERTY_NAME, Object.class, Object.class, Object.class);
+    private static final SMethodHandle PRINT                = findOwnMH_S("print",               Object.class, Object.class, Object[].class);
+    private static final SMethodHandle PRINTLN              = findOwnMH_S("println",             Object.class, Object.class, Object[].class);
+    private static final SMethodHandle LOAD                 = findOwnMH_S("load",                Object.class, Object.class, Object.class);
+    private static final SMethodHandle LOAD_WITH_NEW_GLOBAL = findOwnMH_S("loadWithNewGlobal",   Object.class, Object.class, Object[].class);
+    private static final SMethodHandle EXIT                 = findOwnMH_S("exit",                Object.class, Object.class, Object.class);
+    private static final SMethodHandle LEXICAL_SCOPE_FILTER = findOwnMH_S("lexicalScopeFilter",  Object.class, Object.class);
 
     // initialized by nasgen
     private static PropertyMap $nasgenmap$;
@@ -935,7 +936,7 @@ public final class Global extends Scope {
     private final LexicalScope lexicalScope;
 
     // Switchpoint for non-constant global callsites in the presence of ES6 lexical scope.
-    private SwitchPoint lexicalScopeSwitchPoint;
+    private SSwitchPoint lexicalScopeSwitchPoint;
 
     /**
      * Set the current script context
@@ -1146,7 +1147,7 @@ public final class Global extends Scope {
      * @param self receiver object
      * @return method handle to create wrapper objects for primitive receiver
      */
-    public static MethodHandle getPrimitiveWrapFilter(final Object self) {
+    public static SMethodHandle getPrimitiveWrapFilter(final Object self) {
         if (isString(self)) {
             return NativeString.WRAPFILTER;
         } else if (self instanceof Number) {
@@ -1187,18 +1188,18 @@ public final class Global extends Scope {
         try {
             if (hint == String.class) {
 
-                final Object toString = TO_STRING.getGetter().invokeExact(sobj);
+                final Object toString = TO_STRING.getGetter().getReal().invokeExact(sobj);
 
                 if (Bootstrap.isCallable(toString)) {
-                    final Object value = TO_STRING.getInvoker().invokeExact(toString, sobj);
+                    final Object value = TO_STRING.getInvoker().getReal().invokeExact(toString, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
                 }
 
-                final Object valueOf = VALUE_OF.getGetter().invokeExact(sobj);
+                final Object valueOf = VALUE_OF.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(valueOf)) {
-                    final Object value = VALUE_OF.getInvoker().invokeExact(valueOf, sobj);
+                    final Object value = VALUE_OF.getInvoker().getReal().invokeExact(valueOf, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
@@ -1207,17 +1208,17 @@ public final class Global extends Scope {
             }
 
             if (hint == Number.class) {
-                final Object valueOf = VALUE_OF.getGetter().invokeExact(sobj);
+                final Object valueOf = VALUE_OF.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(valueOf)) {
-                    final Object value = VALUE_OF.getInvoker().invokeExact(valueOf, sobj);
+                    final Object value = VALUE_OF.getInvoker().getReal().invokeExact(valueOf, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
                 }
 
-                final Object toString = TO_STRING.getGetter().invokeExact(sobj);
+                final Object toString = TO_STRING.getGetter().getReal().invokeExact(sobj);
                 if (Bootstrap.isCallable(toString)) {
-                    final Object value = TO_STRING.getInvoker().invokeExact(toString, sobj);
+                    final Object value = TO_STRING.getInvoker().getReal().invokeExact(toString, sobj);
                     if (JSType.isPrimitive(value)) {
                         return value;
                     }
@@ -1397,7 +1398,7 @@ public final class Global extends Scope {
         return getLazilyCreatedValue(key, creator, namedInvokers);
     }
 
-    private final Map<Object, MethodHandle> dynamicInvokers = new ConcurrentHashMap<>();
+    private final Map<Object, SMethodHandle> dynamicInvokers = new ConcurrentHashMap<>();
 
     /**
      * Get cached dynamic method handle for the given key
@@ -1405,7 +1406,7 @@ public final class Global extends Scope {
      * @param creator if method handle is absent 'creator' is called to make one (lazy init)
      * @return dynamic method handle associated with the key.
      */
-    public MethodHandle getDynamicInvoker(final Object key, final Callable<MethodHandle> creator) {
+    public SMethodHandle getDynamicInvoker(final Object key, final Callable<SMethodHandle> creator) {
         return getLazilyCreatedValue(key, creator, dynamicInvokers);
     }
 
@@ -1816,7 +1817,7 @@ public final class Global extends Scope {
      * Get the switchpoint used to check property changes for Function.prototype.apply
      * @return the switchpoint guarding apply (same as guarding call, and everything else in function)
      */
-    public static SwitchPoint getBuiltinFunctionApplySwitchPoint() {
+    public static SSwitchPoint getBuiltinFunctionApplySwitchPoint() {
         return ScriptFunction.getPrototype(Global.instance().getBuiltinFunction()).getProperty("apply").getBuiltinSwitchPoint();
     }
 
@@ -2224,10 +2225,10 @@ public final class Global extends Scope {
         addOwnProperty("evalinput", Attribute.NOT_ENUMERABLE, value);
     }
 
-    private synchronized SwitchPoint getLexicalScopeSwitchPoint() {
-        SwitchPoint switchPoint = lexicalScopeSwitchPoint;
+    private synchronized SSwitchPoint getLexicalScopeSwitchPoint() {
+        SSwitchPoint switchPoint = lexicalScopeSwitchPoint;
         if (switchPoint == null || switchPoint.hasBeenInvalidated()) {
-            switchPoint = lexicalScopeSwitchPoint = new SwitchPoint();
+            switchPoint = lexicalScopeSwitchPoint = new SSwitchPoint();
         }
         return switchPoint;
     }
@@ -2235,7 +2236,7 @@ public final class Global extends Scope {
     private synchronized void invalidateLexicalSwitchPoint() {
         if (lexicalScopeSwitchPoint != null) {
             context.getLogger(GlobalConstants.class).info("Invalidating non-constant globals on lexical scope update");
-            SwitchPoint.invalidateAll(new SwitchPoint[]{ lexicalScopeSwitchPoint });
+            SSwitchPoint.invalidateAll(new SSwitchPoint[]{ lexicalScopeSwitchPoint });
         }
     }
 
@@ -2612,7 +2613,7 @@ public final class Global extends Scope {
      * @param func builtin script object
      */
     private void tagBuiltinProperties(final String name, final ScriptObject func) {
-        SwitchPoint sp = context.getBuiltinSwitchPoint(name);
+        SSwitchPoint sp = context.getBuiltinSwitchPoint(name);
         if (sp == null) {
             sp = context.newBuiltinSwitchPoint(name);
         }
@@ -2719,8 +2720,8 @@ public final class Global extends Scope {
         tagBuiltinProperties("Function", anon);
     }
 
-    private static MethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), Global.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH_S(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), Global.class, name, MH.type(rtype, types));
     }
 
     RegExpResult getLastRegExpResult() {

@@ -43,6 +43,8 @@ import static jdk.internal.org.objectweb.asm.Opcodes.RETURN;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.linker.AdaptationResult.Outcome.ERROR_NO_ACCESSIBLE_CONSTRUCTOR;
 
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.AccessibleObject;
@@ -158,7 +160,9 @@ final class JavaAdapterBytecodeGenerator {
     private static final Type SCRIPT_FUNCTION_TYPE = Type.getType(ScriptFunction.class);
     private static final Type STRING_TYPE = Type.getType(String.class);
     private static final Type METHOD_TYPE_TYPE = Type.getType(MethodType.class);
-    private static final Type METHOD_HANDLE_TYPE = Type.getType(MethodHandle.class);
+    private static final Type METHOD_HANDLE_TYPE = Type.getType(SMethodHandle.class);
+    private static final Type JAVA_METHOD_HANDLE_TYPE = Type.getType(MethodHandle.class);
+    private static final String GET_REAL_DESCRIPTOR = Type.getMethodDescriptor(JAVA_METHOD_HANDLE_TYPE);
     private static final String GET_HANDLE_OBJECT_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
             OBJECT_TYPE, STRING_TYPE, METHOD_TYPE_TYPE);
     private static final String GET_HANDLE_FUNCTION_DESCRIPTOR = Type.getMethodDescriptor(METHOD_HANDLE_TYPE,
@@ -227,7 +231,7 @@ final class JavaAdapterBytecodeGenerator {
      * Names of static fields holding type converter method handles for return value conversion. We are emitting code
      * for invoking these explicitly after the delegate handle is invoked, instead of doing an asType or
      * filterReturnValue on the delegate handle, as that would create a new converter handle wrapping the function's
-     * handle for every instance of the adapter, causing the handle.invokeExact() call sites to become megamorphic.
+     * handle for every instance of the adapter, causing the handle.getReal().invokeExact() call sites to become megamorphic.
      */
     private final Map<Class<?>, String> converterFields = new LinkedHashMap<>();
 
@@ -382,7 +386,7 @@ final class JavaAdapterBytecodeGenerator {
             mv.ifeq(notAFunction);
             mv.checkcast(SCRIPT_FUNCTION_TYPE);
 
-            // Assign MethodHandle fields through invoking getHandle() for a ScriptFunction, only assigning the SAM
+            // Assign SMethodHandle fields through invoking getHandle() for a ScriptFunction, only assigning the SAM
             // method(s).
             for (final MethodInfo mi : methodInfos) {
                 if(mi.getName().equals(samName)) {
@@ -399,7 +403,7 @@ final class JavaAdapterBytecodeGenerator {
         } else {
             initGlobal = null;
         }
-        // Assign MethodHandle fields through invoking getHandle() for a ScriptObject
+        // Assign SMethodHandle fields through invoking getHandle() for a ScriptObject
         for (final MethodInfo mi : methodInfos) {
             mv.dup();
             mv.aconst(mi.getName());
@@ -443,7 +447,7 @@ final class JavaAdapterBytecodeGenerator {
 
     private static void loadMethodTypeAndGetHandle(final InstructionAdapter mv, final MethodInfo mi, final String getHandleDescriptor) {
         // NOTE: we're using generic() here because we'll be linking to the "generic" invoker version of
-        // the functions anyway, so we cut down on megamorphism in the invokeExact() calls in adapter
+        // the functions anyway, so we cut down on megamorphism in the getReal().invokeExact() calls in adapter
         // bodies. Once we start linking to type-specializing invokers, this should be changed.
         mv.aconst(Type.getMethodType(mi.type.generic().toMethodDescriptorString()));
         mv.invokestatic(SERVICES_CLASS_TYPE_NAME, "getHandle", getHandleDescriptor, false);
@@ -525,7 +529,7 @@ final class JavaAdapterBytecodeGenerator {
      * suffix that makes it unique in case of overloaded methods. The generated constructor will invoke
      * {@link #getHandle(ScriptFunction, MethodType, boolean)} or {@link #getHandle(Object, String, MethodType,
      * boolean)} to obtain the method handles; these methods make sure to add the necessary conversions and arity
-     * adjustments so that the resulting method handles can be invoked from generated methods using {@code invokeExact}.
+     * adjustments so that the resulting method handles can be invoked from generated methods using {@code getReal().invokeExact}.
      * The constructor that takes a script function will only initialize the methods with the same name as the single
      * abstract method. The constructor will also store the Nashorn global that was current at the constructor
      * invocation time in a field named "global". The generated constructor will be public, regardless of whether the
@@ -569,7 +573,7 @@ final class JavaAdapterBytecodeGenerator {
         // Get a descriptor to the appropriate "JavaAdapterFactory.getHandle" method.
         final String getHandleDescriptor = fromFunction ? GET_HANDLE_FUNCTION_DESCRIPTOR : GET_HANDLE_OBJECT_DESCRIPTOR;
 
-        // Assign MethodHandle fields through invoking getHandle()
+        // Assign SMethodHandle fields through invoking getHandle()
         for (final MethodInfo mi : methodInfos) {
             mv.visitVarInsn(ALOAD, 0);
             if (fromFunction && !mi.getName().equals(samName)) {
@@ -709,10 +713,10 @@ final class JavaAdapterBytecodeGenerator {
      * inspect the method handle field assigned to them. If it is null (the JS object doesn't provide an implementation
      * for the method) then it will either invoke its version in the supertype, or if it is abstract, throw an
      * {@link UnsupportedOperationException}. Otherwise, if the method handle field's value is not null, the handle is
-     * invoked using invokeExact (signature polymorphic invocation as per JLS 15.12.3). Before the invocation, the
+     * invoked using getReal().invokeExact (signature polymorphic invocation as per JLS 15.12.3). Before the invocation, the
      * current Nashorn {@link Context} is checked, and if it is different than the global used to create the adapter
      * instance, the creating global is set to be the current global. In this case, the previously current global is
-     * restored after the invocation. If invokeExact results in a Throwable that is not one of the method's declared
+     * restored after the invocation. If getReal().invokeExact results in a Throwable that is not one of the method's declared
      * exceptions, and is not an unchecked throwable, then it is wrapped into a {@link RuntimeException} and the runtime
      * exception is thrown. The method handle retrieved from the field is guaranteed to exactly match the signature of
      * the method; this is guaranteed by the way constructors of the adapter class obtain them using
@@ -818,6 +822,7 @@ final class JavaAdapterBytecodeGenerator {
 
         mv.visitLabel(invokeHandle);
         mv.visitVarInsn(ISTORE, globalsDifferVar);
+        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal", GET_REAL_DESCRIPTOR, false);
         // stack: [handle]
 
         // Load all parameters back on stack for dynamic invocation. NOTE: since we're using a generic
@@ -923,13 +928,14 @@ final class JavaAdapterBytecodeGenerator {
             } else {
                 // Invoke converter method handle for everything else. Note that we could have just added an asType or
                 // filterReturnValue to the invoked handle instead, but then every instance would have the function
-                // method handle wrapped in a separate converter method handle, making handle.invokeExact() megamorphic.
+                // method handle wrapped in a separate converter method handle, making handle.getReal().invokeExact() megamorphic.
                 if(classOverride) {
                     mv.getstatic(generatedClassName, converterFields.get(returnType), METHOD_HANDLE_TYPE_DESCRIPTOR);
                 } else {
                     mv.visitVarInsn(ALOAD, 0);
                     mv.getfield(generatedClassName, converterFields.get(returnType), METHOD_HANDLE_TYPE_DESCRIPTOR);
                 }
+                mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "getReal", GET_REAL_DESCRIPTOR, false);
                 mv.swap();
                 emitInvokeExact(mv, MethodType.methodType(returnType, Object.class));
             }
@@ -937,7 +943,7 @@ final class JavaAdapterBytecodeGenerator {
     }
 
     private static void emitInvokeExact(final InstructionAdapter mv, final MethodType type) {
-        mv.invokevirtual(METHOD_HANDLE_TYPE.getInternalName(), "invokeExact", type.toMethodDescriptorString(), false);
+        mv.invokevirtual(JAVA_METHOD_HANDLE_TYPE.getInternalName(), "invokeExact", type.toMethodDescriptorString(), false);
     }
 
     private static void boxStackTop(final InstructionAdapter mv, final Type t) {
@@ -1080,7 +1086,7 @@ final class JavaAdapterBytecodeGenerator {
 
     private void generateFinalizerDelegate(final String finalizerDelegateName) {
         // Generate a delegate that will be invoked from the no-permission trampoline. Note it can be private, as we'll
-        // refer to it with a MethodHandle constant pool entry in the overridden finalize() method (see
+        // refer to it with a SMethodHandle constant pool entry in the overridden finalize() method (see
         // generateFinalizerOverride()).
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PRIVATE | ACC_STATIC,
                 finalizerDelegateName, Type.getMethodDescriptor(Type.VOID_TYPE, OBJECT_TYPE), null, null));
@@ -1097,7 +1103,7 @@ final class JavaAdapterBytecodeGenerator {
     private void generateFinalizerOverride(final String finalizerDelegateName) {
         final InstructionAdapter mv = new InstructionAdapter(cw.visitMethod(ACC_PUBLIC, "finalize",
                 VOID_NOARG_METHOD_DESCRIPTOR, null, null));
-        // Overridden finalizer will take a MethodHandle to the finalizer delegating method, ...
+        // Overridden finalizer will take a SMethodHandle to the finalizer delegating method, ...
         mv.aconst(new Handle(Opcodes.H_INVOKESTATIC, generatedClassName, finalizerDelegateName,
                 Type.getMethodDescriptor(Type.VOID_TYPE, OBJECT_TYPE)));
         mv.visitVarInsn(ALOAD, 0);

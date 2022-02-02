@@ -28,8 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.referenceError;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.getAccessorTypeIndex;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.LinkRequest;
@@ -80,7 +80,7 @@ final class SetMethodCreator {
      * Creates the actual guarded invocation that represents the dynamic setter method for the property.
      * @return the actual guarded invocation that represents the dynamic setter method for the property.
      */
-    GuardedInvocation createGuardedInvocation(final SwitchPoint builtinSwitchPoint) {
+    GuardedInvocation createGuardedInvocation(final SSwitchPoint builtinSwitchPoint) {
         return createSetMethod(builtinSwitchPoint).createGuardedInvocation();
     }
 
@@ -90,7 +90,7 @@ final class SetMethodCreator {
      *
      */
     private class SetMethod {
-        private final MethodHandle methodHandle;
+        private final SMethodHandle methodHandle;
         private final Property property;
 
         /**
@@ -98,7 +98,7 @@ final class SetMethodCreator {
          * @param methodHandle the actual method handle
          * @param property the property object. Can be null in case we're creating a new property in the global object.
          */
-        SetMethod(final MethodHandle methodHandle, final Property property) {
+        SetMethod(final SMethodHandle methodHandle, final Property property) {
             assert methodHandle != null;
             this.methodHandle = methodHandle;
             this.property     = property;
@@ -114,11 +114,11 @@ final class SetMethodCreator {
             // relink on ClassCastException.
             final boolean explicitInstanceOfCheck = NashornGuards.explicitInstanceOfCheck(desc, request);
             return new GuardedInvocation(methodHandle, NashornGuards.getGuard(sobj, property, desc, explicitInstanceOfCheck),
-                    (SwitchPoint)null, explicitInstanceOfCheck ? null : ClassCastException.class);
+                    (SSwitchPoint)null, explicitInstanceOfCheck ? null : ClassCastException.class);
         }
     }
 
-    private SetMethod createSetMethod(final SwitchPoint builtinSwitchPoint) {
+    private SetMethod createSetMethod(final SSwitchPoint builtinSwitchPoint) {
         if (find != null) {
             return createExistingPropertySetter();
         }
@@ -143,7 +143,7 @@ final class SetMethodCreator {
     private SetMethod createExistingPropertySetter() {
         final Property property = find.getProperty();
         final boolean isStrict  = NashornCallSiteDescriptor.isStrict(desc);
-        final MethodHandle methodHandle;
+        final SMethodHandle methodHandle;
 
         if (NashornCallSiteDescriptor.isDeclaration(desc)) {
             assert property.needsDeclaration();
@@ -155,11 +155,11 @@ final class SetMethodCreator {
             final PropertyMap oldMap = getMap();
             final Property newProperty = property.removeFlags(Property.NEEDS_DECLARATION);
             final PropertyMap newMap = oldMap.replaceProperty(property, newProperty);
-            final MethodHandle fastSetter = find.replaceProperty(newProperty).getSetter(type, isStrict, request);
-            final MethodHandle slowSetter = MH.insertArguments(ScriptObject.DECLARE_AND_SET, 1, getName()).asType(fastSetter.type());
+            final SMethodHandle fastSetter = find.replaceProperty(newProperty).getSetter(type, isStrict, request);
+            final SMethodHandle slowSetter = MH.insertArguments(ScriptObject.DECLARE_AND_SET, 1, getName()).asType(fastSetter.type());
 
             // cas map used as guard, if true that means we can do the set fast
-            MethodHandle casMap = MH.insertArguments(ScriptObject.CAS_MAP, 1, oldMap, newMap);
+            SMethodHandle casMap = MH.insertArguments(ScriptObject.CAS_MAP, 1, oldMap, newMap);
             casMap = MH.dropArguments(casMap, 1, type);
             casMap = MH.asType(casMap, casMap.type().changeParameterType(0, Object.class));
             methodHandle = MH.guardWithTest(casMap, fastSetter, slowSetter);
@@ -170,7 +170,7 @@ final class SetMethodCreator {
         assert methodHandle != null;
         assert property     != null;
 
-        final MethodHandle boundHandle;
+        final SMethodHandle boundHandle;
         if (!(property instanceof UserAccessorProperty) && find.isInherited()) {
             boundHandle = ScriptObject.addProtoFilter(methodHandle, find.getProtoChainLength());
         } else {
@@ -184,13 +184,13 @@ final class SetMethodCreator {
         return new SetMethod(MH.filterArguments(global.addSpill(type, getName()), 0, ScriptObject.GLOBALFILTER), null);
     }
 
-    private SetMethod createNewPropertySetter(final SwitchPoint builtinSwitchPoint) {
+    private SetMethod createNewPropertySetter(final SSwitchPoint builtinSwitchPoint) {
         final SetMethod sm = map.getFreeFieldSlot() > -1 ? createNewFieldSetter(builtinSwitchPoint) : createNewSpillPropertySetter(builtinSwitchPoint);
         map.propertyAdded(sm.property, true);
         return sm;
     }
 
-    private SetMethod createNewSetter(final Property property, final SwitchPoint builtinSwitchPoint) {
+    private SetMethod createNewSetter(final Property property, final SSwitchPoint builtinSwitchPoint) {
         property.setBuiltinSwitchPoint(builtinSwitchPoint);
 
         final PropertyMap oldMap   = getMap();
@@ -199,10 +199,10 @@ final class SetMethodCreator {
         final String      name     = desc.getNameToken(CallSiteDescriptor.NAME_OPERAND);
 
         //fast type specific setter
-        final MethodHandle fastSetter = property.getSetter(type, newMap); //0 sobj, 1 value, slot folded for spill property already
+        final SMethodHandle fastSetter = property.getSetter(type, newMap); //0 sobj, 1 value, slot folded for spill property already
 
         //slow setter, that calls ScriptObject.set with appropriate type and key name
-        MethodHandle slowSetter = ScriptObject.SET_SLOW[getAccessorTypeIndex(type)];
+        SMethodHandle slowSetter = ScriptObject.SET_SLOW[getAccessorTypeIndex(type)];
         slowSetter = MH.insertArguments(slowSetter, 3, NashornCallSiteDescriptor.getFlags(desc));
         slowSetter = MH.insertArguments(slowSetter, 1, name);
         slowSetter = MH.asType(slowSetter, slowSetter.type().changeParameterType(0, Object.class));
@@ -210,29 +210,29 @@ final class SetMethodCreator {
         assert slowSetter.type().equals(fastSetter.type()) : "slow=" + slowSetter + " != fast=" + fastSetter;
 
         //cas map used as guard, if true that means we can do the set fast
-        MethodHandle casMap = MH.insertArguments(ScriptObject.CAS_MAP, 1, oldMap, newMap);
+        SMethodHandle casMap = MH.insertArguments(ScriptObject.CAS_MAP, 1, oldMap, newMap);
         casMap = MH.dropArguments(casMap, 1, type);
         casMap = MH.asType(casMap, casMap.type().changeParameterType(0, Object.class));
-        final MethodHandle casGuard = MH.guardWithTest(casMap, fastSetter, slowSetter);
+        final SMethodHandle casGuard = MH.guardWithTest(casMap, fastSetter, slowSetter);
 
         //outermost level needs an extendable check. if object can be extended, guard is true and
         //we can run the cas setter. The setter goes to "nop" VOID_RETURN if false or throws an
         //exception if we are in strict mode and object is not extensible
-        MethodHandle extCheck = MH.insertArguments(ScriptObject.EXTENSION_CHECK, 1, isStrict, name);
+        SMethodHandle extCheck = MH.insertArguments(ScriptObject.EXTENSION_CHECK, 1, isStrict, name);
         extCheck = MH.asType(extCheck, extCheck.type().changeParameterType(0, Object.class));
         extCheck = MH.dropArguments(extCheck, 1, type);
 
-        MethodHandle nop = JSType.VOID_RETURN.methodHandle();
+        SMethodHandle nop = JSType.VOID_RETURN.methodHandle();
         nop = MH.dropArguments(nop, 0, Object.class, type);
 
         return new SetMethod(MH.asType(MH.guardWithTest(extCheck, casGuard, nop), fastSetter.type()), property);
     }
 
-    private SetMethod createNewFieldSetter(final SwitchPoint builtinSwitchPoint) {
+    private SetMethod createNewFieldSetter(final SSwitchPoint builtinSwitchPoint) {
         return createNewSetter(new AccessorProperty(getName(), getFlags(sobj), sobj.getClass(), getMap().getFreeFieldSlot(), type), builtinSwitchPoint);
     }
 
-    private SetMethod createNewSpillPropertySetter(final SwitchPoint builtinSwitchPoint) {
+    private SetMethod createNewSpillPropertySetter(final SSwitchPoint builtinSwitchPoint) {
         return createNewSetter(new SpillProperty(getName(), getFlags(sobj), getMap().getFreeSpillSlot(), type), builtinSwitchPoint);
     }
 

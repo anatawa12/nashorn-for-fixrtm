@@ -27,7 +27,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.ref.WeakReference;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.Compiler;
@@ -40,7 +41,7 @@ import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 final public class AllocationStrategy implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup LOOKUP = SMethodHandles.l(MethodHandles.lookup());
 
     /** Number of fields in the allocated object */
     private final int fieldCount;
@@ -52,7 +53,7 @@ final public class AllocationStrategy implements Serializable {
     private transient String allocatorClassName;
 
     /** lazily generated allocator */
-    private transient MethodHandle allocator;
+    private transient SMethodHandle allocator;
 
     /** Last used allocator map */
     private transient AllocatorMap lastMap;
@@ -124,7 +125,7 @@ final public class AllocationStrategy implements Serializable {
                 allocator = MH.findStatic(LOOKUP, Context.forStructureClass(getAllocatorClassName()),
                         CompilerConstants.ALLOCATE.symbolName(), MH.type(ScriptObject.class, PropertyMap.class));
             }
-            return (ScriptObject)allocator.invokeExact(map);
+            return (ScriptObject)allocator.getReal().invokeExact(map);
         } catch (final RuntimeException | Error e) {
             throw e;
         } catch (final Throwable t) {

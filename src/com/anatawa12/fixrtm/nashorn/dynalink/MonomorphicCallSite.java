@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 import com.anatawa12.fixrtm.nashorn.dynalink.support.AbstractRelinkableCallSite;
 
@@ -104,12 +104,12 @@ public class MonomorphicCallSite extends AbstractRelinkableCallSite {
     }
 
     @Override
-    public void relink(final GuardedInvocation guardedInvocation, final MethodHandle relink) {
+    public void relink(final GuardedInvocation guardedInvocation, final SMethodHandle relink) {
         setTarget(guardedInvocation.compose(relink));
     }
 
     @Override
-    public void resetAndRelink(final GuardedInvocation guardedInvocation, final MethodHandle relink) {
+    public void resetAndRelink(final GuardedInvocation guardedInvocation, final SMethodHandle relink) {
         relink(guardedInvocation, relink);
     }
 }

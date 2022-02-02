@@ -26,7 +26,7 @@
 package com.anatawa12.fixrtm.nashorn.internal.runtime.arrays;
 
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import java.nio.Buffer;
 import com.anatawa12.fixrtm.nashorn.dynalink.CallSiteDescriptor;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
@@ -151,17 +151,17 @@ public abstract class TypedArrayData<T extends Buffer> extends ContinuousArrayDa
      * Element getter method handle
      * @return getter
      */
-    protected abstract MethodHandle getGetElem();
+    protected abstract SMethodHandle getGetElem();
 
     /**
      * Element setter method handle
      * @return setter
      */
-    protected abstract MethodHandle getSetElem();
+    protected abstract SMethodHandle getSetElem();
 
     @Override
-    public MethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
-        final MethodHandle getter = getContinuousElementGetter(getClass(), getGetElem(), returnType, programPoint);
+    public SMethodHandle getElementGetter(final Class<?> returnType, final int programPoint) {
+        final SMethodHandle getter = getContinuousElementGetter(getClass(), getGetElem(), returnType, programPoint);
         if (getter != null) {
             return Lookup.filterReturnType(getter, returnType);
         }
@@ -169,13 +169,13 @@ public abstract class TypedArrayData<T extends Buffer> extends ContinuousArrayDa
     }
 
     @Override
-    public MethodHandle getElementSetter(final Class<?> elementType) {
+    public SMethodHandle getElementSetter(final Class<?> elementType) {
         return getContinuousElementSetter(getClass(), Lookup.filterArgumentType(getSetElem(), 2, elementType), elementType);
     }
 
     @Override
-    protected MethodHandle getContinuousElementSetter(final Class<? extends ContinuousArrayData> clazz, final MethodHandle setHas, final Class<?> elementType) {
-        final MethodHandle mh = Lookup.filterArgumentType(setHas, 2, elementType);
+    protected SMethodHandle getContinuousElementSetter(final Class<? extends ContinuousArrayData> clazz, final SMethodHandle setHas, final Class<?> elementType) {
+        final SMethodHandle mh = Lookup.filterArgumentType(setHas, 2, elementType);
         return MH.asType(mh, mh.type().changeParameterType(0, clazz));
     }
 

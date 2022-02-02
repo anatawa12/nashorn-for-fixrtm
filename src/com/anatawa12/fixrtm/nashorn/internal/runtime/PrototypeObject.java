@@ -28,7 +28,8 @@ package com.anatawa12.fixrtm.nashorn.internal.runtime;
 import static com.anatawa12.fixrtm.nashorn.internal.lookup.Lookup.MH;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import com.anatawa12.fixrtm.nashorn.internal.objects.Global;
@@ -43,8 +44,8 @@ public class PrototypeObject extends ScriptObject {
 
     private Object constructor;
 
-    private static final MethodHandle GET_CONSTRUCTOR = findOwnMH("getConstructor", Object.class, Object.class);
-    private static final MethodHandle SET_CONSTRUCTOR = findOwnMH("setConstructor", void.class, Object.class, Object.class);
+    private static final SMethodHandle GET_CONSTRUCTOR = findOwnMH("getConstructor", Object.class, Object.class);
+    private static final SMethodHandle SET_CONSTRUCTOR = findOwnMH("setConstructor", void.class, Object.class, Object.class);
 
     static {
         final ArrayList<Property> properties = new ArrayList<>(1);
@@ -112,7 +113,7 @@ public class PrototypeObject extends ScriptObject {
         this.constructor = constructor;
     }
 
-    private static MethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
-        return MH.findStatic(MethodHandles.lookup(), PrototypeObject.class, name, MH.type(rtype, types));
+    private static SMethodHandle findOwnMH(final String name, final Class<?> rtype, final Class<?>... types) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), PrototypeObject.class, name, MH.type(rtype, types));
     }
 }

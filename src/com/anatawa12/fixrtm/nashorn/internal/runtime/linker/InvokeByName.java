@@ -25,7 +25,7 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.runtime.linker;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 
 /**
  * A tuple of method handles, one for dynamically getting function as a property of an object, and another for invoking
@@ -39,18 +39,18 @@ import java.lang.invoke.MethodHandle;
  * <pre>
  *     private static final InvokeByName TO_JSON = new InvokeByName("toJSON", Object.class, Object.class, Object.class);
  *     ...
- *     final Object toJSONFn = TO_JSON.getGetter().invokeExact(obj);
- *     value = TO_JSON.getInvoker().invokeExact(toJSONFn, obj, key);
+ *     final Object toJSONFn = TO_JSON.getGetter().getReal().invokeExact(obj);
+ *     value = TO_JSON.getInvoker().getReal().invokeExact(toJSONFn, obj, key);
  * </pre>
  * In practice, you can have stronger type assumptions if it makes sense for your code, just remember that you must use
- * the same parameter types as the formal types of the arguments for {@code invokeExact} to work:
+ * the same parameter types as the formal types of the arguments for {@code getReal().invokeExact} to work:
  * <pre>
  *     private static final InvokeByName TO_JSON = new InvokeByName("toJSON", ScriptObject.class, Object.class, Object.class);
  *     ...
  *     final ScriptObject sobj = (ScriptObject)obj;
- *     final Object toJSONFn = TO_JSON.getGetter().invokeExact(sobj);
+ *     final Object toJSONFn = TO_JSON.getGetter().getReal().invokeExact(sobj);
  *     if(toJSONFn instanceof ScriptFunction) {
- *         value = TO_JSON.getInvoker().invokeExact(toJSONFn, sobj, key);
+ *         value = TO_JSON.getInvoker().getReal().invokeExact(toJSONFn, sobj, key);
  *     }
  * </pre>
  * Note that in general you will not want to reuse a single instance of this class for implementing more than one call
@@ -60,8 +60,8 @@ import java.lang.invoke.MethodHandle;
  */
 public final class InvokeByName {
     private final String name;
-    private final MethodHandle getter;
-    private final MethodHandle invoker;
+    private final SMethodHandle getter;
+    private final SMethodHandle invoker;
 
     /**
      * Creates a getter and invoker for a function of the given name that takes no arguments and has a return type of
@@ -111,7 +111,7 @@ public final class InvokeByName {
      * subsequently invoked by the invoker returned by {@link #getInvoker()}.
      * @return the property getter method handle for the function.
      */
-    public MethodHandle getGetter() {
+    public SMethodHandle getGetter() {
         return getter;
     }
 
@@ -120,7 +120,7 @@ public final class InvokeByName {
      * the getter retrieved with {@link #getGetter()} on the target object.
      * @return the invoker method handle for the function.
      */
-    public MethodHandle getInvoker() {
+    public SMethodHandle getInvoker() {
         return invoker;
     }
 }

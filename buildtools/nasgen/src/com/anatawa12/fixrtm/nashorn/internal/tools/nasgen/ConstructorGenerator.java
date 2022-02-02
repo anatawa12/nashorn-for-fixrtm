@@ -25,6 +25,8 @@
 
 package com.anatawa12.fixrtm.nashorn.internal.tools.nasgen;
 
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE;
+import static com.anatawa12.fixrtm.nashorn.internal.tools.nasgen.StringConstants.MAKE_DIRECT_CALL_SITE_DESC;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_FINAL;
 import static jdk.internal.org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static jdk.internal.org.objectweb.asm.Opcodes.H_INVOKESTATIC;
@@ -185,6 +187,7 @@ public class ConstructorGenerator extends ClassGenerator {
             superDesc = (memberCount > 0) ? SCRIPTFUNCTION_INIT_DESC4 : SCRIPTFUNCTION_INIT_DESC3;
             mi.loadLiteral(constructor.getName());
             mi.visitLdcInsn(new Handle(H_INVOKESTATIC, scriptClassInfo.getJavaName(), constructor.getJavaName(), constructor.getJavaDesc()));
+            mi.visitInvokeDynamicInsn("_", MAKE_DIRECT_CALL_SITE_DESC, MAKE_DIRECT_CALL_SITE, H_INVOKESTATIC);
             loadMap(mi);
             mi.memberInfoArray(scriptClassInfo.getJavaName(), specs); //pushes null if specs empty
         }

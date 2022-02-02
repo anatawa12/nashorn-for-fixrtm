@@ -30,7 +30,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.ECMAErrors.typeError
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isRepresentableAsInt;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.ScriptRuntime.UNDEFINED;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.text.Collator;
@@ -72,9 +73,9 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
     private final CharSequence value;
 
     /** Method handle to create an object wrapper for a primitive string */
-    static final MethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeString.class, Object.class));
+    static final SMethodHandle WRAPFILTER = findOwnMH("wrapFilter", MH.type(NativeString.class, Object.class));
     /** Method handle to retrieve the String prototype object */
-    private static final MethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
+    private static final SMethodHandle PROTOFILTER = findOwnMH("protoFilter", MH.type(Object.class, Object.class));
 
     // initialized by nasgen
     private static PropertyMap $nasgenmap$;
@@ -156,7 +157,7 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
 
         if (returnType == Object.class && JSType.isString(self)) {
             try {
-                return new GuardedInvocation(MH.findStatic(MethodHandles.lookup(), NativeString.class, "get", desc.getMethodType()), NashornGuards.getStringGuard());
+                return new GuardedInvocation(MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeString.class, "get", desc.getMethodType()), NashornGuards.getStringGuard());
             } catch (final LookupException e) {
                 //empty. Shouldn't happen. Fall back to super
             }
@@ -1301,8 +1302,8 @@ public final class NativeString extends ScriptObject implements OptimisticBuilti
         return key >= 0 && key < value.length();
     }
 
-    private static MethodHandle findOwnMH(final String name, final MethodType type) {
-        return MH.findStatic(MethodHandles.lookup(), NativeString.class, name, type);
+    private static SMethodHandle findOwnMH(final String name, final MethodType type) {
+        return MH.findStatic(SMethodHandles.l(MethodHandles.lookup()), NativeString.class, name, type);
     }
 
     @Override

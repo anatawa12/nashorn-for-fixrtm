@@ -83,7 +83,9 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+
+import java.io.Serializable;
 import java.lang.invoke.MethodType;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,14 +97,14 @@ import com.anatawa12.fixrtm.nashorn.dynalink.support.TypeUtilities;
  *
  * @author Attila Szegedi
  */
-final class ClassString {
+final class ClassString implements Serializable {
     /**
      * An anonymous inner class used solely to represent the "type" of null values for method applicability checking.
      */
     static final Class<?> NULL_CLASS = (new Object() { /* Intentionally empty */ }).getClass();
 
     private final Class<?>[] classes;
-    private int hashCode;
+    private transient int hashCode;
 
     ClassString(final Class<?>[] classes) {
         this.classes = classes;
@@ -150,7 +152,7 @@ final class ClassString {
         return true;
     }
 
-    List<MethodHandle> getMaximallySpecifics(final List<MethodHandle> methods, final LinkerServices linkerServices, final boolean varArg) {
+    List<SMethodHandle> getMaximallySpecifics(final List<SMethodHandle> methods, final LinkerServices linkerServices, final boolean varArg) {
         return MaximallySpecific.getMaximallySpecificMethodHandles(getApplicables(methods, linkerServices, varArg),
                 varArg, classes, linkerServices);
     }
@@ -158,9 +160,9 @@ final class ClassString {
     /**
      * Returns all methods that are applicable to actual parameter classes represented by this ClassString object.
      */
-    LinkedList<MethodHandle> getApplicables(final List<MethodHandle> methods, final LinkerServices linkerServices, final boolean varArg) {
-        final LinkedList<MethodHandle> list = new LinkedList<>();
-        for(final MethodHandle member: methods) {
+    LinkedList<SMethodHandle> getApplicables(final List<SMethodHandle> methods, final LinkerServices linkerServices, final boolean varArg) {
+        final LinkedList<SMethodHandle> list = new LinkedList<>();
+        for(final SMethodHandle member: methods) {
             if(isApplicable(member, linkerServices, varArg)) {
                 list.add(member);
             }
@@ -173,7 +175,7 @@ final class ClassString {
      * object.
      *
      */
-    private boolean isApplicable(final MethodHandle method, final LinkerServices linkerServices, final boolean varArg) {
+    private boolean isApplicable(final SMethodHandle method, final LinkerServices linkerServices, final boolean varArg) {
         final Class<?>[] formalTypes = method.type().parameterArray();
         final int cl = classes.length;
         final int fl = formalTypes.length - (varArg ? 1 : 0);

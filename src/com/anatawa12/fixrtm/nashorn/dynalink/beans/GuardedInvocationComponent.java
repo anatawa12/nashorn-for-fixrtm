@@ -83,7 +83,7 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import com.anatawa12.fixrtm.nashorn.dynalink.linker.GuardedInvocation;
 
 /**
@@ -105,15 +105,15 @@ class GuardedInvocationComponent {
     private final GuardedInvocation guardedInvocation;
     private final Validator validator;
 
-    GuardedInvocationComponent(final MethodHandle invocation) {
+    GuardedInvocationComponent(final SMethodHandle invocation) {
         this(invocation, null, ValidationType.NONE);
     }
 
-    GuardedInvocationComponent(final MethodHandle invocation, final MethodHandle guard, final ValidationType validationType) {
+    GuardedInvocationComponent(final SMethodHandle invocation, final SMethodHandle guard, final ValidationType validationType) {
         this(invocation, guard, null, validationType);
     }
 
-    GuardedInvocationComponent(final MethodHandle invocation, final MethodHandle guard, final Class<?> validatorClass,
+    GuardedInvocationComponent(final SMethodHandle invocation, final SMethodHandle guard, final Class<?> validatorClass,
             final ValidationType validationType) {
         this(invocation, guard, new Validator(validatorClass, validationType));
     }
@@ -123,16 +123,16 @@ class GuardedInvocationComponent {
         this(guardedInvocation, new Validator(validatorClass, validationType));
     }
 
-    GuardedInvocationComponent replaceInvocation(final MethodHandle newInvocation) {
+    GuardedInvocationComponent replaceInvocation(final SMethodHandle newInvocation) {
         return replaceInvocation(newInvocation, guardedInvocation.getGuard());
     }
 
-    GuardedInvocationComponent replaceInvocation(final MethodHandle newInvocation, final MethodHandle newGuard) {
+    GuardedInvocationComponent replaceInvocation(final SMethodHandle newInvocation, final SMethodHandle newGuard) {
         return new GuardedInvocationComponent(guardedInvocation.replaceMethods(newInvocation,
                 newGuard), validator);
     }
 
-    private GuardedInvocationComponent(final MethodHandle invocation, final MethodHandle guard, final Validator validator) {
+    private GuardedInvocationComponent(final SMethodHandle invocation, final SMethodHandle guard, final Validator validator) {
         this(new GuardedInvocation(invocation, guard), validator);
     }
 
@@ -153,10 +153,10 @@ class GuardedInvocationComponent {
         return validator.validationType;
     }
 
-    GuardedInvocationComponent compose(final MethodHandle compositeInvocation, final MethodHandle otherGuard,
+    GuardedInvocationComponent compose(final SMethodHandle compositeInvocation, final SMethodHandle otherGuard,
             final Class<?> otherValidatorClass, final ValidationType otherValidationType) {
         final Validator compositeValidator = validator.compose(new Validator(otherValidatorClass, otherValidationType));
-        final MethodHandle compositeGuard = compositeValidator == validator ? guardedInvocation.getGuard() : otherGuard;
+        final SMethodHandle compositeGuard = compositeValidator == validator ? guardedInvocation.getGuard() : otherGuard;
         return new GuardedInvocationComponent(compositeInvocation, compositeGuard, compositeValidator);
     }
 

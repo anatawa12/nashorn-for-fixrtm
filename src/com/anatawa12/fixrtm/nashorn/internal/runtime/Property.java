@@ -29,8 +29,8 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.C
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.ENUMERABLE;
 import static com.anatawa12.fixrtm.nashorn.internal.runtime.PropertyDescriptor.WRITABLE;
 import java.io.Serializable;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.util.Objects;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.ObjectClassGenerator;
 
@@ -115,8 +115,8 @@ public abstract class Property implements Serializable {
      */
     private Class<?> type;
 
-    /** SwitchPoint that is invalidated when property is changed, optional */
-    protected transient SwitchPoint builtinSwitchPoint;
+    /** SSwitchPoint that is invalidated when property is changed, optional */
+    protected transient SSwitchPoint builtinSwitchPoint;
 
     private static final long serialVersionUID = 2099814273074501176L;
 
@@ -192,12 +192,12 @@ public abstract class Property implements Serializable {
     }
 
     /**
-     * Set the change callback for this property, i.e. a SwitchPoint
+     * Set the change callback for this property, i.e. a SSwitchPoint
      * that will be invalidated when the value of the property is
      * changed
-     * @param sp SwitchPoint to use for change callback
+     * @param sp SSwitchPoint to use for change callback
      */
-    public final void setBuiltinSwitchPoint(final SwitchPoint sp) {
+    public final void setBuiltinSwitchPoint(final SSwitchPoint sp) {
         this.builtinSwitchPoint = sp;
     }
 
@@ -206,7 +206,7 @@ public abstract class Property implements Serializable {
      * invalidated when they are set, this is a getter for it
      * @return builtin switchpoint, or null if none
      */
-    public final SwitchPoint getBuiltinSwitchPoint() {
+    public final SSwitchPoint getBuiltinSwitchPoint() {
         return builtinSwitchPoint;
     }
 
@@ -399,7 +399,7 @@ public abstract class Property implements Serializable {
      * @param type getter return value type
      * @return a getter for this property as {@code type}
      */
-    public abstract MethodHandle getGetter(final Class<?> type);
+    public abstract SMethodHandle getGetter(final Class<?> type);
 
     /**
      * Get an optimistic getter that throws an exception if type is not the known given one
@@ -407,7 +407,7 @@ public abstract class Property implements Serializable {
      * @param programPoint  program point
      * @return getter
      */
-    public abstract MethodHandle getOptimisticGetter(final Class<?> type, final int programPoint);
+    public abstract SMethodHandle getOptimisticGetter(final Class<?> type, final int programPoint);
 
     /**
      * Hook to initialize method handles after deserialization.
@@ -434,7 +434,7 @@ public abstract class Property implements Serializable {
 
     /**
      * get the Object value of this property from {@code owner}. This allows to bypass creation of the
-     * getter MethodHandle for spill and user accessor properties.
+     * getter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner of the property
@@ -444,7 +444,7 @@ public abstract class Property implements Serializable {
 
     /**
      * get the Object value of this property from {@code owner}. This allows to bypass creation of the
-     * getter MethodHandle for spill and user accessor properties.
+     * getter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner of the property
@@ -454,7 +454,7 @@ public abstract class Property implements Serializable {
 
     /**
      * get the Object value of this property from {@code owner}. This allows to bypass creation of the
-     * getter MethodHandle for spill and user accessor properties.
+     * getter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner of the property
@@ -464,7 +464,7 @@ public abstract class Property implements Serializable {
 
     /**
      * Set the value of this property in {@code owner}. This allows to bypass creation of the
-     * setter MethodHandle for spill and user accessor properties.
+     * setter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner object
@@ -475,7 +475,7 @@ public abstract class Property implements Serializable {
 
     /**
      * Set the value of this property in {@code owner}. This allows to bypass creation of the
-     * setter MethodHandle for spill and user accessor properties.
+     * setter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner object
@@ -486,7 +486,7 @@ public abstract class Property implements Serializable {
 
     /**
      * Set the value of this property in {@code owner}. This allows to bypass creation of the
-     * setter MethodHandle for spill and user accessor properties.
+     * setter SMethodHandle for spill and user accessor properties.
      *
      * @param self the this object
      * @param owner the owner object
@@ -506,7 +506,7 @@ public abstract class Property implements Serializable {
      * we automatically get a map guard that relinks the call site so that the
      * older setter will never be used again.
      * <p>
-     * see {@link ObjectClassGenerator#createSetter(Class, Class, MethodHandle, MethodHandle)}
+     * see {@link ObjectClassGenerator#createSetter(Class, Class, SMethodHandle, SMethodHandle)}
      * if you are interested in the internal details of this. Note that if you
      * are running with {@code -Dnashorn.fields.objects=true}, the setters
      * will currently never change, as all properties are represented as Object field,
@@ -517,7 +517,7 @@ public abstract class Property implements Serializable {
      * @param currentMap current property map for property
      * @return a getter for this property as {@code type}
      */
-    public abstract MethodHandle getSetter(final Class<?> type, final PropertyMap currentMap);
+    public abstract SMethodHandle getSetter(final Class<?> type, final PropertyMap currentMap);
 
     /**
      * Get the user defined getter function if one exists. Only {@link UserAccessorProperty} instances

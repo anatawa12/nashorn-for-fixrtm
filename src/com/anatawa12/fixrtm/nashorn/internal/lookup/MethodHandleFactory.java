@@ -29,10 +29,11 @@ import static com.anatawa12.fixrtm.nashorn.internal.runtime.JSType.isString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.SwitchPoint;
+import com.anatawa12.fixrtm.nashorn.invoke.SSwitchPoint;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,8 +59,8 @@ import com.anatawa12.fixrtm.nashorn.internal.runtime.options.Options;
  */
 public final class MethodHandleFactory {
 
-    private static final MethodHandles.Lookup PUBLIC_LOOKUP = MethodHandles.publicLookup();
-    private static final MethodHandles.Lookup LOOKUP        = MethodHandles.lookup();
+    private static final SMethodHandles.Lookup PUBLIC_LOOKUP = SMethodHandles.publicLookup();
+    private static final SMethodHandles.Lookup LOOKUP        = SMethodHandles.l(MethodHandles.lookup());
 
     private static final Level TRACE_LEVEL = Level.INFO;
 
@@ -111,9 +112,9 @@ public final class MethodHandleFactory {
         return FUNC;
     }
 
-    private static final MethodHandle TRACE             = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceArgs",   MethodType.methodType(void.class, DebugLogger.class, String.class, int.class, Object[].class));
-    private static final MethodHandle TRACE_RETURN      = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceReturn", MethodType.methodType(Object.class, DebugLogger.class, Object.class));
-    private static final MethodHandle TRACE_RETURN_VOID = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceReturnVoid", MethodType.methodType(void.class, DebugLogger.class));
+    private static final SMethodHandle TRACE             = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceArgs",   MethodType.methodType(void.class, DebugLogger.class, String.class, int.class, Object[].class));
+    private static final SMethodHandle TRACE_RETURN      = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceReturn", MethodType.methodType(Object.class, DebugLogger.class, Object.class));
+    private static final SMethodHandle TRACE_RETURN_VOID = FUNC.findStatic(LOOKUP, MethodHandleFactory.class, "traceReturnVoid", MethodType.methodType(void.class, DebugLogger.class));
 
     private static final String VOID_TAG = "[VOID]";
 
@@ -231,7 +232,7 @@ public final class MethodHandleFactory {
      * @param tag start of trace message
      * @return traced method handle
      */
-    public static MethodHandle addDebugPrintout(final MethodHandle mh, final Object tag) {
+    public static SMethodHandle addDebugPrintout(final SMethodHandle mh, final Object tag) {
         return addDebugPrintout(null, Level.OFF, mh, 0, true, tag);
     }
 
@@ -244,7 +245,7 @@ public final class MethodHandleFactory {
      * @param tag start of trace message
      * @return traced method handle
      */
-    public static MethodHandle addDebugPrintout(final DebugLogger logger, final Level level, final MethodHandle mh, final Object tag) {
+    public static SMethodHandle addDebugPrintout(final DebugLogger logger, final Level level, final SMethodHandle mh, final Object tag) {
         return addDebugPrintout(logger, level, mh, 0, true, tag);
     }
 
@@ -258,7 +259,7 @@ public final class MethodHandleFactory {
      * @param tag start of trace message
      * @return  traced method handle
      */
-    public static MethodHandle addDebugPrintout(final MethodHandle mh, final int paramStart, final boolean printReturnValue, final Object tag) {
+    public static SMethodHandle addDebugPrintout(final SMethodHandle mh, final int paramStart, final boolean printReturnValue, final Object tag) {
         return addDebugPrintout(null, Level.OFF, mh, paramStart, printReturnValue, tag);
     }
 
@@ -273,7 +274,7 @@ public final class MethodHandleFactory {
      * @param tag start of trace message
      * @return  traced method handle
      */
-    public static MethodHandle addDebugPrintout(final DebugLogger logger, final Level level, final MethodHandle mh, final int paramStart, final boolean printReturnValue, final Object tag) {
+    public static SMethodHandle addDebugPrintout(final DebugLogger logger, final Level level, final SMethodHandle mh, final int paramStart, final boolean printReturnValue, final Object tag) {
         final MethodType type = mh.type();
 
         //if there is no logger, or if it's set to log only coarser events
@@ -284,9 +285,9 @@ public final class MethodHandleFactory {
 
         assert TRACE != null;
 
-        MethodHandle trace = MethodHandles.insertArguments(TRACE, 0, logger, tag, paramStart);
+        SMethodHandle trace = SMethodHandles.insertArguments(TRACE, 0, logger, tag, paramStart);
 
-        trace = MethodHandles.foldArguments(
+        trace = SMethodHandles.foldArguments(
                 mh,
                 trace.asCollector(
                         Object[].class,
@@ -296,12 +297,12 @@ public final class MethodHandleFactory {
         final Class<?> retType = type.returnType();
         if (printReturnValue) {
             if (retType != void.class) {
-                final MethodHandle traceReturn = MethodHandles.insertArguments(TRACE_RETURN, 0, logger);
-                trace = MethodHandles.filterReturnValue(trace,
+                final SMethodHandle traceReturn = SMethodHandles.insertArguments(TRACE_RETURN, 0, logger);
+                trace = SMethodHandles.filterReturnValue(trace,
                         traceReturn.asType(
                                 traceReturn.type().changeParameterType(0, retType).changeReturnType(retType)));
             } else {
-                trace = MethodHandles.filterReturnValue(trace, MethodHandles.insertArguments(TRACE_RETURN_VOID, 0, logger));
+                trace = SMethodHandles.filterReturnValue(trace, SMethodHandles.insertArguments(TRACE_RETURN_VOID, 0, logger));
             }
         }
 
@@ -320,7 +321,7 @@ public final class MethodHandleFactory {
 
         // for bootstrapping reasons, because a lot of static fields use MH for lookups, we
         // need to set the logger when the Global object is finished. This means that we don't
-        // get instrumentation for public static final MethodHandle SOMETHING = MH... in the builtin
+        // get instrumentation for public static final SMethodHandle SOMETHING = MH... in the builtin
         // classes, but that doesn't matter, because this is usually not where we want it
         private DebugLogger log = DebugLogger.DISABLED_LOGGER;
 
@@ -368,7 +369,7 @@ public final class MethodHandleFactory {
             return sb.toString();
         }
 
-        public MethodHandle debug(final MethodHandle master, final String str, final Object... args) {
+        public SMethodHandle debug(final SMethodHandle master, final String str, final Object... args) {
             if (log.isEnabled()) {
                 if (PRINT_STACKTRACE) {
                     stacktrace(log);
@@ -379,117 +380,117 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle filterArguments(final MethodHandle target, final int pos, final MethodHandle... filters) {
-            final MethodHandle mh = MethodHandles.filterArguments(target, pos, filters);
+        public SMethodHandle filterArguments(final SMethodHandle target, final int pos, final SMethodHandle... filters) {
+            final SMethodHandle mh = SMethodHandles.filterArguments(target, pos, filters);
             return debug(mh, "filterArguments", target, pos, filters);
         }
 
         @Override
-        public MethodHandle filterReturnValue(final MethodHandle target, final MethodHandle filter) {
-            final MethodHandle mh = MethodHandles.filterReturnValue(target, filter);
+        public SMethodHandle filterReturnValue(final SMethodHandle target, final SMethodHandle filter) {
+            final SMethodHandle mh = SMethodHandles.filterReturnValue(target, filter);
             return debug(mh, "filterReturnValue", target, filter);
         }
 
         @Override
-        public MethodHandle guardWithTest(final MethodHandle test, final MethodHandle target, final MethodHandle fallback) {
-            final MethodHandle mh = MethodHandles.guardWithTest(test, target, fallback);
+        public SMethodHandle guardWithTest(final SMethodHandle test, final SMethodHandle target, final SMethodHandle fallback) {
+            final SMethodHandle mh = SMethodHandles.guardWithTest(test, target, fallback);
             return debug(mh, "guardWithTest", test, target, fallback);
         }
 
         @Override
-        public MethodHandle insertArguments(final MethodHandle target, final int pos, final Object... values) {
-            final MethodHandle mh = MethodHandles.insertArguments(target, pos, values);
+        public SMethodHandle insertArguments(final SMethodHandle target, final int pos, final Object... values) {
+            final SMethodHandle mh = SMethodHandles.insertArguments(target, pos, values);
             return debug(mh, "insertArguments", target, pos, values);
         }
 
         @Override
-        public MethodHandle dropArguments(final MethodHandle target, final int pos, final Class<?>... values) {
-            final MethodHandle mh = MethodHandles.dropArguments(target, pos, values);
+        public SMethodHandle dropArguments(final SMethodHandle target, final int pos, final Class<?>... values) {
+            final SMethodHandle mh = SMethodHandles.dropArguments(target, pos, values);
             return debug(mh, "dropArguments", target, pos, values);
         }
 
         @Override
-        public MethodHandle dropArguments(final MethodHandle target, final int pos, final List<Class<?>> values) {
-            final MethodHandle mh = MethodHandles.dropArguments(target, pos, values);
+        public SMethodHandle dropArguments(final SMethodHandle target, final int pos, final List<Class<?>> values) {
+            final SMethodHandle mh = SMethodHandles.dropArguments(target, pos, values);
             return debug(mh, "dropArguments", target, pos, values);
         }
 
         @Override
-        public MethodHandle asType(final MethodHandle handle, final MethodType type) {
-            final MethodHandle mh = handle.asType(type);
+        public SMethodHandle asType(final SMethodHandle handle, final MethodType type) {
+            final SMethodHandle mh = handle.asType(type);
             return debug(mh, "asType", handle, type);
         }
 
         @Override
-        public MethodHandle bindTo(final MethodHandle handle, final Object x) {
-            final MethodHandle mh = handle.bindTo(x);
+        public SMethodHandle bindTo(final SMethodHandle handle, final Object x) {
+            final SMethodHandle mh = handle.bindTo(x);
             return debug(mh, "bindTo", handle, x);
         }
 
         @Override
-        public MethodHandle foldArguments(final MethodHandle target, final MethodHandle combiner) {
-            final MethodHandle mh = MethodHandles.foldArguments(target, combiner);
+        public SMethodHandle foldArguments(final SMethodHandle target, final SMethodHandle combiner) {
+            final SMethodHandle mh = SMethodHandles.foldArguments(target, combiner);
             return debug(mh, "foldArguments", target, combiner);
         }
 
         @Override
-        public MethodHandle explicitCastArguments(final MethodHandle target, final MethodType type) {
-            final MethodHandle mh = MethodHandles.explicitCastArguments(target, type);
+        public SMethodHandle explicitCastArguments(final SMethodHandle target, final MethodType type) {
+            final SMethodHandle mh = SMethodHandles.explicitCastArguments(target, type);
             return debug(mh, "explicitCastArguments", target, type);
         }
 
         @Override
-        public MethodHandle arrayElementGetter(final Class<?> type) {
-            final MethodHandle mh = MethodHandles.arrayElementGetter(type);
+        public SMethodHandle arrayElementGetter(final Class<?> type) {
+            final SMethodHandle mh = SMethodHandles.arrayElementGetter(type);
             return debug(mh, "arrayElementGetter", type);
         }
 
         @Override
-        public MethodHandle arrayElementSetter(final Class<?> type) {
-            final MethodHandle mh = MethodHandles.arrayElementSetter(type);
+        public SMethodHandle arrayElementSetter(final Class<?> type) {
+            final SMethodHandle mh = SMethodHandles.arrayElementSetter(type);
             return debug(mh, "arrayElementSetter", type);
         }
 
         @Override
-        public MethodHandle throwException(final Class<?> returnType, final Class<? extends Throwable> exType) {
-            final MethodHandle mh = MethodHandles.throwException(returnType, exType);
+        public SMethodHandle throwException(final Class<?> returnType, final Class<? extends Throwable> exType) {
+            final SMethodHandle mh = SMethodHandles.throwException(returnType, exType);
             return debug(mh, "throwException", returnType, exType);
         }
 
         @Override
-        public MethodHandle catchException(final MethodHandle target, final Class<? extends Throwable> exType, final MethodHandle handler) {
-            final MethodHandle mh = MethodHandles.catchException(target, exType, handler);
+        public SMethodHandle catchException(final SMethodHandle target, final Class<? extends Throwable> exType, final SMethodHandle handler) {
+            final SMethodHandle mh = SMethodHandles.catchException(target, exType, handler);
             return debug(mh, "catchException", exType);
         }
 
         @Override
-        public MethodHandle constant(final Class<?> type, final Object value) {
-            final MethodHandle mh = MethodHandles.constant(type, value);
+        public SMethodHandle constant(final Class<?> type, final Object value) {
+            final SMethodHandle mh = SMethodHandles.constant(type, value);
             return debug(mh, "constant", type, value);
         }
 
         @Override
-        public MethodHandle identity(final Class<?> type) {
-            final MethodHandle mh = MethodHandles.identity(type);
+        public SMethodHandle identity(final Class<?> type) {
+            final SMethodHandle mh = SMethodHandles.identity(type);
             return debug(mh, "identity", type);
         }
 
         @Override
-        public MethodHandle asCollector(final MethodHandle handle, final Class<?> arrayType, final int arrayLength) {
-            final MethodHandle mh = handle.asCollector(arrayType, arrayLength);
+        public SMethodHandle asCollector(final SMethodHandle handle, final Class<?> arrayType, final int arrayLength) {
+            final SMethodHandle mh = handle.asCollector(arrayType, arrayLength);
             return debug(mh, "asCollector", handle, arrayType, arrayLength);
         }
 
         @Override
-        public MethodHandle asSpreader(final MethodHandle handle, final Class<?> arrayType, final int arrayLength) {
-            final MethodHandle mh = handle.asSpreader(arrayType, arrayLength);
+        public SMethodHandle asSpreader(final SMethodHandle handle, final Class<?> arrayType, final int arrayLength) {
+            final SMethodHandle mh = handle.asSpreader(arrayType, arrayLength);
             return debug(mh, "asSpreader", handle, arrayType, arrayLength);
         }
 
         @Override
-        public MethodHandle getter(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
+        public SMethodHandle getter(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
             try {
-                final MethodHandle mh = explicitLookup.findGetter(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findGetter(clazz, name, type);
                 return debug(mh, "getter", explicitLookup, clazz, name, type);
             } catch (final NoSuchFieldException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -497,9 +498,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle staticGetter(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
+        public SMethodHandle staticGetter(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
             try {
-                final MethodHandle mh = explicitLookup.findStaticGetter(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findStaticGetter(clazz, name, type);
                 return debug(mh, "static getter", explicitLookup, clazz, name, type);
             } catch (final NoSuchFieldException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -507,9 +508,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle setter(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
+        public SMethodHandle setter(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
             try {
-                final MethodHandle mh = explicitLookup.findSetter(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findSetter(clazz, name, type);
                 return debug(mh, "setter", explicitLookup, clazz, name, type);
             } catch (final NoSuchFieldException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -517,9 +518,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle staticSetter(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
+        public SMethodHandle staticSetter(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final Class<?> type) {
             try {
-                final MethodHandle mh = explicitLookup.findStaticSetter(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findStaticSetter(clazz, name, type);
                 return debug(mh, "static setter", explicitLookup, clazz, name, type);
             } catch (final NoSuchFieldException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -527,9 +528,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle find(final Method method) {
+        public SMethodHandle find(final Method method) {
             try {
-                final MethodHandle mh = PUBLIC_LOOKUP.unreflect(method);
+                final SMethodHandle mh = PUBLIC_LOOKUP.unreflect(method);
                 return debug(mh, "find", method);
             } catch (final IllegalAccessException e) {
                 throw new LookupException(e);
@@ -537,9 +538,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle findStatic(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type) {
+        public SMethodHandle findStatic(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type) {
             try {
-                final MethodHandle mh = explicitLookup.findStatic(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findStatic(clazz, name, type);
                 return debug(mh, "findStatic", explicitLookup, clazz, name, type);
             } catch (final NoSuchMethodException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -547,9 +548,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle findSpecial(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type, final Class<?> thisClass) {
+        public SMethodHandle findSpecial(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type, final Class<?> thisClass) {
             try {
-                final MethodHandle mh = explicitLookup.findSpecial(clazz, name, type, thisClass);
+                final SMethodHandle mh = explicitLookup.findSpecial(clazz, name, type, thisClass);
                 return debug(mh, "findSpecial", explicitLookup, clazz, name, type);
             } catch (final NoSuchMethodException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -557,9 +558,9 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public MethodHandle findVirtual(final MethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type) {
+        public SMethodHandle findVirtual(final SMethodHandles.Lookup explicitLookup, final Class<?> clazz, final String name, final MethodType type) {
             try {
-                final MethodHandle mh = explicitLookup.findVirtual(clazz, name, type);
+                final SMethodHandle mh = explicitLookup.findVirtual(clazz, name, type);
                 return debug(mh, "findVirtual", explicitLookup, clazz, name, type);
             } catch (final NoSuchMethodException | IllegalAccessException e) {
                 throw new LookupException(e);
@@ -567,15 +568,15 @@ public final class MethodHandleFactory {
         }
 
         @Override
-        public SwitchPoint createSwitchPoint() {
-            final SwitchPoint sp = new SwitchPoint();
+        public SSwitchPoint createSwitchPoint() {
+            final SSwitchPoint sp = new SSwitchPoint();
             log.log(TRACE_LEVEL, "createSwitchPoint ", sp);
             return sp;
         }
 
         @Override
-        public MethodHandle guardWithTest(final SwitchPoint sp, final MethodHandle before, final MethodHandle after) {
-            final MethodHandle mh = sp.guardWithTest(before, after);
+        public SMethodHandle guardWithTest(final SSwitchPoint sp, final SMethodHandle before, final SMethodHandle after) {
+            final SMethodHandle mh = sp.guardWithTest(before, after);
             return debug(mh, "guardWithTest", sp, before, after);
         }
 

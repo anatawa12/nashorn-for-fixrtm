@@ -34,7 +34,7 @@ import static jdk.internal.org.objectweb.asm.Opcodes.GETSTATIC;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.className;
 import static com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants.typeDescriptor;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
 import jdk.internal.org.objectweb.asm.Handle;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import com.anatawa12.fixrtm.nashorn.internal.codegen.CompilerConstants;
@@ -120,7 +120,7 @@ class ObjectType extends Type {
             return STRING;
         } else if (c instanceof Handle) {
             method.visitLdcInsn(c);
-            return Type.typeFor(MethodHandle.class);
+            return Type.typeFor(SMethodHandle.class);
         } else {
             throw new UnsupportedOperationException("implementation missing for class " + c.getClass() + " value=" + c);
         }

@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
@@ -156,14 +157,14 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         return null;
     }
 
-    private static MethodHandle GET_LIST_ELEMENT = Lookup.PUBLIC.findVirtual(List.class, "get",
+    private static SMethodHandle GET_LIST_ELEMENT = Lookup.PUBLIC.findVirtual(List.class, "get",
             MethodType.methodType(Object.class, int.class));
 
-    private static MethodHandle GET_MAP_ELEMENT = Lookup.PUBLIC.findVirtual(Map.class, "get",
+    private static SMethodHandle GET_MAP_ELEMENT = Lookup.PUBLIC.findVirtual(Map.class, "get",
             MethodType.methodType(Object.class, Object.class));
 
-    private static MethodHandle LIST_GUARD = Guards.getInstanceOfGuard(List.class);
-    private static MethodHandle MAP_GUARD = Guards.getInstanceOfGuard(Map.class);
+    private static SMethodHandle LIST_GUARD = Guards.getInstanceOfGuard(List.class);
+    private static SMethodHandle MAP_GUARD = Guards.getInstanceOfGuard(Map.class);
 
     private enum CollectionType {
         ARRAY, LIST, MAP
@@ -184,7 +185,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         final GuardedInvocationComponent gic;
         final CollectionType collectionType;
         if(declaredType.isArray()) {
-            gic = createInternalFilteredGuardedInvocationComponent(MethodHandles.arrayElementGetter(declaredType), linkerServices);
+            gic = createInternalFilteredGuardedInvocationComponent(SMethodHandles.arrayElementGetter(declaredType), linkerServices);
             collectionType = CollectionType.ARRAY;
         } else if(List.class.isAssignableFrom(declaredType)) {
             gic = createInternalFilteredGuardedInvocationComponent(GET_LIST_ELEMENT, linkerServices);
@@ -193,7 +194,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
             gic = createInternalFilteredGuardedInvocationComponent(GET_MAP_ELEMENT, linkerServices);
             collectionType = CollectionType.MAP;
         } else if(clazz.isArray()) {
-            gic = getClassGuardedInvocationComponent(linkerServices.filterInternalObjects(MethodHandles.arrayElementGetter(clazz)), callSiteType);
+            gic = getClassGuardedInvocationComponent(linkerServices.filterInternalObjects(SMethodHandles.arrayElementGetter(clazz)), callSiteType);
             collectionType = CollectionType.ARRAY;
         } else if(List.class.isAssignableFrom(clazz)) {
             gic = createInternalFilteredGuardedInvocationComponent(GET_LIST_ELEMENT, Guards.asType(LIST_GUARD, callSiteType), List.class, ValidationType.INSTANCE_OF,
@@ -224,13 +225,13 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
 
         final GuardedInvocation gi = gic.getGuardedInvocation();
         final Binder binder = new Binder(linkerServices, callSiteType, typedFixedKey);
-        final MethodHandle invocation = gi.getInvocation();
+        final SMethodHandle invocation = gi.getInvocation();
 
         if(nextComponent == null) {
             return gic.replaceInvocation(binder.bind(invocation));
         }
 
-        final MethodHandle checkGuard;
+        final SMethodHandle checkGuard;
         switch(collectionType) {
         case LIST:
             checkGuard = convertArgToInt(RANGE_CHECK_LIST, linkerServices, callSiteDescriptor);
@@ -254,12 +255,12 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
     }
 
     private static GuardedInvocationComponent createInternalFilteredGuardedInvocationComponent(
-            final MethodHandle invocation, final LinkerServices linkerServices) {
+            final SMethodHandle invocation, final LinkerServices linkerServices) {
         return new GuardedInvocationComponent(linkerServices.filterInternalObjects(invocation));
     }
 
     private static GuardedInvocationComponent createInternalFilteredGuardedInvocationComponent(
-            final MethodHandle invocation, final MethodHandle guard, final Class<?> validatorClass,
+            final SMethodHandle invocation, final SMethodHandle guard, final Class<?> validatorClass,
             final ValidationType validationType, final LinkerServices linkerServices) {
         return new GuardedInvocationComponent(linkerServices.filterInternalObjects(invocation), guard,
                 validatorClass, validationType);
@@ -274,7 +275,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         try {
             if(linkerServices.canConvert(String.class, Number.class)) {
                 try {
-                    final Object val = linkerServices.getTypeConverter(String.class, Number.class).invoke(fixedKey);
+                    final Object val = linkerServices.getTypeConverter(String.class, Number.class).getReal().invoke(fixedKey);
                     if(!(val instanceof Number)) {
                         return null; // not a number
                     }
@@ -301,13 +302,13 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         }
     }
 
-    private static MethodHandle convertArgToInt(final MethodHandle mh, final LinkerServices ls, final CallSiteDescriptor desc) {
+    private static SMethodHandle convertArgToInt(final SMethodHandle mh, final LinkerServices ls, final CallSiteDescriptor desc) {
         final Class<?> sourceType = desc.getMethodType().parameterType(1);
         if(TypeUtilities.isMethodInvocationConvertible(sourceType, Number.class)) {
             return mh;
         } else if(ls.canConvert(sourceType, Number.class)) {
-            final MethodHandle converter = ls.getTypeConverter(sourceType, Number.class);
-            return MethodHandles.filterArguments(mh, 1, converter.asType(converter.type().changeReturnType(
+            final SMethodHandle converter = ls.getTypeConverter(sourceType, Number.class);
+            return SMethodHandles.filterArguments(mh, 1, converter.asType(converter.type().changeReturnType(
                     mh.type().parameterType(1))));
         }
         return mh;
@@ -330,26 +331,26 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
             this.fixedKey = fixedKey;
         }
 
-        /*private*/ MethodHandle bind(final MethodHandle handle) {
+        /*private*/ SMethodHandle bind(final SMethodHandle handle) {
             return bindToFixedKey(linkerServices.asTypeLosslessReturn(handle, methodType));
         }
 
-        /*private*/ MethodHandle bindTest(final MethodHandle handle) {
+        /*private*/ SMethodHandle bindTest(final SMethodHandle handle) {
             return bindToFixedKey(Guards.asType(handle, methodType));
         }
 
-        private MethodHandle bindToFixedKey(final MethodHandle handle) {
-            return fixedKey == null ? handle : MethodHandles.insertArguments(handle, 1, fixedKey);
+        private SMethodHandle bindToFixedKey(final SMethodHandle handle) {
+            return fixedKey == null ? handle : SMethodHandles.insertArguments(handle, 1, fixedKey);
         }
     }
 
-    private static MethodHandle RANGE_CHECK_ARRAY = findRangeCheck(Object.class);
-    private static MethodHandle RANGE_CHECK_LIST = findRangeCheck(List.class);
-    private static MethodHandle CONTAINS_MAP = Lookup.PUBLIC.findVirtual(Map.class, "containsKey",
+    private static SMethodHandle RANGE_CHECK_ARRAY = findRangeCheck(Object.class);
+    private static SMethodHandle RANGE_CHECK_LIST = findRangeCheck(List.class);
+    private static SMethodHandle CONTAINS_MAP = Lookup.PUBLIC.findVirtual(Map.class, "containsKey",
             MethodType.methodType(boolean.class, Object.class));
 
-    private static MethodHandle findRangeCheck(final Class<?> collectionType) {
-        return Lookup.findOwnStatic(MethodHandles.lookup(), "rangeCheck", boolean.class, collectionType, Object.class);
+    private static SMethodHandle findRangeCheck(final Class<?> collectionType) {
+        return Lookup.findOwnStatic(SMethodHandles.l(MethodHandles.lookup()), "rangeCheck", boolean.class, collectionType, Object.class);
     }
 
     @SuppressWarnings("unused")
@@ -386,10 +387,10 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         throw new IndexOutOfBoundsException("Index: " + n + ", Size: " + list.size());
     }
 
-    private static MethodHandle SET_LIST_ELEMENT = Lookup.PUBLIC.findVirtual(List.class, "set",
+    private static SMethodHandle SET_LIST_ELEMENT = Lookup.PUBLIC.findVirtual(List.class, "set",
             MethodType.methodType(Object.class, int.class, Object.class));
 
-    private static MethodHandle PUT_MAP_ELEMENT = Lookup.PUBLIC.findVirtual(Map.class, "put",
+    private static SMethodHandle PUT_MAP_ELEMENT = Lookup.PUBLIC.findVirtual(Map.class, "put",
             MethodType.methodType(Object.class, Object.class, Object.class));
 
     private GuardedInvocationComponent getElementSetter(final CallSiteDescriptor callSiteDescriptor,
@@ -405,7 +406,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
         // in use will get a chance to perform any (if there's any) implicit conversion to integer for the indices.
         final CollectionType collectionType;
         if(declaredType.isArray()) {
-            gic = createInternalFilteredGuardedInvocationComponent(MethodHandles.arrayElementSetter(declaredType), linkerServices);
+            gic = createInternalFilteredGuardedInvocationComponent(SMethodHandles.arrayElementSetter(declaredType), linkerServices);
             collectionType = CollectionType.ARRAY;
         } else if(List.class.isAssignableFrom(declaredType)) {
             gic = createInternalFilteredGuardedInvocationComponent(SET_LIST_ELEMENT, linkerServices);
@@ -415,7 +416,7 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
             collectionType = CollectionType.MAP;
         } else if(clazz.isArray()) {
             gic = getClassGuardedInvocationComponent(linkerServices.filterInternalObjects(
-                    MethodHandles.arrayElementSetter(clazz)), callSiteType);
+                    SMethodHandles.arrayElementSetter(clazz)), callSiteType);
             collectionType = CollectionType.ARRAY;
         } else if(List.class.isAssignableFrom(clazz)) {
             gic = createInternalFilteredGuardedInvocationComponent(SET_LIST_ELEMENT, Guards.asType(LIST_GUARD, callSiteType), List.class, ValidationType.INSTANCE_OF,
@@ -456,14 +457,14 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
 
         final GuardedInvocation gi = gic.getGuardedInvocation();
         final Binder binder = new Binder(linkerServices, callSiteType, typedFixedKey);
-        final MethodHandle invocation = gi.getInvocation();
+        final SMethodHandle invocation = gi.getInvocation();
 
         if(nextComponent == null) {
             return gic.replaceInvocation(binder.bind(invocation));
         }
 
         assert collectionType == CollectionType.LIST || collectionType == CollectionType.ARRAY;
-        final MethodHandle checkGuard = convertArgToInt(collectionType == CollectionType.LIST ? RANGE_CHECK_LIST :
+        final SMethodHandle checkGuard = convertArgToInt(collectionType == CollectionType.LIST ? RANGE_CHECK_LIST :
             RANGE_CHECK_ARRAY, linkerServices, callSiteDescriptor);
         final MethodPair matchedInvocations = matchReturnTypes(binder.bind(invocation),
                 nextComponent.getGuardedInvocation().getInvocation());
@@ -471,16 +472,16 @@ class BeanLinker extends AbstractJavaLinker implements TypeBasedGuardingDynamicL
                 gic.getValidatorClass(), gic.getValidationType());
     }
 
-    private static MethodHandle GET_ARRAY_LENGTH = Lookup.PUBLIC.findStatic(Array.class, "getLength",
+    private static SMethodHandle GET_ARRAY_LENGTH = Lookup.PUBLIC.findStatic(Array.class, "getLength",
             MethodType.methodType(int.class, Object.class));
 
-    private static MethodHandle GET_COLLECTION_LENGTH = Lookup.PUBLIC.findVirtual(Collection.class, "size",
+    private static SMethodHandle GET_COLLECTION_LENGTH = Lookup.PUBLIC.findVirtual(Collection.class, "size",
             MethodType.methodType(int.class));
 
-    private static MethodHandle GET_MAP_LENGTH = Lookup.PUBLIC.findVirtual(Map.class, "size",
+    private static SMethodHandle GET_MAP_LENGTH = Lookup.PUBLIC.findVirtual(Map.class, "size",
             MethodType.methodType(int.class));
 
-    private static MethodHandle COLLECTION_GUARD = Guards.getInstanceOfGuard(Collection.class);
+    private static SMethodHandle COLLECTION_GUARD = Guards.getInstanceOfGuard(Collection.class);
 
     private GuardedInvocationComponent getLengthGetter(final CallSiteDescriptor callSiteDescriptor) {
         assertParameterCount(callSiteDescriptor, 1);

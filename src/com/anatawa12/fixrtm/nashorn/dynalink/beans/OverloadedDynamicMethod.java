@@ -83,7 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink.beans;
 
-import java.lang.invoke.MethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle;
+import com.anatawa12.fixrtm.nashorn.invoke.SMethodHandles;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.text.Collator;
@@ -109,7 +110,8 @@ class OverloadedDynamicMethod extends DynamicMethod {
      * Holds a list of all methods.
      */
     private final LinkedList<SingleDynamicMethod> methods;
-    private final ClassLoader classLoader;
+    private final Class<?> loaderClass;
+    private transient ClassLoader classLoader;
 
     /**
      * Creates a new overloaded dynamic method.
@@ -118,13 +120,19 @@ class OverloadedDynamicMethod extends DynamicMethod {
      * @param name the name of the method
      */
     OverloadedDynamicMethod(final Class<?> clazz, final String name) {
-        this(new LinkedList<SingleDynamicMethod>(), clazz.getClassLoader(), getClassAndMethodName(clazz, name));
+        this(new LinkedList<SingleDynamicMethod>(), clazz, clazz.getClassLoader(), getClassAndMethodName(clazz, name));
     }
 
-    private OverloadedDynamicMethod(final LinkedList<SingleDynamicMethod> methods, final ClassLoader classLoader, final String name) {
+    private OverloadedDynamicMethod(final LinkedList<SingleDynamicMethod> methods, final Class<?> clazz, final ClassLoader classLoader, final String name) {
         super(name);
+        this.loaderClass = clazz;
         this.methods = methods;
         this.classLoader = classLoader;
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        classLoader = loaderClass.getClassLoader();
     }
 
     @Override
@@ -151,7 +159,7 @@ class OverloadedDynamicMethod extends DynamicMethod {
     }
 
     @Override
-    public MethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
+    public SMethodHandle getInvocation(final CallSiteDescriptor callSiteDescriptor, final LinkerServices linkerServices) {
         final MethodType callSiteType = callSiteDescriptor.getMethodType();
         // First, find all methods applicable to the call site by subtyping (JLS 15.12.2.2)
         final ApplicableOverloadedMethods subtypingApplicables = getApplicables(callSiteType,
@@ -217,8 +225,8 @@ class OverloadedDynamicMethod extends DynamicMethod {
                 // go back all the way to candidate selection. Note that we're resolving any potential caller sensitive
                 // methods here to their handles, as the OverloadedMethod instance is specific to a call site, so it
                 // has an already determined Lookup.
-                final List<MethodHandle> methodHandles = new ArrayList<>(invokables.size());
-                final MethodHandles.Lookup lookup = callSiteDescriptor.getLookup();
+                final List<SMethodHandle> methodHandles = new ArrayList<>(invokables.size());
+                final SMethodHandles.Lookup lookup = callSiteDescriptor.getLookup();
                 for(final SingleDynamicMethod method: invokables) {
                     methodHandles.add(method.getTarget(lookup));
                 }

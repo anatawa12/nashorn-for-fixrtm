@@ -83,6 +83,8 @@
 
 package com.anatawa12.fixrtm.nashorn.dynalink;
 
+import com.anatawa12.fixrtm.nashorn.invoke.SMutableCallSite;
+
 import java.lang.invoke.MutableCallSite;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -229,7 +231,7 @@ public class DynamicLinkerFactory {
     }
 
     /**
-     * Sets whether the linker created by this factory will invoke {@link MutableCallSite#syncAll(MutableCallSite[])}
+     * Sets whether the linker created by this factory will invoke {@link java.lang.invoke.MutableCallSite#syncAll(MutableCallSite[])}
      * after a call site is relinked. Defaults to false. You probably want to set it to true if your runtime supports
      * multithreaded execution of dynamically linked code.
      * @param syncOnRelink true for invoking sync on relink, false otherwise.
@@ -265,20 +267,20 @@ public class DynamicLinkerFactory {
 
     /**
      * Sets an object representing the conversion strategy for automatic type conversions. After
-     * {@link TypeConverterFactory#asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)} has
+     * {@link TypeConverterFactory#asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)} has
      * applied all custom conversions to a method handle, it still needs to effect
      * {@link TypeUtilities#isMethodInvocationConvertible(Class, Class) method invocation conversions} that
      * can usually be automatically applied as per
-     * {@link java.lang.invoke.MethodHandle#asType(java.lang.invoke.MethodType)}.
+     * {@link com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle#asType(java.lang.invoke.MethodType)}.
      * However, sometimes language runtimes will want to customize even those conversions for their own call
      * sites. A typical example is allowing unboxing of null return values, which is by default prohibited by
-     * ordinary {@code MethodHandles.asType}. In this case, a language runtime can install its own custom
+     * ordinary {@code SMethodHandles.asType}. In this case, a language runtime can install its own custom
      * automatic conversion strategy, that can deal with null values. Note that when the strategy's
-     * {@link MethodTypeConversionStrategy#asType(java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)}
+     * {@link MethodTypeConversionStrategy#asType(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle, java.lang.invoke.MethodType)}
      * is invoked, the custom language conversions will already have been applied to the method handle, so by
      * design the difference between the handle's current method type and the desired final type will always
      * only be ones that can be subjected to method invocation conversions. The strategy also doesn't need to
-     * invoke a final {@code MethodHandle.asType()} as the converter factory will do that as the final step.
+     * invoke a final {@code SMethodHandle.asType()} as the converter factory will do that as the final step.
      * @param autoConversionStrategy the strategy for applying method invocation conversions for the linker
      * created by this factory.
      */
@@ -288,7 +290,7 @@ public class DynamicLinkerFactory {
 
     /**
      * Sets a method handle transformer that is supposed to act as the implementation of this linker factory's linkers'
-     * services {@link LinkerServices#filterInternalObjects(java.lang.invoke.MethodHandle)} method.
+     * services {@link LinkerServices#filterInternalObjects(com.anatawa12.fixrtm.nashorn.invoke.SMethodHandle)} method.
      * @param internalObjectsFilter a method handle transformer filtering out internal objects, or null.
      */
     public void setInternalObjectsFilter(final MethodHandleTransformer internalObjectsFilter) {
